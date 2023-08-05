@@ -1,5 +1,6 @@
 ﻿using DongThucVatQuangTri.Applications.Animals.BranchAnimalManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -41,17 +42,24 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             return await _context.SaveChangesAsync();
         }
 
-        public Task<List<DtvNganh>> getAllItem()
+        public Task<List<BranchViewModel>> getAllItem()
+        {
+            throw new NotImplementedException();
+            //var listItem = from b in _context.DtvNganh
+            //               join u in _context.App
+        }
+
+        public Task<PageResult<BranchViewModel>> GetAlllPaging(GetBranchRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DtvNganh> getItemById(int id)
+        public Task<BranchViewModel> getItemById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DtvNganh> getItemByName(string name)
+        public Task<BranchViewModel> getItemByName(string name)
         {
             throw new NotImplementedException();
         }

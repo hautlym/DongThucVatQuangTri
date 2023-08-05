@@ -13,8 +13,8 @@ namespace DongThucVatQuangTri.Models.Entities
         public short? Loai { get; set; }
         public short? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public int? CreatedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public int? UpdatedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
     }
 }
