@@ -4,6 +4,7 @@ using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
 {
@@ -45,13 +46,48 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public Task<List<BranchViewModel>> getAllItem()
         {
             throw new NotImplementedException();
-            //var listItem = from b in _context.DtvNganh
-            //               join u in _context.App
         }
 
-        public Task<PageResult<BranchViewModel>> GetAlllPaging(GetBranchRequest request)
+        public async Task<PageResult<BranchViewModel>> GetAlllPaging(GetBranchRequest request)
         {
-            throw new NotImplementedException();
+            var query = from b in _context.DtvNganh
+                           join uc in _context.User on b.CreatedBy equals uc.Id
+                           join ud in _context.User on b.UpdatedBy equals ud.Id
+                           select new { b, uc, ud };
+            if(request.loai == 1 || request.loai == 0)
+            {
+                query = query.Where(x => x.b.Loai == request.loai);
+            }    
+            if (!string.IsNullOrEmpty(request.keyword))
+            {
+                query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
+            }
+            if (request.status == 1 || request.status == 0)
+            {
+                query = query.Where(x => x.b.Status == request.status);
+            }
+            int totalRow = await query.CountAsync();
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
+                .Select(x => new BranchViewModel()
+                {
+                    Id = x.b.Id,
+                    Name = x.b.Name,
+                    NameLatinh = x.b.NameLatinh,
+                    Status = x.b.Status,
+                    Loai = x.b.Loai,
+                    CreatedAt = x.b.CreatedAt,
+                    CreatedBy = x.uc.FirstName,
+                    UpdatedAt = x.b.UpdatedAt,
+                    UpdatedBy = x.ud.FirstName,
+                }).ToListAsync();
+            var pageResult = new PageResult<BranchViewModel>
+            {
+                TotalRecords = totalRow,
+                Items = data,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+            };
+            return pageResult;
         }
 
         public Task<BranchViewModel> getItemById(int id)

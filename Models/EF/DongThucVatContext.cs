@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DongThucVatQuangTri.Models.EF
 {
-    public partial class DongThucVatContext : IdentityDbContext<AppUser, AppRoles, Guid>
+    public partial class DongThucVatContext : IdentityDbContext<AppUser,AppRoles,Guid>
     {
         public DongThucVatContext()
         {
@@ -23,7 +23,8 @@ namespace DongThucVatQuangTri.Models.EF
         //    : base(options)
         //{
         //}
-
+        public DbSet<AppUser> appUsers { get; set; }
+        public DbSet<AppRoles> appRoles { get; set; }
         public virtual DbSet<AuthAssignment> AuthAssignment { get; set; }
         public virtual DbSet<AuthItem> AuthItem { get; set; }
         public virtual DbSet<AuthItemChild> AuthItemChild { get; set; }
@@ -60,7 +61,7 @@ namespace DongThucVatQuangTri.Models.EF
         public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<TagRel> TagRel { get; set; }
         public virtual DbSet<User> User { get; set; }
-        public DbSet<AppUser> appUsers { get; set; }
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

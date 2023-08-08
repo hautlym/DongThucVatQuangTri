@@ -1,27 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DongThucVatQuangTri.Models.Entities
 {
-    public class AppUser : IdentityUser<Guid>
+    public class AppUser:IdentityUser<Guid>
     {
+        public string FirstName { get; set; }
+        public string? LastName { get; set; }
         public long? CitiesId { get; set; }
         public long? CitiesDistrictId { get; set; }
-        public string FullName { get; set; }
         public string? Avatar { get; set; }
-        public DateTime Dob { get; set; }
-        public DateTime RegisterDay { get; set; }
-        public DateTime UpdateDay { get; set; }
-        public DateTime LastLogin { get; set; }
-        public string sex { get; set; }
-
-        public List<DtvNganh> Nganh { get; set; }
-        
-
-
+        public string Gender { get; set; }
+        public DateTime? Dob { get; set; }
+        public string Address { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public DateTime? LastSigninedTime { get; set; }
+        public short IsAdmin { get; set; }
+        public short Status { get; set; }
+        public string Roles { get; set; }
     }
 }

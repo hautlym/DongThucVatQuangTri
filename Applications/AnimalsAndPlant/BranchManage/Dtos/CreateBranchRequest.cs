@@ -7,8 +7,8 @@
         public short? Loai { get; set; }
         public short? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public Guid? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public Guid? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

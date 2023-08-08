@@ -7,6 +7,6 @@
         public string NameLatinh { get; set; }
         public short? Status { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public Guid? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

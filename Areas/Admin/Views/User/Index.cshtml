@@ -1,0 +1,140 @@
+﻿@using DongThucVatQuangTri.Applications.Common;
+@using DongThucVatQuangTri.Applications.UserManage.Dtos;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PageResult<UserViewModels>
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách người dùng</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách người dùng </li>
+    </ol>
+
+    <div class="card mb-12">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <a asp-action="Create" class="btn btn-success">Thêm người dùng</a>
+
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <form asp-action="Index" asp-controller="User" method="post">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="col-md-2">
+                            <a class="btn btn-secondary " href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            @if (ViewBag.SuscessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuscessMsg
+                </div>
+            }
+            @{
+                int i = 1;
+            }
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            STT
+                        </th>
+                        <th>
+                            Họ tên
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            SĐT
+                        </th>
+                        <th>
+                            Ngày tạo
+                        </th>
+                        <th>
+                            Last Login
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                        <th>Hoạt động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                @i
+                                @{
+                                    i++;
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedAt)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastSigninedTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" class="text-decoration-none">
+                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                </a>
+                                <a asp-action="Delete" class="text-decoration-none">
+                                    <i class="fa-solid fa-trash" style="color: #f20707;"></i>
+                                </a>
+                                @*@Html.ActionLink("Sửa", "Edit", new { id = item.Id },new {@class= "btn btn-success"})
+                                @Html.ActionLink("Xóa", "Delete", new { id = item.Id },new {@class= "btn btn-danger"})*@
+                                @* @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.Id },new {@class= "btn btn-warning"}) *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>
+
