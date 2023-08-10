@@ -1,6 +1,7 @@
-﻿using DongThucVatQuangTri.Applications.Animals.BranchAnimalManage;
-using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -43,17 +44,24 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             return await _context.SaveChangesAsync();
         }
 
-        public Task<List<BranchViewModel>> getAllItem()
+        public async Task<List<BranchViewModel>> getAllItem()
         {
-            throw new NotImplementedException();
+            var data = await _context.DtvNganh.Select(request => new BranchViewModel()
+            {
+                Name = request.Name,
+                NameLatinh = request.NameLatinh,
+                Status = request.Status,
+                UpdatedAt = request.UpdatedAt,
+                CreatedAt = request.CreatedAt,
+                Loai = request.Loai,
+            }).ToListAsync();
+            return data;
         }
 
-        public async Task<PageResult<BranchViewModel>> GetAlllPaging(GetBranchRequest request)
+        public async Task<ApiResult<PageResult<BranchViewModel>>> GetAlllPaging(GetBranchRequest request)
         {
             var query = from b in _context.DtvNganh
-                           join uc in _context.User on b.CreatedBy equals uc.Id
-                           join ud in _context.User on b.UpdatedBy equals ud.Id
-                           select new { b, uc, ud };
+                           select new { b};
             if(request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
@@ -76,9 +84,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                     Status = x.b.Status,
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
-                    CreatedBy = x.uc.FirstName,
                     UpdatedAt = x.b.UpdatedAt,
-                    UpdatedBy = x.ud.FirstName,
                 }).ToListAsync();
             var pageResult = new PageResult<BranchViewModel>
             {
@@ -87,7 +93,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
             };
-            return pageResult;
+            return new ApiSuccessResult<PageResult<BranchViewModel>>(pageResult);
         }
 
         public Task<BranchViewModel> getItemById(int id)

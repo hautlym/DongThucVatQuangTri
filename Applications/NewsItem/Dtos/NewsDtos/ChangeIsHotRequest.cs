@@ -1,4 +1,4 @@
-﻿namespace DongThucVatQuangTri.Applications.News.Dtos.NewsDtos
+﻿namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos
 {
     public class ChangeIsHotRequest
     {

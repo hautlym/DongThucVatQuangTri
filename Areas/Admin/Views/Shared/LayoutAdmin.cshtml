@@ -105,44 +105,42 @@
                                 </nav>
                             </nav>
                         </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducer" aria-expanded="false" aria-controls="collapseProducer">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-archway"></i></div>
-                            Nhà cung cấp
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseProducer" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Producer">Danh sách</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="Producer">Thêm mới</a>
+                        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                        {
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducer" aria-expanded="false" aria-controls="collapseProducer">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-archway"></i></div>
+                                Động vật
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseProducer" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" asp-action="Index" asp-controller="Branch" asp-route-loai="1">Ngành</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Lớp</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Bộ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Họ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Loài</a>
+                                    </nav>
                                 </nav>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOrder" aria-expanded="false" aria-controls="collapseProducer">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-                            Đơn hàng
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseOrder" aria-labelledby="headingFive" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Order">Danh sách</a>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOrder" aria-expanded="false" aria-controls="collapseProducer">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                                Thực vật
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseOrder" aria-labelledby="headingFive" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" asp-action="Index" asp-controller="Branch" asp-route-loai="0">Ngành</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Lớp</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Bộ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Họ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Loài</a>
+                                    </nav>
                                 </nav>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseContact" aria-expanded="false" aria-controls="collapseProducer">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-message"></i></div>
-                            Phản hồi
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseContact" aria-labelledby="headingSix" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Contact">Danh sách</a>
-                                </nav>
-                            </nav>
-                        </div>
+                            </div>
+                        }
+                        
                     </div>
                 </div>
             </nav>
