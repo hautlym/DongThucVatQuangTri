@@ -1,10 +1,11 @@
-﻿namespace DongThucVatQuangTri.Applications.News.Dtos.NewsDtos
+﻿namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos
 {
     public class NewsViewModels
     {
         public long Id { get; set; }
         public int? RootNewsCatId { get; set; }
         public int? NewsCatId { get; set; }
+        public string? NewsCatName { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
         public string Image { get; set; }

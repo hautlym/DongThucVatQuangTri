@@ -1,15 +1,17 @@
-﻿namespace DongThucVatQuangTri.Applications.News.Dtos.NewsDtos
+﻿namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos
 {
     public class UpdateNewsRequest
     {
+        public long Id { get; set; }
+        public bool IsDelete { get; set; }
         public int? RootNewsCatId { get; set; }
         public int? NewsCatId { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
-        public string linkUrl { get; set; }
-        public IFormFile Image { get; set; }
-        public string ShortDescription { get; set; }
-        public string Description { get; set; }
+        public string? linkUrl { get; set; }
+        public IFormFile? Image { get; set; }
+        public string? ShortDescription { get; set; }
+        public string? Description { get; set; }
         public int? TotalView { get; set; }
         public int? SortOrder { get; set; }
         public short? IsHot { get; set; }

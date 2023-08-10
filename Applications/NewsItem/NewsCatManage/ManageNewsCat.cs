@@ -1,13 +1,13 @@
 ﻿using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Common;
-using DongThucVatQuangTri.Applications.News.Dtos.NewsCatDtos;
+using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DongThucVatQuangTri.Applications.News.NewsCatManage
+namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
 {
     public class ManageNewsCat : IManageNewsCat
     {
@@ -70,7 +70,7 @@ namespace DongThucVatQuangTri.Applications.News.NewsCatManage
                 TitleSeo = newscat.TitleSeo,
                 ContentSeo = newscat.ContentSeo,
                 KeySeo = newscat.KeySeo,
-                UpdateAt= newscat.UpdatedAt,
+                UpdateAt = newscat.UpdatedAt,
                 Name = newscat.Name,
                 ParentId = newscat.ParentId,
                 CreateAt = newscat.CreatedAt,
@@ -178,9 +178,9 @@ namespace DongThucVatQuangTri.Applications.News.NewsCatManage
             newsCat.Language = request.Language;
             newsCat.IdRelated = request.IdRelated;
             newsCat.Path = request.Path;
-            newsCat.TitleSeo=request.TitleSeo;
+            newsCat.TitleSeo = request.TitleSeo;
             newsCat.Description = request.Description;
-            newsCat.ContentSeo=request.ContentSeo;
+            newsCat.ContentSeo = request.ContentSeo;
             newsCat.KeySeo = request.KeySeo;
             newsCat.UpdatedAt = DateTime.Now;
             newsCat.ParentId = request.ParentId;
