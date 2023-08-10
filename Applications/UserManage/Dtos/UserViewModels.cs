@@ -22,5 +22,6 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
         public DateTime? LastSigninedTime { get; set; }
         public string Status { get; set; }
         
+        public string Roles { get; set; }
     }
 }

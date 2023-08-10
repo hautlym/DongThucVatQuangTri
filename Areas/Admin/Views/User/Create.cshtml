@@ -5,14 +5,6 @@
     ViewData["Title"] = "Thêm người dùng mới";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
-@section Scripts{
-    <script>
-        setTimeout(function () {
-            $('#msgAlert').fadeOut("slow");
-        }, 2000);
-
-    </script>
-}
 <div class="container-fluid px-4">
     <h1 class="mt-4">Thêm người dùng</h1>
     <ol class="breadcrumb mb-4">
@@ -24,7 +16,7 @@
     </div>
     <div class="row ">
         <div class="col-md-5">
-            <form asp-action="Create" novalidate>
+            <form asp-action="Create">
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label"> Họ tên: </label>
                     <input asp-for="FirstName" class="form-control" />
@@ -52,7 +44,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Dob" class="control-label"> Ngày sinh: </label>
-                    <input type="date" asp-for="Dob" class="form-control" />
+                    <input type="date" asp-for="Dob" class="form-control"/>
                     <span asp-validation-for="Dob" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -88,8 +80,8 @@
                     <label asp-for="Status" class="control-label">Trạng thái:</label>
                     <select asp-for="Status" class="form-control" id="dropdown" name="Status">
                         <option value="-1">None</option>
-                        <option value="0">Kích hoạt</option>
-                        <option value="1">Khóa</option>
+                        <option value="1">Kích hoạt</option>
+                        <option value="0">Khóa</option>
                     </select>
                 </div>
                 <div class="form-group">

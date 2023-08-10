@@ -11,7 +11,6 @@
         setTimeout(function () {
             $('#msgAlert').fadeOut("slow");
         }, 2000);
-
     </script>
 }
 <div class="container-fluid px-4">
@@ -24,35 +23,33 @@
     <div class="card mb-12">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-6 col-xs-12 mt-1">
                     <a asp-action="Create" class="btn btn-success">Thêm người dùng</a>
 
                 </div>
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-6 col-xs-12 mt-1">
                     <div class="row">
                         <div class="col-md-10">
                             <form asp-action="Index" asp-controller="User" method="post">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
-
+                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
                                     </div>
                                     <div class="col-md-3">
-                                        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
                                     </div>
                                 </div>
 
                             </form>
                         </div>
-
                         <div class="col-md-2">
-                            <a class="btn btn-secondary " href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
+                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body align-middle">
 
             @if (ViewBag.SuscessMsg != null)
             {
@@ -63,51 +60,57 @@
             @{
                 int i = 1;
             }
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>
+                        <th scope="col">
                             STT
                         </th>
-                        <th>
+                        <th scope="col">
                             Họ tên
                         </th>
                         <th>
                             Email
                         </th>
-                        <th>
+                        <th scope="col">
                             SĐT
                         </th>
-                        <th>
+                        <th scope="col">
                             Ngày tạo
                         </th>
-                        <th>
+                        <th scope="col">
                             Last Login
                         </th>
-                        <th>
+                        <th scope="col">
                             Trạng thái
                         </th>
-                        <th>Hoạt động</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Items)
                     {
                         <tr>
-                            <td>
+                            <th scope="row">
                                 @i
                                 @{
                                     i++;
                                 }
+                            </th>
+                            <td>
+                                <a class="text-decoration-none" asp-action="Details" asp-controller="User" asp-route-Id="@item.Id">
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </a>
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <a class="text-decoration-none" asp-action="Details" asp-controller="User" asp-route-Id="@item.Id">
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </a>
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Phone)
+                                <a class="text-decoration-none" asp-action="Details" asp-controller="User" asp-route-Id="@item.Id">
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.CreatedAt)
@@ -119,22 +122,49 @@
                                 @Html.DisplayFor(modelItem => item.Status)
                             </td>
                             <td>
-                                <a asp-action="Edit" class="text-decoration-none">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
                                     <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
                                 </a>
-                                <a asp-action="Delete" class="text-decoration-none">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{@item.Id}" style="border:none;background-color:transparent;">
                                     <i class="fa-solid fa-trash" style="color: #f20707;"></i>
-                                </a>
-                                @*@Html.ActionLink("Sửa", "Edit", new { id = item.Id },new {@class= "btn btn-success"})
-                                @Html.ActionLink("Xóa", "Delete", new { id = item.Id },new {@class= "btn btn-danger"})*@
-                                @* @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.Id },new {@class= "btn btn-warning"}) *@
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal@{@item.Id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        @using (Html.BeginForm("Delete", "User", FormMethod.Post))
+                                        {
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa tài khoản</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có muốn xóa tài khoản @item.Email không ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
+                                                    <input type="hidden" name="Id" value="@item.Id">
+                                                    <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
+                                                        Xóa tài khoản
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
                             </td>
+
+
+                            @*@Html.ActionLink("Sửa", "Edit", new { id = item.Id },new {@class= "btn btn-success"})
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.Id },new {@class= "btn btn-danger"})*@
+                            @* @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.Id },new {@class= "btn btn-warning"}) *@
+
                         </tr>
+
                     }
                 </tbody>
             </table>
             @await Component.InvokeAsync("Pager", Model)
         </div>
+
     </div>
 </div>
 

@@ -8,6 +8,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>@ViewData["Title"] - Admin </title>
+
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="/admin/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
@@ -64,35 +65,43 @@
                                 {
                                     <a class="nav-link" asp-action="Index" asp-controller="User">Danh sách</a>
                                     <a class="nav-link" asp-action="Create" asp-controller="User">Thêm mới</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="User">Đổi mật khẩu</a>
+                                    <a class="nav-link" asp-action="ChangePasswordList" asp-controller="User">Đổi mật khẩu</a>
                                 }
-                                <a class="nav-link" asp-action="Create" asp-controller="User">Thông tin User</a>
+                                <a class="nav-link" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">Thông tin User</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fa-brands fa-product-hunt"></i></div>
-                            Sản phẩm
+                            Banner
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Product">Danh sách</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="Product">Thêm mới</a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Banner">Danh sách</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="Banner">Thêm mới</a>
+                                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Admin"))
+                                    {
+                                        <a class="nav-link" asp-action="Index" asp-controller="BannerCat">Danh mục</a>
+                                    }
                                 </nav>
                             </nav>
                         </div>
 
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Loại sản phẩm
+                            Tin tức
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseCategory" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Category">Danh sách</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="Category">Thêm mới</a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="News">Danh sách</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="News">Thêm mới</a>
+                                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Admin"))
+                                    {
+                                        <a class="nav-link" asp-action="Index" asp-controller="NewsCat">Danh mục</a>
+                                    }
                                 </nav>
                             </nav>
                         </div>
@@ -146,6 +155,7 @@
             </footer>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="/admin/js/scripts.js"></script>

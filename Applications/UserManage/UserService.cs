@@ -48,7 +48,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+            CheckSignedTime(user.Id);
             var token = new JwtSecurityToken(_config["Tokens:Issuer"],
                 _config["Tokens:Issuer"],
                 claim,
@@ -56,6 +56,43 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 signingCredentials: creds);
 
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        public async Task<ApiResult<bool>> ChangePassword(Guid id,UpdatePasswordRequest request )
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+            user.UpdatedAt = DateTime.Now;
+            var result = await _userManager.ChangePasswordAsync(user,request.CurrentPassword,request.NewPassword);
+            if (result.Succeeded)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+            return new ApiErrorResult<bool>("cập nhật không thành công");
+        }
+
+        public async Task<ApiResult<bool>> CheckSignedTime(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+            user.LastSigninedTime = DateTime.Now;
+            try
+            {
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return new ApiSuccessResult<bool>();
+                }
+            }
+            catch (Exception ex) { }
+            
+            return new ApiErrorResult<bool>("cập nhật không thành công");
         }
 
         public async Task<ApiResult<bool>> delete(Guid id)
@@ -88,10 +125,12 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 CreatedAt = user.CreatedAt,
                 Dob = user.Dob,
                 Email = user.Email,
+                UpdatedAt = user.UpdatedAt,
                 FirstName = user.FirstName,
                 LastSigninedTime = user.LastSigninedTime,
                 Status = user.Status==1?"Kích hoạt":user.Status==0?"Khóa":"None",
                 Phone = user.PhoneNumber,
+                Roles = user.Roles,
             };
             return new ApiSuccessResult<UserViewModels>(userVm);
         }
@@ -117,7 +156,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastSigninedTime = user.LastSigninedTime,
-                    Status = user.Status == 0 ? "Kích hoạt" : user.Status == 1 ? "Khóa" : "None",
+                    Status = user.Status == 1 ? "Kích hoạt" : user.Status == 0 ? "Khóa" : "None",
                     Phone = user.PhoneNumber,
                 }).ToListAsync();
             var PageResult = new PageResult<UserViewModels>()
@@ -160,61 +199,22 @@ namespace DongThucVatQuangTri.Applications.UserManage
             }
             return new ApiErrorResult<bool>("Đăng ký không thành công");
         }
-
-        public async Task<ApiResult<bool>> RoleAssign(Guid id, RolesAssignRequest request)
+        public async Task<ApiResult<bool>> Update(Guid id, UserUpdateRequest request)
         {
+            
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
                 return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
-            var removedRoles = request.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
-            foreach (var roleName in removedRoles)
-            {
-                var kq = await _userManager.IsInRoleAsync(user, roleName);
-                if (kq)
-                {
-                    await _userManager.RemoveFromRoleAsync(user, roleName);
-                }
-            }
-            //await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
-            var addedRoles = request.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
-            foreach (var roleName in addedRoles)
-            {
-                if (await _userManager.IsInRoleAsync(user, roleName) == false)
-                {
-                    await _userManager.AddToRoleAsync(user, roleName);
-                }
-            }
-
-            return new ApiSuccessResult<bool>();
-        }
-
-        public async Task<ApiResult<bool>> Update(Guid id, UserUpdateRequest request)
-        {
-            if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
-            {
-                return new ApiErrorResult<bool>("emai đã tồn tại");
-            }
-            var user = await _userManager.FindByIdAsync(id.ToString());
             user.Dob = request.Dob;
-            user.Email = request.Email;
             user.FirstName = request.FirstName;
             user.PhoneNumber = request.Phone;
             user.Address = request.Address;
             user.Gender = request.Gender;
-            user.CitiesDistrictId = request.CitiesDistrictId;
-            user.CitiesId = request.CitiesId;
-            user.Id = request.Id;
-            user.IsAdmin = request.IsAdmin;
-            user.Avatar = request.Avatar;
-            user.CreatedAt = request.CreatedAt;
-            user.LastSigninedTime = request.LastSigninedTime;
             user.Status = request.Status;
-            user.CreatedAt = request.CreatedAt;
-            user.UpdatedAt=request.UpdatedAt;
-            user.LastSigninedTime = request.LastSigninedTime;
+            user.UpdatedAt=DateTime.Now;
+            user.Roles = request.Roles;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {

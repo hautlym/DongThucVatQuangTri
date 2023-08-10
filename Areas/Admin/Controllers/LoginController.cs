@@ -46,17 +46,19 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var userPrincipal = this.ValidateToken(token.ResultObj);
             var kq = userPrincipal.FindFirst(ClaimTypes.Role).Value;
             var status = userPrincipal.FindFirst(ClaimTypes.UserData).Value;
+            var UserId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (!kq.Contains("Admin")|| status.Contains("-1"))
             {
                 ModelState.AddModelError("", "Tài khoản không tồn tại");
                 return View();
             }
             
-            if (!status.Contains("0"))
+            if (!status.Contains("1"))
             {
                 ModelState.AddModelError("", "Tài khoản đã bị khóa");
                 return View();
             }
+            var loginTime = _userService.CheckSignedTime(Guid.Parse(UserId));
             var authProperties = new AuthenticationProperties
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),

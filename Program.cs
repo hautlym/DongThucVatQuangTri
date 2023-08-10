@@ -1,5 +1,9 @@
 ﻿using DongThucVatQuangTri.Applications.Animals;
+using DongThucVatQuangTri.Applications.Banners.ManageBanner;
+using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.News.NewsCatManage;
+using DongThucVatQuangTri.Applications.News.NewsManage;
 using DongThucVatQuangTri.Applications.UserManage;
 using DongThucVatQuangTri.Applications.Validation;
 using DongThucVatQuangTri.Models.EF;
@@ -7,9 +11,11 @@ using DongThucVatQuangTri.Models.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Configuration;
@@ -21,14 +27,6 @@ builder.Services.AddControllers().AddFluentValidation(fv =>
     {
         fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>();
     });
-
-
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Login/Index/";
-//        options.AccessDeniedPath = "/User/Forbidden/";
-//    });
 builder.Services.AddControllersWithViews()
                 .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Add services to the container.
@@ -61,6 +59,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IStorageService, FileStorageService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IManageBanner, ManageBanner>();
+builder.Services.AddTransient<IManageBannerCat, ManageBannerCat>();
+builder.Services.AddTransient<IManageFile, ManageFile>();
+builder.Services.AddTransient<IManageNewsCat, ManageNewsCat>();
+builder.Services.AddTransient<IManageNews, ManageNews>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>

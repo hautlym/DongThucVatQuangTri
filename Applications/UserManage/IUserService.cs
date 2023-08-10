@@ -18,7 +18,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
         Task<ApiResult<PageResult<UserViewModels>>> GetUserPaging(GetUserPagingRequest request);
         Task<ApiResult<bool>> delete(Guid id);
         Task<ApiResult<UserViewModels>> GetById(Guid id);
-        public Task<ApiResult<bool>> RoleAssign(Guid id, RolesAssignRequest request);
-
+        Task<ApiResult<bool>> ChangePassword(Guid id,UpdatePasswordRequest request);
+        Task<ApiResult<bool>> CheckSignedTime(Guid id);
     }
 }
