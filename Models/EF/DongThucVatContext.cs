@@ -3,12 +3,14 @@
 using System;
 using System.Collections.Generic;
 using DongThucVatQuangTri.Models.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DongThucVatQuangTri.Models.EF
 {
-    public partial class DongThucVatContext : DbContext
+    public partial class DongThucVatContext : IdentityDbContext<AppUser,AppRoles,Guid>
     {
         public DongThucVatContext()
         {
@@ -21,7 +23,8 @@ namespace DongThucVatQuangTri.Models.EF
         //    : base(options)
         //{
         //}
-
+        public DbSet<AppUser> appUsers { get; set; }
+        public DbSet<AppRoles> appRoles { get; set; }
         public virtual DbSet<AuthAssignment> AuthAssignment { get; set; }
         public virtual DbSet<AuthItem> AuthItem { get; set; }
         public virtual DbSet<AuthItemChild> AuthItemChild { get; set; }
@@ -58,9 +61,15 @@ namespace DongThucVatQuangTri.Models.EF
         public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<TagRel> TagRel { get; set; }
         public virtual DbSet<User> User { get; set; }
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.RoleId, x.UserId });
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
             modelBuilder.Entity<AuthAssignment>(entity =>
             {
                 entity.HasKey(e => new { e.ItemName, e.UserId })

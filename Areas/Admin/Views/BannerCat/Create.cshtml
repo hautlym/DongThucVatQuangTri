@@ -1,0 +1,72 @@
+﻿@using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
+@model CreateBannerCatRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thêm danh mục</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thêm danh mục </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-controller="BannerCat">Danh sách danh mục</a>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Tiêu đề:</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ParentId" class="control-label"> Danh mục cha:</label>
+                    <select asp-for="ParentId" name="ParentId" asp-items="@ViewBag.Categories" class="form-control">
+                        <option value="0">--Danh mục gốc--</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Image" class="control-label">Hình ảnh:</label>
+                    <input asp-for="Image" class="form-control" type="file" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SortOrder" class="control-label">Thứ tự: </label>
+                    <input type="number" asp-for="SortOrder" class="form-control" />
+                    <span asp-validation-for="SortOrder" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label">Trạng thái: </label>
+                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                        <option value="1">Bật</option>
+                        <option value="0">Tắt</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Mô tả</label>
+                    <textarea asp-for="Description" id="editor" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="form-group mt-2">
+                        <input type="submit" value="Thêm danh mục" class="btn btn-primary" />
+                        <input type="reset" value="Reset" class="btn btn-secondary" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

@@ -2,7 +2,7 @@
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
-    public class AnimalController : Controller
+    public class AnimalController : BaseController
     {
 
         public IActionResult Index()
