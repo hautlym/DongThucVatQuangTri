@@ -1,10 +1,9 @@
-﻿using DongThucVatQuangTri.Applications.News.Dtos.NewsDtos;
-using DongThucVatQuangTri.Applications.News.Dtos;
-using DongThucVatQuangTri.Applications.Common;
+﻿using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos;
+using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 
-namespace DongThucVatQuangTri.Applications.News.NewsManage
+namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
 {
     public interface IManageNews
     {

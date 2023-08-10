@@ -1,9 +1,9 @@
-﻿using DongThucVatQuangTri.Applications.Animals;
+﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
-using DongThucVatQuangTri.Applications.News.NewsCatManage;
-using DongThucVatQuangTri.Applications.News.NewsManage;
+using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
+using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.UserManage;
 using DongThucVatQuangTri.Applications.Validation;
 using DongThucVatQuangTri.Models.EF;
@@ -19,6 +19,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Configuration;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,7 @@ string signingKey = "123456789987654321";
 byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
 builder.Services.AddAuthentication(options =>
 {
+    
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -54,6 +56,18 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
     options.LoginPath = "/admin/Login/Index";
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, "Admin");
+    });
+
+    options.AddPolicy("AdministratorPolicy", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, "Administator");
+    });
 });
 //builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/admin/Login/Index");
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -64,6 +78,7 @@ builder.Services.AddTransient<IManageBannerCat, ManageBannerCat>();
 builder.Services.AddTransient<IManageFile, ManageFile>();
 builder.Services.AddTransient<IManageNewsCat, ManageNewsCat>();
 builder.Services.AddTransient<IManageNews, ManageNews>();
+builder.Services.AddTransient<IManageBranch, ManageBranch>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>

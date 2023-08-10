@@ -1,4 +1,4 @@
-﻿namespace DongThucVatQuangTri.Applications.News.Dtos.NewsCatDtos
+﻿namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos
 {
     public class UpdateNewsCatRequest
     {
