@@ -1,9 +1,9 @@
 ﻿using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
-using DongThucVatQuangTri.Applications.News.Dtos.NewsCatDtos;
+using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 
-namespace DongThucVatQuangTri.Applications.News.NewsCatManage
+namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
 {
     public interface IManageNewsCat
     {

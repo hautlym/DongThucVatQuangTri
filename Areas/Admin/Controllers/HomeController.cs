@@ -1,5 +1,4 @@
-﻿using DongThucVatQuangTri.Applications.Animals;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
