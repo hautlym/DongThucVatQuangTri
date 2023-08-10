@@ -1,0 +1,198 @@
+﻿@using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
+@using DongThucVatQuangTri.Applications.Common;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PageResult<BannerViewModels>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+    <script>
+        function changeStatus(id, status) {
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Banner")',
+                type: 'POST',
+                data: { id: id, status: status },
+                success: function (result) {
+
+                },
+                error: function (error) {
+                    alert("Đã xảy ra lỗi: " + error);
+                }
+            });
+        }
+        function changeSortOrder(id, SortOrder) {
+            $.ajax({
+                url: '@Url.Action("ChangeSortOrder", "Banner")',
+                type: 'POST',
+                data: { id: id, sortOrder: SortOrder },
+                success: function (result) {
+
+                },
+                error: function (error) {
+                    alert("Đã xảy ra lỗi: " + error);
+                }
+            });
+        }
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách Banner</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách  Banner </li>
+    </ol>
+
+    <div class="card mb-12">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6 col-xs-12 mt-1">
+                    <a asp-action="Create" class="btn btn-success">Thêm banner</a>
+                </div>
+                <div class="col-md-6 col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <form asp-action="Index" asp-controller="Banner" method="post">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Banner",new {keyword = ""})">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body align-middle">
+            @if (ViewBag.SuscessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuscessMsg
+                </div>
+            }
+            @{
+                int i = 1;
+            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            STT
+                        </th>
+                        <th>
+                            Ảnh
+                        </th>
+                        <th>
+                            Tiêu đề
+                        </th>
+                        <th>
+                            Danh mục
+                        </th>
+                        <th>
+                            Thứ tự
+                        </th>
+                        <th>
+                            Ngày cập nhật
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr >
+                            <th scope="row">
+                                @i
+                                @{
+                                    i++;
+                                }
+                            </th>
+                            <td>
+                                @if (!String.IsNullOrEmpty(item.Src))
+                                {
+                                    <img style="height: 40px;width:60px" src="/user-content/@item.Src" alt="..." class="img-thumbnail">
+                                }
+                                else
+                                {
+                                    <img style="height: 40px;width:60px" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                                }
+                            </td>
+                            <td class="align-middle">
+                                <a class="text-decoration-none" asp-action="Edit" asp-controller="Banner" asp-route-Id="@item.Id">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.BannerCat)
+                            </td>
+                            <td>
+                                <input asp-for="@item.SortOrder" onchange="changeSortOrder(@item.Id,this.value)" type="number" class="form-control" />
+                                @*@Html.DisplayFor(model => item.SortOrder)*@
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td>
+                                <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">
+                                    <option value="1">Bật</option>
+                                    <option value="0">Tắt</option>
+                                </select>
+                            </td>
+                            <td class="align-middle">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                </a>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
+                                    @item.Id
+                                }" style="border:none;background-color:transparent;">
+                                    <i class="fa-solid fa-trash" style="color: #f20707;"></i>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal@{@item.Id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        @using (Html.BeginForm("Delete", "Banner", FormMethod.Post))
+                                        {
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa  banner</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có muốn xóa banner @item.Name không ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
+                                                    <input type="hidden" name="Id" value="@item.Id">
+                                                    <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
+                                                        Xóa banner
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+
+    </div>
+</div>

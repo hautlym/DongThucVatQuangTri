@@ -1,0 +1,80 @@
+﻿@model DongThucVatQuangTri.Applications.UserManage.Dtos.UserViewModels
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thông tin tài khoản: @Model.Email</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thông tin tài khoản </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Họ tên: </th>
+                                    <td>@Html.DisplayFor(model => model.FirstName)</td>
+                                </tr>
+                                <tr>
+                                    <th>Email: </th>
+                                    <td> @Html.DisplayFor(model => model.Email)</td>
+                                </tr>
+                                <tr>
+                                    <th>Số điện thoại:</th>
+                                    <td>@Html.DisplayFor(model => model.Phone)</td>
+                                </tr>
+                                <tr>
+                                    <th>Giới tính:</th>
+                                    <td>@{
+                                         var gender = Convert.ToInt32(Model.Gender) == 1 ? "Nam" : Convert.ToInt32(Model.Gender) == 0 ? "Nữ" : "Khác";
+                                        }
+                                        @gender
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <th>Ngày sinh:</th>
+                                    <td>@Html.DisplayFor(model => model.Dob)</td>
+                                </tr>
+                                <tr>
+                                    <th>Địa chỉ:</th>
+                                    <td>@Html.DisplayFor(model => model.Address)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày đăng kí:</th>
+                                    <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày cập nhật:</th>
+                                    <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Lần đăng nhập cuối:</th>
+                                    <td>@Html.DisplayFor(model => model.LastSigninedTime)</td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+                                    <td>@Html.DisplayFor(model => model.Status)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div >
+                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
