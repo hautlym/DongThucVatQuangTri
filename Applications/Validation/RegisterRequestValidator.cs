@@ -20,7 +20,7 @@ namespace DongThucVatQuangTri.Applications.Validation
          .NotEmpty().WithMessage("Mật khẩu không được trống.")
          .MinimumLength(8).WithMessage("Mật khẩu phải có ít nhất 8 kí tự.")
          .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$")
-         .WithMessage("Mật khẩu phải chứa ít nhất một chữ cái, một số và một kí tự đặc biệt.");
+         .WithMessage("Mật khẩu phải chứa ít nhất một chữ cái cái hoa, thường, một số và một kí tự đặc biệt.");
             RuleFor(x => x).Custom((request, context) =>
               {
                   if (request.Password != request.ConfirmPassword)
