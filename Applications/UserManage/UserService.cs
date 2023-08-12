@@ -28,6 +28,25 @@ namespace DongThucVatQuangTri.Applications.UserManage
             _signInManager = signInManager;
             _config = config;
         }
+
+        public async Task<ApiResult<bool>> AdminChangePassword(Guid id, AdminUpdatePasswordRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+            user.UpdatedAt = DateTime.Now;
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+            if (result.Succeeded)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+
+            return new ApiErrorResult<bool>("Cập nhật không thành công");
+        }
+
         public async Task<ApiResult<string>> Authencate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
@@ -58,7 +77,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        public async Task<ApiResult<bool>> ChangePassword(Guid id,UpdatePasswordRequest request )
+        public async Task<ApiResult<bool>> ChangePassword(Guid id, UpdatePasswordRequest request)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
@@ -66,12 +85,16 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
             user.UpdatedAt = DateTime.Now;
-            var result = await _userManager.ChangePasswordAsync(user,request.CurrentPassword,request.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
             if (result.Succeeded)
             {
                 return new ApiSuccessResult<bool>();
             }
-            return new ApiErrorResult<bool>("cập nhật không thành công");
+            else
+            {
+                return new ApiErrorResult<bool>("Mật khẩu không chính xác");
+            }
+
         }
 
         public async Task<ApiResult<bool>> CheckSignedTime(Guid id)
@@ -91,7 +114,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 }
             }
             catch (Exception ex) { }
-            
+
             return new ApiErrorResult<bool>("cập nhật không thành công");
         }
 
@@ -128,7 +151,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 UpdatedAt = user.UpdatedAt,
                 FirstName = user.FirstName,
                 LastSigninedTime = user.LastSigninedTime,
-                Status = user.Status==1?"Kích hoạt":user.Status==0?"Khóa":"None",
+                Status = user.Status == 1 ? "Kích hoạt" : user.Status == 0 ? "Khóa" : "None",
                 Phone = user.PhoneNumber,
                 Roles = user.Roles,
             };
@@ -141,7 +164,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             if (!string.IsNullOrEmpty(request.Keyword))
             {
                 query = query.Where(x => x.UserName.Contains(request.Keyword)
-                 || x.PhoneNumber.Contains(request.Keyword)||x.FirstName.Contains(request.Keyword));
+                 || x.PhoneNumber.Contains(request.Keyword) || x.FirstName.Contains(request.Keyword));
             }
             var totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(
@@ -177,7 +200,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             }
             var user = new AppUser()
             {
-                
+
                 UserName = request.Email,
                 Dob = request.Dob,
                 Email = request.Email,
@@ -190,7 +213,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 Avatar = request.Avatar,
                 Status = request.Status,
                 Roles = request.Roles,
-                IsAdmin = request.Roles.Contains("Admin")? Convert.ToInt16(1): Convert.ToInt16(0),
+                IsAdmin = request.Roles.Contains("Admin") ? Convert.ToInt16(1) : Convert.ToInt16(0),
             };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
@@ -201,7 +224,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
         }
         public async Task<ApiResult<bool>> Update(Guid id, UserUpdateRequest request)
         {
-            
+
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
@@ -213,7 +236,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             user.Address = request.Address;
             user.Gender = request.Gender;
             user.Status = request.Status;
-            user.UpdatedAt=DateTime.Now;
+            user.UpdatedAt = DateTime.Now;
             user.Roles = request.Roles;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)

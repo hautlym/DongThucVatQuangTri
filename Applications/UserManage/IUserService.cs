@@ -19,6 +19,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
         Task<ApiResult<bool>> delete(Guid id);
         Task<ApiResult<UserViewModels>> GetById(Guid id);
         Task<ApiResult<bool>> ChangePassword(Guid id,UpdatePasswordRequest request);
+        Task<ApiResult<bool>> AdminChangePassword(Guid id, AdminUpdatePasswordRequest request);
         Task<ApiResult<bool>> CheckSignedTime(Guid id);
     }
 }

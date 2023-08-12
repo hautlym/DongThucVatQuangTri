@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace DongThucVatQuangTri.Applications.Validation
 {
-    public class ChangePasswordValidator : AbstractValidator<UpdatePasswordRequest>
+    public class AdminChangePasswordValidator:AbstractValidator<AdminUpdatePasswordRequest>
     {
-        public ChangePasswordValidator()
+        public AdminChangePasswordValidator()
         {
             RuleFor(x => x.NewPassword)
         .NotEmpty().WithMessage("Mật khẩu không được trống.")
@@ -20,5 +20,6 @@ namespace DongThucVatQuangTri.Applications.Validation
                 }
             });
         }
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿@model DongThucVatQuangTri.Applications.UserManage.Dtos.UserUpdateRequest
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.UserManage.Dtos.UserUpdateRequest
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Edit";
@@ -6,13 +7,17 @@
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Thêm người dùng</h1>
+    <h1 class="mt-4">Sửa thông tin người dùng</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Thêm người dùng </li>
+        <li class="breadcrumb-item active">Sửa Sửa thông tin người dùng </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+        {
+            <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+        }
+        
     </div>
     <div class="row">
         <div class="col-md-4">
@@ -80,7 +85,16 @@
                 </div>
                 <div class="form-group" style="margin: 20px 0;">
                     <input type="submit" value="Lưu" class="btn btn-primary" />
-                    <button asp-action="Index" asp-controller="User" class="btn btn-secondary" />Hủy</button>
+                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                    {
+
+                        <button asp-action="Index" asp-controller="User" class="btn btn-secondary">Hủy</button>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-controller="User" asp-route-Id="@Model.Id" class="btn btn-secondary">Hủy</a>
+                    }
+                    
                 </div>
             </form>
         </div>

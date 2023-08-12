@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -65,16 +65,41 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            var result = await _userService.ChangePassword(request.Id,request);
+            var result = await _userService.ChangePassword(request.Id, request);
             if (result.IsSuccessed)
             {
-                TempData["result"] = "Đổi mật khẩu thành công";
-                return RedirectToAction("ChangePasswordList");
+                //TempData["result"] = "Đổi mật khẩu thành công";
+                ViewBag.SuscessMsg = "Đổi mật khẩu thành công";
+                return View(request);
 
             }
+            ViewBag.ErrorMsg = result.Message;
             return View(request);
         }
+        [HttpGet]
+        public IActionResult AdminChangePassword(Guid Id)
+        {
+            var newpass = new AdminUpdatePasswordRequest()
+            {
+                Id = Id,
+            };
+            return View(newpass);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AdminChangePassword(AdminUpdatePasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            var result = await _userService.AdminChangePassword(request.Id, request);
+            if (result.IsSuccessed)
+            {
+                TempData["result"] = "Thay đổi mật khẩu thành công";
+                return RedirectToAction("Index");
 
+            }
+            ViewBag.ErrorMsg = result.Message;
+            return View(request);
+        }
         [HttpGet]
         [Authorize(Policy = "AdministratorPolicy")]
         public IActionResult Create()
@@ -104,7 +129,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index", "Login");
         }
         [HttpGet]
-        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var result = await _userService.GetById(id);
@@ -120,14 +144,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     Gender = user.Gender,
                     Address = user.Address,
                     Roles = user.Roles,
-                    Status =Convert.ToInt16(user.Status.Contains("Kích hoạt")?1:user.Status.Contains("Khóa")?0:-1),
+                    Status = Convert.ToInt16(user.Status.Contains("Kích hoạt") ? 1 : user.Status.Contains("Khóa") ? 0 : -1),
                 };
                 return View(updateRequest);
             }
             return RedirectToAction("Error", "Home");
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(UserUpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -136,11 +159,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _userService.Update(request.Id, request);
             if (result.IsSuccessed)
             {
+               if( User.FindFirst(ClaimTypes.Role).Value=="Admin"){
+                    return RedirectToAction("Details", new {id = request.Id});
+                }
                 TempData["result"] = "Cập nhật thông tin thành công";
                 return RedirectToAction("Index");
-
             }
-
             ModelState.AddModelError("", result.Message);
             return View(request);
         }
@@ -162,8 +186,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        //[Authorize(Policy ="AdminPolicy")]
-        //[Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Details(Guid Id)
         {
             var result = await _userService.GetById(Id);

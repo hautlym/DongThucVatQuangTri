@@ -37,11 +37,11 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="#!">@User.FindFirst(ClaimTypes.GivenName).Value</a></li>
-                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                    <li><a class="dropdown-item" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li>
                         <form method="post" asp-controller="User" asp-action="Logout">
-                            <button type="submit" class="dropdown-item">Đăng xuất</button>
+                            <button type="submit" class="dropdown-item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
                         </form>
                     </li>
                 </ul>
