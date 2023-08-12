@@ -1,0 +1,68 @@
+﻿@using System.Security.Claims;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
+@model UpdateSetRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Sửa bộ @ViewBag.Loai: @Model.Name</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Sửa bộ @ViewBag.Loai: @Model.Name </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh sách bộ @ViewBag.Loai</a>
+    </div>
+    <div class="row">
+        <form asp-action="Edit" asp-route-loai="@idLoai" class="row" >
+            <div class="col-md-6">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdDtvLop" class="control-label"> Lớp:</label>
+                    <select asp-for="IdDtvLop" name="IdDtvLop" asp-items="@ViewBag.Categories" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Tên tiếng Việt</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
+                    <input asp-for="NameLatinh" class="form-control" />
+                    <span asp-validation-for="NameLatinh" class="text-danger"></span>
+                </div>
+              
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label">Trạng thái: </label>
+                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                        <option value="1">Bật</option>
+                        <option value="0">Tắt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                    <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
+                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

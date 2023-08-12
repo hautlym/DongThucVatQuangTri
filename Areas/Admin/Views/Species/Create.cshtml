@@ -1,0 +1,134 @@
+﻿@using System.Security.Claims;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+@model CreateSpeciesRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thêm loài @ViewBag.Loai </h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thêm loài @ViewBag.Loai </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh loài  @ViewBag.Loai</a>
+    </div>
+    <div class="row">
+        <form asp-action="Create" asp-route-loai="@idLoai" enctype="multipart/form-data" class="row">
+            <div class="col-md-6">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="IdDtvHo" class="control-label"> Họ:</label>
+                    <select asp-for="IdDtvHo" name="IdDtvHo" asp-items="@ViewBag.Categories" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Tên tiếng Việt:</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
+                    <input asp-for="NameLatinh" class="form-control" />
+                    <span asp-validation-for="NameLatinh" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TenKhac" class="control-label">Tên khác:</label>
+                    <input asp-for="TenKhac" class="form-control" />
+                    <span asp-validation-for="TenKhac" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhanBo" class="control-label">Vùng phân bố:</label>
+                    <input asp-for="PhanBo" class="form-control" />
+                    <span asp-validation-for="PhanBo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NguonTaiLieu" class="control-label">Nguồn tài liệu:</label>
+                    <input asp-for="NguonTaiLieu" class="form-control" />
+                    <span asp-validation-for="NguonTaiLieu" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Mức độ bảo tồn IUCN:</label>
+                    <div class="d-flex flex-row">
+                        <select asp-for="MucDoBaoTonIucn" name="MucDoBaoTonIucn" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control "  >
+                            <option value="0">
+                                <i class="fa-solid fa-arrow-down"></i>
+                                ICUN
+                                </option>
+                        </select>
+                        <select asp-for="MucDoBaoTonSdvn" name="MucDoBaoTonSdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control "  >
+                            <option value="0">Sách đỏ Việt Nam</option>
+                        </select>
+                        <select asp-for="MucDoBaoTonNdcp" name="MucDoBaoTonNdcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
+                            @if (idLoai == 1)
+                            {
+                                <option value="0">Nghị định 84/ NĐ-CP</option>
+                            }
+                            @if (idLoai == 0)
+                            {
+                                <option value="0">Nghị định 32/ NĐ-CP</option>
+                            }
+                        </select>
+                        @if (idLoai == 1)
+                        {
+                            <select asp-for="MucDoBaoTonNd64cp" name="MucDoBaoTonNd64cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
+                                <option value="0">Nghị định 64/ NĐ-CP</option>
+                            </select>
+                        }
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label">Trạng thái: </label>
+                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                        <option value="1">Bật</option>
+                        <option value="0">Tắt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FileDinhKem" class="control-label">Hình ảnh:</label>
+                    <input type="file" multiple asp-for="FileDinhKem" class="form-control" />
+                    <span asp-validation-for="FileDinhKem" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GiaTriSuDung" class="control-label">Công dụng/ Giá trị sử dụng:</label>
+                    <textarea placeholder="Tối đa 255 kí tự" style="height:100px;" maxlength="255" asp-for="GiaTriSuDung" class="form-control"></textarea>
+                    <span asp-validation-for="GiaTriSuDung" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DacDiem" class="control-label">Đặc điểm hình thái, sinh thái:</label>
+                    <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
+                    <span asp-validation-for="DacDiem" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Loai" value="@idLoai" />
+                    <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                    <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
+                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,187 @@
+﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage.Dtos;
+@using DongThucVatQuangTri.Applications.Common;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PageResult<ClassViewModels>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+    <script>
+        function changeStatus(id, status) {
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Class")',
+                type: 'POST',
+                data: { id: id, status: status },
+                success: function (result) {
+
+                },
+                error: function (error) {
+                    alert("Đã xảy ra lỗi: " + error);
+                }
+            });
+        }
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Lớp @ViewBag.Loai </h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Lớp @ViewBag.Loai </li>
+    </ol>
+
+    <div class="card mb-12">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6 col-xs-12 mt-1">
+                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success">Thêm mới</a>
+                </div>
+                <div class="col-md-6 col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <form asp-action="Index" asp-route-loai="@idLoai" method="post">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Class",new {keyword = "",loai=idLoai})">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body align-middle">
+            @if (ViewBag.SuscessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuscessMsg
+                </div>
+            }
+            @{
+                int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            STT
+                        </th>
+                        <th>
+                            Tên tiếng Việt
+                        </th>
+                        <th>
+                            Tên Latinh
+                        </th>
+                        <th>
+                            Ngành
+                        </th>
+                        <th>
+                            Ngày cập nhật
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <th class="align-middle" scope="row">
+
+                                @i
+                                @{
+                                    i++;
+                                }
+                            </th>
+                            <td class="align-middle" style="width:20%">
+                                <a class="text-decoration-none" asp-action="Edit" asp-route-Id="@item.Id">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
+
+                            <td class="align-middle" style="width:20%">
+                                @Html.DisplayFor(modelItem => item.NameLatinh)
+                            </td>
+                            <td class="align-middle" style="width:20%">
+                                @Html.DisplayFor(modelItem => item.DtvNganhName)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td class="align-middle">
+                                <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">
+                                    <option value="1">Bật</option>
+                                    <option value="0">Tắt</option>
+                                </select>
+                            </td>
+                            <td class="align-middle">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                </a>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
+                                    @item.Id
+                                }" style="border:none;background-color:transparent;">
+                                    <i class="fa-solid fa-trash" style="color: #f20707;"></i>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal@{
+                                                @item.Id
+}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        @using (Html.BeginForm("Delete", "Class", new { loai = idLoai }, FormMethod.Post))
+                                        {
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa lớp</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có muốn xóa lớp @item.Name không ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
+                                                    <input type="hidden" name="Id" value="@item.Id">
+                                                    <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
+                                                        Xóa lớp
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+
+    </div>
+</div>
+
