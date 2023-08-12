@@ -8,15 +8,20 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>@ViewData["Title"] - Admin </title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="/admin/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        select {
+            -webkit-appearance: auto !important;
+        }
+    </style>
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="@Url.Action("Index","Home")">Wood WorkShop</a>
+        <a class="navbar-brand ps-3" href="@Url.Action("Index","Home")">Admin - CSDL</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -108,7 +113,7 @@
                         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                         {
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducer" aria-expanded="false" aria-controls="collapseProducer">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-archway"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-hippo"></i></div>
                                 Động vật
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
@@ -116,15 +121,15 @@
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
                                         <a class="nav-link" asp-action="Index" asp-controller="Branch" asp-route-loai="1">Ngành</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Lớp</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Bộ</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Họ</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Loài</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Class" asp-route-loai="1">Lớp</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Set" asp-route-loai="1">Bộ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Family" asp-route-loai="1">Họ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Species" asp-route-loai="1">Loài</a>
                                     </nav>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOrder" aria-expanded="false" aria-controls="collapseProducer">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-plant-wilt"></i></div>
                                 Thực vật
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
@@ -132,10 +137,10 @@
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
                                         <a class="nav-link" asp-action="Index" asp-controller="Branch" asp-route-loai="0">Ngành</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Lớp</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Bộ</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Họ</a>
-                                        <a class="nav-link" asp-action="Index" asp-controller="Producer">Loài</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Class" asp-route-loai="0">Lớp</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Set" asp-route-loai="0">Bộ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Family" asp-route-loai="0">Họ</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="Species" asp-route-loai="0">Loài</a>
                                     </nav>
                                 </nav>
                             </div>

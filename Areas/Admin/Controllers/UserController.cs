@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
+    
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -15,6 +16,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             _userService = userService;
         }
+
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetUserPagingRequest()
@@ -31,6 +34,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(data.ResultObj);
         }
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> ChangePasswordList(string keyword, int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetUserPagingRequest()
@@ -72,11 +76,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Create(RegisterRequest request)
         {
             if (!ModelState.IsValid)
@@ -98,6 +104,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index", "Login");
         }
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var result = await _userService.GetById(id);
@@ -120,6 +127,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(UserUpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -137,6 +145,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Delete(Guid Id)
         {
             if (!ModelState.IsValid)
@@ -153,6 +162,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
+        //[Authorize(Policy ="AdminPolicy")]
+        //[Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Details(Guid Id)
         {
             var result = await _userService.GetById(Id);

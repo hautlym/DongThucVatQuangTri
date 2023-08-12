@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Applications\AnimalsAndPlant\ClassAnimalManage\" />
-    <Folder Include="Applications\AnimalsAndPlant\FamilyAnimalManage\" />
-    <Folder Include="Applications\AnimalsAndPlant\SpeciesAnimeManage\" />
-    <Folder Include="Applications\AnimalsAndPlant\SetAnimalManage\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Datas\" />

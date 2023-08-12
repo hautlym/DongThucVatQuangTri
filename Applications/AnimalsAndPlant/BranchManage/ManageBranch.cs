@@ -1,4 +1,5 @@
 ﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
@@ -17,6 +18,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             _context = context;
         }
 
+        public async Task<int> ChangeStatus(ChangeStatusRequest request)
+        {
+            var branch = await _context.DtvNganh.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
+            if (branch == null)
+                return -1;
+            branch.Status = request.status;
+            _context.DtvNganh.Update(branch);
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<long> createItem(CreateBranchRequest request)
         {
             var branch = new DtvNganh()
@@ -24,10 +35,10 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 Name = request.Name,
                 NameLatinh = request.NameLatinh,
                 Status = request.Status,
-                UpdatedAt = request.UpdatedAt,
-                CreatedAt = request.CreatedAt,
-                UpdatedBy = request.UpdatedBy,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 CreatedBy = request.CreatedBy,
+                UpdatedBy = request.UpdatedBy,
                 Loai = request.Loai,
             };
             _context.DtvNganh.Add(branch);
@@ -48,6 +59,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         {
             var data = await _context.DtvNganh.Select(request => new BranchViewModel()
             {
+                Id = request.Id,
                 Name = request.Name,
                 NameLatinh = request.NameLatinh,
                 Status = request.Status,
@@ -96,9 +108,26 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             return new ApiSuccessResult<PageResult<BranchViewModel>>(pageResult);
         }
 
-        public Task<BranchViewModel> getItemById(int id)
+        public async Task<BranchViewModel> getItemById(int id)
         {
-            throw new NotImplementedException();
+            //var LongId = Convert.ToInt64(id);
+            var branchList = await _context.DtvNganh.ToListAsync();
+            var branch = branchList.Where(x=>x.Id == id).FirstOrDefault();
+            if (branch == null)
+            {
+                return null;
+            }
+            var branchVm = new BranchViewModel()
+            {
+                Id = branch.Id,
+                Name = branch.Name,
+                NameLatinh = branch.NameLatinh,
+                Status = branch.Status,
+                Loai = branch.Loai,
+                CreatedAt = branch.CreatedAt,
+                UpdatedAt = branch.UpdatedAt,
+            };
+            return branchVm;
         }
 
         public Task<BranchViewModel> getItemByName(string name)
@@ -115,7 +144,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             branch.Name = request.Name;
             branch.NameLatinh = request.NameLatinh;
             branch.UpdatedBy = request.UpdatedBy;
-            branch.UpdatedAt= request.UpdatedAt;
+            branch.UpdatedAt= DateTime.Now;
             _context.DtvNganh.Update(branch);
             return await _context.SaveChangesAsync();
         }
