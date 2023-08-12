@@ -1,4 +1,5 @@
-﻿@model DongThucVatQuangTri.Applications.UserManage.Dtos.UserViewModels
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.UserManage.Dtos.UserViewModels
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Thông tin tài khoản";
@@ -12,7 +13,10 @@
         <li class="breadcrumb-item active">Thông tin tài khoản </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+        {
+            <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+        }
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -35,11 +39,12 @@
                                 </tr>
                                 <tr>
                                     <th>Giới tính:</th>
-                                    <td>@{
-                                         var gender = Convert.ToInt32(Model.Gender) == 1 ? "Nam" : Convert.ToInt32(Model.Gender) == 0 ? "Nữ" : "Khác";
+                                    <td>
+                                        @{
+                                            var gender = Convert.ToInt32(Model.Gender) == 1 ? "Nam" : Convert.ToInt32(Model.Gender) == 0 ? "Nữ" : "Khác";
                                         }
                                         @gender
-                                        </td>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Ngày sinh:</th>
@@ -68,8 +73,9 @@
                             </tbody>
                         </table>
                     </dl>
-                    <div >
+                    <div>
                         <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                        <a class="btn btn-primary" @Html.ActionLink("Đổi mật khẩu", "ChangePassword", new { Id = @Model.Id })</a>
                     </div>
                 </div>
             </div>

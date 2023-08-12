@@ -1,0 +1,181 @@
+﻿@using System.Security.Claims;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+@model UpdateSpeciesRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+@section Scripts{
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Sửa loài @ViewBag.Loai</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Sửa loài:  @ViewBag.Loai </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index">Danh sách loài</a>
+    </div>
+    <div class="row">
+        <form asp-action="Edit" asp-route-loai="@idLoai" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <div class="form-group">
+                        <label asp-for="IdDtvHo" class="control-label">Họ:</label>
+                        <select asp-for="IdDtvHo" name="IdDtvHo" asp-items="@ViewBag.Categories" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Tiêu đề:</label>
+                        <input asp-for="Name" onkeyup="createAlias(this.value)" class="form-control" id="Name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
+                        <input asp-for="NameLatinh" class="form-control" />
+                        <span asp-validation-for="NameLatinh" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TenKhac" class="control-label">Tên khác:</label>
+                        <input asp-for="TenKhac" class="form-control" />
+                        <span asp-validation-for="TenKhac" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhanBo" class="control-label">Vùng phân bố:</label>
+                        <input asp-for="PhanBo" class="form-control" />
+                        <span asp-validation-for="PhanBo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NguonTaiLieu" class="control-label">Nguồn tài liệu:</label>
+                        <input asp-for="NguonTaiLieu" class="form-control" />
+                        <span asp-validation-for="NguonTaiLieu" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Mức độ bảo tồn IUCN:</label>
+                        <div class="d-flex flex-row">
+                            <select asp-for="MucDoBaoTonIucn" name="MucDoBaoTonIucn" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control " >
+                                <option value="0">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                    ICUN
+                                </option>
+                            </select>
+                            <select asp-for="MucDoBaoTonSdvn" name="MucDoBaoTonSdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control " >
+                                <option value="0">Sách đỏ Việt Nam</option>
+                            </select>
+                            <select asp-for="MucDoBaoTonNdcp" name="MucDoBaoTonNdcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control" >
+                                @if (idLoai == 1)
+                                {
+                                    <option value="0">Nghị định 84/ NĐ-CP</option>
+                                }
+                                @if (idLoai == 0)
+                                {
+                                    <option value="0">Nghị định 32/ NĐ-CP</option>
+                                }
+                            </select>
+                            @if (idLoai == 1)
+                            {
+                                <select asp-for="MucDoBaoTonNd64cp" name="MucDoBaoTonNd64cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control" >
+                                    <option value="0">Nghị định 64/ NĐ-CP</option>
+                                </select>
+                            }
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label">Trạng thái: </label>
+                        <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                            <option value="1">Bật</option>
+                            <option value="0">Tắt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileDinhKem" class="control-label">Ảnh đính kèm:</label>
+                        <input type="file" multiple asp-for="FileDinhKem" class="form-control" />
+                        <span asp-validation-for="FileDinhKem" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GiaTriSuDung" class="control-label">Công dụng/ Giá trị sử dụng:</label>
+                        <textarea placeholder="Tối đa 255 kí tự" style="height:100px;" maxlength="255" asp-for="GiaTriSuDung" class="form-control"></textarea>
+                        <span asp-validation-for="GiaTriSuDung" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DacDiem" class="control-label">Đặc điểm hình thái, sinh thái:</label>
+                        <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
+                        <span asp-validation-for="DacDiem" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="HinhAnh" class="control-label" style="display:block">Hình ảnh:</label>
+                        @{
+                            List<string> ListUrl = new List<string>();
+                            @if (Model != null)
+                            {
+                                if (!String.IsNullOrEmpty(Model.HinhAnh))
+                                {
+                                    ListUrl = (@Model.HinhAnh.Split(",")).ToList();
+                                }
+                                else
+                                {
+                                    ListUrl = null;
+                                }
+                            }
+                            else
+                            {
+                                ListUrl = null;
+                            }
+                        }
+                        @if (ListUrl != null)
+                        {
+                            @foreach (var Url in ListUrl)
+                            {
+                                @if (!String.IsNullOrEmpty(Url))
+                                {
+                                    <img style="height: 200px;width:200px;" src="/user-content/@Url" alt="..." class="img-thumbnail">
+                                }
+                            }
+                            <div class="form-check  ">
+                                <input asp-for="isDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Xóa ảnh
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <img style="height: 200px;width:200px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mt-2">
+                    <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

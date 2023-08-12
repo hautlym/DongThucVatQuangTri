@@ -14,8 +14,8 @@ namespace DongThucVatQuangTri.Models.Entities
         public int? IdDtvBo { get; set; }
         public short? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public int? UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }

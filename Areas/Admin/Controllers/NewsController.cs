@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    public class NewsController : Controller
+    public class NewsController : BaseController
     {
         private readonly IManageNews _news;
         private readonly IManageNewsCat _newsCat;

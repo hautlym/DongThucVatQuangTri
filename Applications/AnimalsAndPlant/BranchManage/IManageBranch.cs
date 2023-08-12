@@ -1,4 +1,5 @@
 ﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.Entities;
@@ -15,5 +16,6 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public Task<int> updateItem(UpdateBranchRequest request);
         public Task<long> createItem(CreateBranchRequest request);
         public Task<int> deleteItem(int id);
+        public Task<int> ChangeStatus(ChangeStatusRequest request);
     }
 }

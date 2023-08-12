@@ -3,6 +3,7 @@ using DongThucVatQuangTri.Applications.UserManage;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ using System.Text;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         private readonly IUserService _userService;
@@ -61,7 +63,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var loginTime = _userService.CheckSignedTime(Guid.Parse(UserId));
             var authProperties = new AuthenticationProperties
             {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
                 IsPersistent = false
             };
             HttpContext.Session.SetString("Token", token.ResultObj);

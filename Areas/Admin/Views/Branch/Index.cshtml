@@ -6,6 +6,17 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
 @section Scripts{
     <script>
         setTimeout(function () {
@@ -15,7 +26,7 @@
     <script>
         function changeStatus(id, status) {
             $.ajax({
-                url: '@Url.Action("ChangeStatus", "News")',
+                url: '@Url.Action("ChangeStatus", "Branch")',
                 type: 'POST',
                 data: { id: id, status: status },
                 success: function (result) {
@@ -39,12 +50,12 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6 col-xs-12 mt-1">
-                    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
+                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success">Thêm mới</a>
                 </div>
                 <div class="col-md-6 col-xs-12 mt-1">
                     <div class="row">
                         <div class="col-md-10">
-                            <form asp-action="Index" asp-controller="Branch" method="post">
+                            <form asp-action="Index" asp-controller="Branch" asp-route-loai="@idLoai" method="post">
                                 <div class="row">
                                     <div class="col-md-9">
                                         <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
@@ -57,7 +68,7 @@
                             </form>
                         </div>
                         <div class="col-md-2">
-                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Branch",new {keyword = ""})">Reset</a>
+                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Branch",new {keyword = "",loai=idLoai})">Reset</a>
                         </div>
                     </div>
                 </div>
@@ -71,7 +82,7 @@
                 </div>
             }
             @{
-                int i = 1;
+                int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
             <table class="table table-striped">
                 <thead>
@@ -100,13 +111,14 @@
                     {
                         <tr>
                             <th class="align-middle" scope="row">
+
                                 @i
                                 @{
                                     i++;
                                 }
                             </th>
                             <td class="align-middle" style="width:25%">
-                                <a class="text-decoration-none" asp-action="Edit" asp-controller="News" asp-route-Id="@item.Id">
+                                <a class="text-decoration-none" asp-action="Edit" asp-controller="Branch" asp-route-Id="@item.Id">
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </a>
                             </td>
@@ -137,21 +149,21 @@
                                             @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        @using (Html.BeginForm("Delete", "Branch", FormMethod.Post))
+                                        @using (Html.BeginForm("Delete", "Branch", new {loai = idLoai},FormMethod.Post))
                                         {
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa  tin tức</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa ngành</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Bạn có muốn xóa tin tức @item.Name không ?
+                                                    Bạn có muốn xóa ngành @item.Name không ?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
                                                     <input type="hidden" name="Id" value="@item.Id">
                                                     <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
-                                                        Xóa tin tức
+                                                        Xóa ngành
                                                     </button>
                                                 </div>
                                             </div>

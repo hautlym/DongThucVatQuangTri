@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public class BannerCatController : BaseController
     {
         private readonly IManageBannerCat _bannerCat;
