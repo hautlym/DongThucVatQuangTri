@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DongThucVatQuangTri.Models.Entities;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    public class NewsCatController : Controller
+    [Authorize(Policy = "AdminPolicy")]
+    public class NewsCatController : BaseController
     {
         private readonly IManageNewsCat _newsCat;
         public NewsCatController(IManageNewsCat newsCat)

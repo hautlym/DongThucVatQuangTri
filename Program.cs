@@ -1,4 +1,8 @@
 ﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
@@ -10,7 +14,6 @@ using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +59,7 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
     options.LoginPath = "/admin/Login/Index";
+    options.AccessDeniedPath = "/Home/Index";
 });
 builder.Services.AddAuthorization(options =>
 {
@@ -79,6 +83,10 @@ builder.Services.AddTransient<IManageFile, ManageFile>();
 builder.Services.AddTransient<IManageNewsCat, ManageNewsCat>();
 builder.Services.AddTransient<IManageNews, ManageNews>();
 builder.Services.AddTransient<IManageBranch, ManageBranch>();
+builder.Services.AddTransient<IManageClass, ManageClass>();
+builder.Services.AddTransient<IManageSet, ManageSet>();
+builder.Services.AddTransient<IManageFamily, ManageFamily>();
+builder.Services.AddTransient<IManageSpecies, ManageSpecies>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>

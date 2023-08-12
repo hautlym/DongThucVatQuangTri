@@ -2,12 +2,14 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
+    
     public class BannerController : BaseController
     {
         private readonly IManageBanner _banner;

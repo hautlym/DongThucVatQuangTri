@@ -6,6 +6,9 @@ using System.Drawing.Printing;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage;
 using Microsoft.AspNetCore.Authorization;
+using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
+using DongThucVatQuangTri.Applications.Banners.Dtos;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -29,7 +32,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             };
             if (loai == 1)
             {
-                ViewBag.Loai = "Động vật";
+                ViewBag.Loai = "Động Vật";
             }
             if (loai == 0)
             {
@@ -43,6 +46,130 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 ViewBag.SuscessMsg = TempData["result"];
             }
             return View(data.ResultObj);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Create(int loai)
+        {
+            if (loai == 1)
+            {
+                ViewBag.Loai = "động vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "thực vật";
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(int loai,CreateBranchRequest request)
+        {
+            int LoaiDtv = loai;
+            if (loai == 1)
+            {
+                ViewBag.Loai = "động vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "thực vật";
+            }
+            if (!ModelState.IsValid)
+                return View();
+            var result = await _manageBranch.createItem(request);
+            if (result > 0)
+            {
+                TempData["result"] = "Thêm thành công";
+                return RedirectToAction("Index",new {loai = LoaiDtv } );
+
+            }
+            return View(request);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit( int id)
+        {
+            
+            var result = await _manageBranch.getItemById(id);
+            if (result.Loai == 1)
+            {
+                ViewBag.Loai = "Động Vật";
+            }
+            if (result.Loai == 0)
+            {
+                ViewBag.Loai = "Thực vật";
+            }
+            if (result != null)
+            {
+                var updateRequest = new UpdateBranchRequest()
+                {
+                    Name = result.Name,
+                    NameLatinh =  result.NameLatinh,
+                    Status = result.Status,
+
+                };
+                return View(updateRequest);
+            }
+            return RedirectToAction("Error", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int loai,UpdateBranchRequest request)
+        {
+            int LoaiDtv = loai;
+            if (loai == 1)
+            {
+                ViewBag.Loai = "động vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "thực vật";
+            }
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _manageBranch.updateItem(request);
+            if (result > 0)
+            {
+                TempData["result"] = "Cập nhật thông tin thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+
+            }
+
+            ModelState.AddModelError("", "Cập nhật không thành công");
+            return View(request);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int loai,int Id)
+        {
+            int LoaiDtv = loai;
+            if (loai == 1)
+            {
+                ViewBag.Loai = "Động Vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "Thực vật";
+            }
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+
+            var result = await _manageBranch.deleteItem(Id);
+            if (result > 0)
+            {
+                TempData["result"] = "Xóa  thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+
+            }
+            TempData["error"] = "Xóa không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            var result = await _manageBranch.ChangeStatus(request);
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
+            }
+            return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
         }
     }
 }

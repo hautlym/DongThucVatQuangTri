@@ -72,7 +72,7 @@
                 </div>
             }
             @{
-                int i = 1;
+                int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
             <table class="table table-striped">
                 <thead>
@@ -101,6 +101,7 @@
                     {
                         <tr>
                             <th scope="row">
+
                                 @i
                                 @{
                                     i++;
