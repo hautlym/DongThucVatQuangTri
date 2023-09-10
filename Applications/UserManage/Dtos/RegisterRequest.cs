@@ -15,7 +15,7 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
         public string Gender { get; set; }
         public short Status { get; set; }
         public string? Roles { get; set; }
