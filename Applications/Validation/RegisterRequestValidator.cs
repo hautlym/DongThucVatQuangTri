@@ -13,8 +13,8 @@ namespace DongThucVatQuangTri.Applications.Validation
         public RegisterRequestValidator()
         {
             RuleFor(x => x.Password).NotEmpty().WithMessage("Vui lòng điền mật khẩu");
-            RuleFor(x => x.FirstName).NotEmpty().WithMessage("Vui lòng điền họ tên");
             RuleFor(x => x.Address).NotEmpty().WithMessage("Vui lòng điền địa chỉ");
+            RuleFor(x => x.FirstName).NotEmpty().WithMessage("Vui lòng điền họ tên");
             RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("Vui lòng điền số điện thoại");
             RuleFor(x => x.Password)
          .NotEmpty().WithMessage("Mật khẩu không được trống.")
