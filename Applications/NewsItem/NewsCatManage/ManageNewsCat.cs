@@ -140,6 +140,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
                 Alias = newscat.Alias,
                 TitleSeo = newscat.TitleSeo,
                 ContentSeo = newscat.ContentSeo,
+                ParentName = _context.NewsCat.Where(x => x.Id == newscat.ParentId).Select(x => x.Name).FirstOrDefault(),
                 KeySeo = newscat.KeySeo,
                 UpdateAt = newscat.UpdatedAt,
                 Name = newscat.Name,

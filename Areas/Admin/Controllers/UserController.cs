@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using DongThucVatQuangTri.Applications.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
+    
+
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -16,7 +20,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             _userService = userService;
         }
-
         [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
         {
@@ -77,6 +80,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
         public IActionResult AdminChangePassword(Guid Id)
         {
             var newpass = new AdminUpdatePasswordRequest()
@@ -86,6 +90,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(newpass);
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> AdminChangePassword(AdminUpdatePasswordRequest request)
         {
             if (!ModelState.IsValid)
@@ -104,6 +109,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [Authorize(Policy = "AdministratorPolicy")]
         public IActionResult Create()
         {
+            ViewBag.Roles = Permittion.Roles.Select(x => new SelectListItem()
+            {
+                Text = x.Value,
+                Value = x.Key.ToString(),
+            });
             return View();
         }
         [HttpPost]
@@ -126,11 +136,17 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("Token");
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index", "Home", new { area = "" } );
         }
         [HttpGet]
+        
         public async Task<IActionResult> Edit(Guid id)
         {
+            ViewBag.Roles = Permittion.Roles.Select(x => new SelectListItem()
+            {
+                Text = x.Value,
+                Value = x.Key.ToString(),
+            });
             var result = await _userService.GetById(id);
             if (result.IsSuccessed)
             {
@@ -159,7 +175,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _userService.Update(request.Id, request);
             if (result.IsSuccessed)
             {
-               if( User.FindFirst(ClaimTypes.Role).Value=="Admin"){
+               if( User.FindFirst(ClaimTypes.Role).Value== "Admin")
+                {
                     return RedirectToAction("Details", new {id = request.Id});
                 }
                 TempData["result"] = "Cập nhật thông tin thành công";

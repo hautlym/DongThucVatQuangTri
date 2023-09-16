@@ -2,6 +2,7 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
+using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -147,6 +148,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _bannerCat.getBannerCatById(Id);
+            return View(result);
         }
     }
 }

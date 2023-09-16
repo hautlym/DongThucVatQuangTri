@@ -8,18 +8,24 @@ using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
+using DongThucVatQuangTri.Models.Entities;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [Authorize(Policy = "AdministatorOrAdminPolicy")]
     public class NewsController : BaseController
     {
         private readonly IManageNews _news;
         private readonly IManageNewsCat _newsCat;
-        public NewsController(IManageNews news, IManageNewsCat newsCat)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public NewsController(IManageNews news, IManageNewsCat newsCat, IWebHostEnvironment webHostEnvironment)
         {
             _news = news;
             _newsCat = newsCat;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
         {
@@ -164,6 +170,41 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        [HttpPost]
+        public async Task<IActionResult> IncreaseView(int id)
+        {
+            var result = await _news.IncreaseView(id);
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
+            }
+            return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        //[Route("upload_CkEditor")]
+        [HttpPost]
+        public IActionResult UploadImage(IFormFile upload)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(upload.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), _webHostEnvironment.WebRootPath, "newsImage", fileName);
+            var stream = new FileStream(path, FileMode.Create);
+            upload.CopyTo(stream);
+            return new JsonResult(new { uploaded = 1, fileName = fileName, url = "/newsImage/" + fileName });
+        }
+
+        [HttpGet]
+        public IActionResult FileBrowswe(IFormFile upload)
+        {
+            var dir = new DirectoryInfo(Path.Combine(_webHostEnvironment.WebRootPath, "newsImage"));
+            ViewBag.FileInfos = dir.GetFiles();
+            return View("fileBrowswe");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _news.getNewsById(Id);
+            return View(result);
         }
     }
 }

@@ -7,11 +7,12 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
 using DongThucVatQuangTri.Applications.Enums;
+using System.Linq;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdministratorPolicy")]
+    [Authorize(Policy = "AdministatorOrNationParkPolicy")]
     public class SpeciesController : BaseController
     {
         private readonly IManageFamily _manageFamily;
@@ -21,6 +22,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             _manageFamily = manageFamily;
             _manageSpecies = manageSpecies;
         }
+
         public async Task<IActionResult> Index(int loai, string keyword = "", int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetSpeciesRequest()
@@ -270,6 +272,26 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _manageSpecies.getItemById(Id);
+            var loai = result.Loai;
+            
+            ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn!=0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn]:"";
+            ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+            ViewBag.MucDoBaoTonNDCP = !String.IsNullOrEmpty(result.MucDoBaoTonNdcp.ToString()) ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNdcp]:"";
+            ViewBag.MucDoBaoTonND64CP = !String.IsNullOrEmpty(result.MucDoBaoTonNd64cp.ToString()) ? MucDoBaoTon.MuDoBaoTonNDCP[ (int)loai][(int)result.MucDoBaoTonNd64cp]:"";
+            if (loai == 1)
+            {
+                ViewBag.Loai = "Động Vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "Thực vật";
+            }
+            return View(result);
         }
     }
 }

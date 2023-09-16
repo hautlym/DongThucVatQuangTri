@@ -113,21 +113,26 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
 
         public async Task<FamilyViewModels> getItemById(int id)
         {
-            var item = await _context.DtvHo.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = from b in _context.DtvBo
+                        join h in _context.DtvHo on b.Id equals (int)h.IdDtvBo
+                        where h.Id == id
+                        select new { b, h };
+            var item = await query.FirstOrDefaultAsync();
             if (item == null)
             {
                 return null;
             }
             var lopVm = new FamilyViewModels()
             {
-                Id = item.Id,
-                IdDtvBo = item.IdDtvBo,
-                Name = item.Name,
-                NameLatinh = item.NameLatinh,
-                Status = item.Status,
-                Loai = item.Loai,
-                CreatedAt = item.CreatedAt,
-                UpdatedAt = item.UpdatedAt,
+                Id = item.h.Id,
+                IdDtvBo = item.h.IdDtvBo,
+                Name = item.h.Name,
+                BoName = item.b.Name,
+                NameLatinh = item.h.NameLatinh,
+                Status = item.h.Status,
+                Loai = item.h.Loai,
+                CreatedAt = item.h.CreatedAt,
+                UpdatedAt = item.h.UpdatedAt,
             };
             return lopVm;
         }

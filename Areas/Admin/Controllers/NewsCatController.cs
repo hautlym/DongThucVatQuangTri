@@ -152,5 +152,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _newsCat.getNewsCatById(Id);
+            return View(result);
+        }
     }
 }

@@ -1,0 +1,237 @@
+@media screen and (max-width : 1440px){
+}
+
+@media screen and (max-width : 1280px){
+#header .header2 .nav ul li a{ padding:0 32px;}
+}
+
+@media screen and (max-width : 1200px){
+#header .header2 .nav ul li a{ padding:0 25px;}
+#content .gioithieu ul li{ margin:0 20px;}
+#content .doitac ul li{ margin:0 40px 50px;}
+#content .cover img{ width:auto; height:160px; position:relative; left:50%; transform:translateX(-50%);}
+#footer .btnHotro{ bottom:340px;}
+}
+
+@media screen and (max-width : 1080px){
+#header .header2 .nav ul li a{ padding:0 22px;}
+#content .slide .slide1 h5{ font-size:40px;}
+#footer .info{ width:45%;}
+#footer .info ul{ padding:0 0 0 40px;}
+#footer .subLink{ width:50%;}
+#footer .subLink ul{ width:50%;}
+#footer .info .logo img{ width:180px; height:auto;}
+#footer .btnHotro{ bottom:280px;}
+}
+
+@media screen and (max-width : 1024px){
+#header .header2 .nav ul li a{ padding:0 22px;}
+#header .header2 .nav ul li a#homeBtn{ width:38px;}
+#content .gioithieu ul{ padding:30px 0 100px;}
+#content .gioithieu ul li img{ width:160px; height:auto; margin:0;}
+#content .gioithieu ul li b{ font-size:18px; margin:-10px 0 0; display:block;}
+#content .doitac marquee{ position:relative; top:-30px;}
+#content .doitac ul li img{ width:80px; height:auto;}
+#content .doitac ul li span { padding:15px 0 0;}
+#content .dichvu ul{ margin:0 150px;}
+}
+
+@media screen and (max-width : 1000px){
+#header .header2 .nav ul li a{ padding:0 18px;}
+}
+
+@media screen and (max-width : 935px){
+#header .header2 .nav ul{ padding:0 15px 0 0;}
+#header .header2 .nav ul li a{ padding:0 14px;}
+#header .header2 .nav ul li a#homeBtn{ width:32px;}
+#content .slide .slide1 h5{ font-size:30px;}
+#content .slide .slick-dots li{ width:8px; height:8px;}
+}
+
+@media screen and (max-width: 880px) {
+#header .contact ul.rightContact li{ margin:0 0 0 30px;}
+#header .contact ul.rightContact li span{ font-size:8px; font-weight:bold;}
+#header .contact ul.rightContact li span span{ font-size:12px;}
+#header .header2 .nav ul{ padding:0 10px 0 0;}
+#header .header2 .nav ul li a{ padding:0 10px;}
+#header .header2 .nav ul li a#homeBtn{ width:30px;}
+#content .dichvu ul li{ margin:0 0 30px;}
+#content .loiich ul{ margin:0 100px;}
+#content .loiich ul li{ position:relative; padding:30px 0 10px 25px; font-size:16px; line-height:24px;}
+#content .loiich ul li .icon{ position:absolute; left:0;}
+#content .tintuc .tinmoi .danhsachtin .tin1 .noidung p{ display:none;}
+#content .tintuc .noibat .tinnoibat .tin1 .stt{ font-size:30px;}
+#content .tintuc .noibat .tinnoibat .tin1 .noidung{ padding:0 0 0 50px;}
+#content .tintuc .noibat .tinnoibat .tin1 .noidung h4 a{ font-size:14px; line-height:19px;}
+
+}
+ 
+@media screen and (max-width: 800px) {
+#header{ height:86px;}
+#header .header2{ height:60px;}
+#header .header2 .logo{ padding:5px 0 0 5px;}
+#header .header2 .logo img{ width:auto; height:50px;}
+#header .header2 .nav ul{ padding:0 10px 0 0;}
+#header .header2 .nav ul li{ padding:22px 0;}
+#header .header2 .nav ul li a{ font-size:12px;}
+#content .gioithieu ul{ font-size:0;}
+#content .gioithieu ul li{ margin:0; width:22%;}
+#content .gioithieu ul li img{ max-width:70%; margin:0 auto;}
+#content .gioithieu ul li b{ margin:0;}
+#content .dichvu ul{ margin:0 100px;}
+}
+ 
+@media screen and (max-width: 780px) {
+
+}
+ 
+@media screen and (max-width: 768px) {
+#header .contact ul.rightContact li{ margin:0 0 0 10px;}
+#header .header2 .nav ul{ padding:0 5px 0 0;}
+#header .header2 .nav ul li a{ font-size:11px;}
+#content .gioithieu .scrollicon{ top:-70px;}
+#content .gioithieu .scrollicon span{animation-name: line2;}
+}
+ 
+@media screen and (max-width: 740px) {
+#footer .info ul{ padding:0 0 0 20px;}
+}
+ 
+@media screen and (max-width: 720px) {
+#header .header2 .nav ul li a{ padding:0 10px;}
+#header .contact ul li{ margin:0 0 0 20px;}
+#header .contact ul li span{ padding:0 0 0 25px;}
+#header .contact ul li span span{ font-size:10px;}
+}
+ 
+@media screen and (max-width: 715px) {
+#header .header2 .logo{ position:relative; z-index:1;}
+#header .header2 .nav{ position:absolute; top:0; right:0; height:0; text-align:center; width:80px;}
+#header .header2 .nav .navBtn{ padding:20px 30px 16px; display:block; float:right;}
+#header .header2 .nav .navBtn span{ background-color:#ccc; display:block; height:3px; border-radius:3px; margin:0 auto 5px; width:30px;}
+#header .header2 .nav ul{ padding:0; background-color:#fff; width:300px; position:relative; right:30px; float:right; box-shadow:2px 5px 5px rgba(0,0,0,0.1); display:none; border-top:solid 5px #e5e5e5;}
+#header .header2 .nav ul li{ display:block; padding:0;}
+#header .header2 .nav ul li a{ border:none; height:50px; line-height:50px; font-size:14px; border-top:solid 1px #f4f4f4; margin:0 10px; transition:none;}
+#header .header2 .nav ul li a#homeBtn{ width:auto; background:none;}
+#header .header2 .nav ul li a.active, #header .header2 .nav ul li a#homeBtn.active{ background-color:#008E1B; color:#fff; margin:0;}
+#header .header2 .nav ul li a#homeBtn span{ display:block;}
+#header .header2 .nav ul li div{ position:relative; top:0; width:auto; opacity:1; height:auto; display:none; transition:none;}
+#header .header2 .nav ul li:hover div{ top:0;}
+#header .header2 .nav ul li ul{ display:block; right:0; float:none; box-shadow:none; border:none; background-color:#222; padding: 10px 0 20px;}
+#header .header2 .nav ul li ul li{}
+#header .header2 .nav ul li ul li a{ color:#999; border:none;}
+#header .header2 .nav ul li ul li a:hover{ text-indent:0; color:#fff;}
+#header .contact{ padding:15px 0;}
+#header .contact ul{ display:none;}
+#header .contact .lang{ left:0; float:none; margin:0 auto; top:0;}
+#header .contact ul{ padding:0;}
+#header .contact ul li{ margin:0 0 0 15px;}
+#header .contact ul li .icon{ transform:scale(0.8) translateY(-2px);}
+#content .slide .slide1 h5{ font-size:24px; width:68%;}
+#content .gioithieu h2, #content .loiich h2, #content .dichvu h2, #content .doitac h2, #content .tintuc h2{ font-size:30px; max-width:80%; margin-right:auto; margin-left:auto;}
+#content .dichvu ul, #content .loiich ul{ margin:0 60px;}
+#content .gioithieu ul li{ width:40%; margin:0 0 30px;}
+#footer{ text-align:center;}
+#footer .maincontent{ padding:45px 0 80px;}
+#footer .info{ width:auto; float:none; margin:0 0 40px;}
+#footer .info ul{ padding:0;}
+#footer .subLink, #footer .subLink ul{ width:auto; float:none; margin:0 0 20px;}
+#footer .subLink ul:first-child{ padding:0;}
+#footer .subLink ul.social li{ display:inline-block;}
+#footer .subLink ul.social li a{ font-size:0; padding:0 5px; line-height:normal;}
+#footer .subLink ul.social li a .icon{ position:relative; top:0;}
+#content .tintuc .noibat .tinhot, #content .tintuc .noibat .tinnoibat, #content .tintuc .tinmoi, #content .tintuc .tinxemnhieu{ width:auto; float:none; margin:0 0 50px;}
+#content .tintuc .noibat .tinnoibat{ margin:0 0 100px;}
+#content .tintuc .tinxemnhieu .danhsachtin .tin1{ margin:0 0 30px;}
+#content .tintuc .tinxemnhieu .danhsachtin .tin1 .imgBox{ width:160px; margin:0 20px 0 0;}
+#content .tintuc .tinxemnhieu .danhsachtin .tin1 .noidung{ padding:0;}
+#content .tintuc .noibat .tinnoibat .tin1 .noidung{ padding:5px 0 0 50px;}
+#content .tintuc#trangchitiet .socialShare{height:auto;}
+#content .tintuc#trangchitiet .socialShare li{ width:auto; margin:0; float:none; height:auto; line-height: normal;}
+#content .tintuc#trangchitiet .socialShare li a{ height:35px; line-height:35px; padding:0 20px; margin:0 10px 20px 0; width:auto;}
+#content .tintuc#trangchitiet .socialShare li a span{ font-size:12px; padding:0 0 0 20px;}
+#content .tintuc#trangchitiet .socialShare li a span .icon{ top:9px;}
+#content .truyxuat .searchBox{ height:45px; line-height:45px; width:80%; margin:0 auto 90px;}
+#content .truyxuat .searchBox input{ font-size:14px; text-indent:20px;}
+#content .truyxuat .searchBox .searchBtn{font-size:14px; text-indent:20px; width:160px;}
+#content .truyxuat .searchBox .searchBtn .icon{ right:10px;}
+#footer .btnHotro{ height:40px; line-height:40px; bottom:20px; right:50%; transform:translateX(50%); width:142px; text-align:left; padding:0 0 0 50px;}
+#footer .btnHotro .icon{ top:10px;}
+}
+ 
+@media only screen and (max-width: 620px) {
+ 
+}
+ 
+@media screen and (max-width: 600px) {
+
+}
+ 
+@media screen and (max-width: 568px) {
+}
+ 
+@media screen and (max-width: 563px) {
+}
+ 
+@media screen and (max-width: 549px) {
+ 
+}
+ 
+@media screen and (max-width: 534px) {
+
+}
+ 
+@media screen and (max-width: 480px) {
+#content .slide .slide1 img{ width:auto; height:300px; position:relative; left:50%; transform:translateX(-50%);}
+#content .gioithieu ul{ padding:30px 0 60px;}
+#content .dichvu ul, #content .loiich ul{ margin:0 35px;}
+#content .slide .slide1 h5{ font-size:20px;}
+#content .gioithieu ul li{ width:50%;}
+#content .gioithieu h2, #content .loiich h2, #content .dichvu h2, #content .doitac h2{ font-size:24px;}
+body{ font-size:14px;}
+#content .gioithieu p{ line-height:20px;}
+#content .dichvu ul, #content .loiich ul{ margin:0 20px 0 35px;}
+#content .loiich ul li{ font-size:14px; padding:10px 0;}
+#content .loiich ul li .icon{ left:-25px; top:12px;}
+#content .dichvu ul li{ margin:0 0 20px;}
+#content .dichvu h2{ margin:0 0 40px;}
+#content .slide .slick-dots{ display:none !important;}
+#content .truyxuat h1{ width:80%; margin:0 auto;}
+#content .truyxuat .searchBox{  width:90%;}
+#content .truyxuat .searchBox .searchBtn{font-size:12px; text-indent:15px; width:135px;}
+#content .truyxuat .searchBox .searchBtn .icon{ right:5px; transform:translateY(-50%) scale(0.8);}
+}
+ 
+@media screen and (max-width: 360px) {
+#header .header2 .nav ul{ width:280px;}
+#content .tintuc .noibat .tinnoibat .tin1{ margin:0 0 15px;}
+#content .tintuc .noibat .tinhot .imgBox{ margin:0 0 15px;}
+#content .tintuc .noibat .tinhot h3{ font-size:20px; line-height:28px;}
+#content .tintuc .noibat .tinnoibat .tin1 .noidung h4{ margin:0 0 5px;}
+#content .tintuc .tinmoi .danhsachtin .tin1{ margin:0 0 20px;}
+#content .tintuc .tinmoi .danhsachtin .tin1 .noidung h4 a{ font-weight:normal; font-size:14px; margin:-3px 0 5px; line-height:20px;}
+#content .tintuc ul li span{ font-size:12px;}
+#content .tintuc ul li .icon{margin:0 10px;}
+#content .tintuc ul li a{ font-size:11px;}
+#content .tintuc .tinmoi .danhsachtin .tin1 .imgBox img{ width:auto; height:80px;}
+#content .tintuc .tinmoi .danhsachtin .tin1 .noidung{ padding:0 0 0 43%;}
+#content .tintuc .tinxemnhieu .danhsachtin .tin1 .imgBox{ width:110px; margin:0 10px 0 0;}
+#content .tintuc .tinxemnhieu .danhsachtin .tin1 .imgBox img{ width:auto; height:68px;}
+#content .tintuc .tinmoi .btnXemthem{ width:180px; margin:30px auto;}
+#content .tintuc#trangchitiet .noidungchitiet{ font-size:14px; margin:0 0 50px;}
+#content .truyxuat .searchBox .searchBtn{ width:68px; font-size:0;}
+#content .truyxuat .searchBox .searchBtn .icon{ transform:translateY(-50%) scale(1); right:15px;}
+
+}
+ 
+@media screen and (max-width: 338px) {
+#header .header2 .nav ul{ width:250px;}
+}
+ 
+@media screen and (max-width: 330px) {
+ 
+}
+ 
+@media screen and (max-width: 320px) {
+ 
+}

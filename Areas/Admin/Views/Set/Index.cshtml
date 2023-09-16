@@ -1,5 +1,6 @@
 ﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
 @using DongThucVatQuangTri.Applications.Common;
+@using System.Security.Claims;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model PageResult<SetViewModels>
 @{
@@ -84,7 +85,7 @@
             @{
                 int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>
@@ -119,7 +120,7 @@
                                 }
                             </th>
                             <td class="align-middle" style="width:20%">
-                                <a class="text-decoration-none" asp-action="Edit" asp-route-Id="@item.Id">
+                                <a class="text-decoration-none" asp-action="Details" asp-route-Id="@item.Id">
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </a>
                             </td>
@@ -139,40 +140,43 @@
                                     <option value="0">Tắt</option>
                                 </select>
                             </td>
-                            <td class="align-middle">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
-                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
-                                </a>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
-                                    @item.Id
-                                }" style="border:none;background-color:transparent;">
-                                    <i class="fa-solid fa-trash" style="color: #f20707;"></i>
-                                </button>
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModal@{
-                                                @item.Id
+                            @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                            {
+                                <td class="align-middle">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                        <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                    </a>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
+                                        @item.Id
+                                    }" style="border:none;background-color:transparent;">
+                                        <i class="fa-solid fa-trash" style="color: #f20707;"></i>
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal@{
+                                                    @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        @using (Html.BeginForm("Delete", "Set", new { loai = idLoai }, FormMethod.Post))
-                                        {
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa bộ</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="modal-dialog">
+                                            @using (Html.BeginForm("Delete", "Set", new { loai = idLoai }, FormMethod.Post))
+                                            {
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Xóa bộ</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Bạn có muốn xóa bộ @item.Name không ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
+                                                        <input type="hidden" name="Id" value="@item.Id">
+                                                        <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
+                                                            Xóa bộ
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    Bạn có muốn xóa bộ @item.Name không ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
-                                                    <input type="hidden" name="Id" value="@item.Id">
-                                                    <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
-                                                        Xóa bộ
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        }
-                            </td>
+                                            }
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

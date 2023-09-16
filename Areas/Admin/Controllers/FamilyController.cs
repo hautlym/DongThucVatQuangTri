@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdministratorPolicy")]
+    [Authorize(Policy = "AdministatorOrNationParkPolicy")]
     public class FamilyController : BaseController
     {
         private readonly IManageSet _manageSet;
@@ -21,6 +21,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             _manageSet = manageSet;
             _manageFamily = manageFamily;
         }
+        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
         public async Task<IActionResult> Index(int loai, string keyword = "", int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetFamilyRequest()
@@ -48,6 +49,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(data.ResultObj);
         }
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Create(int loai)
         {
             var ListItem = await _manageSet.getAllItem();
@@ -67,6 +69,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Create(int loai, CreateFamilyRequest request)
         {
             int LoaiDtv = loai;
@@ -97,6 +100,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -129,6 +133,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Edit(int loai, UpdateFamilyRequest request)
         {
             int LoaiDtv = loai;
@@ -161,6 +166,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> Delete(int loai, int Id)
         {
             int LoaiDtv = loai;
@@ -186,6 +192,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
             var result = await _manageFamily.ChangeStatus(request);
@@ -194,6 +201,21 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _manageFamily.getItemById(Id);
+            var loai = result.Loai;
+            if (loai == 1)
+            {
+                ViewBag.Loai = "Động Vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "Thực vật";
+            }
+            return View(result);
         }
     }
 }

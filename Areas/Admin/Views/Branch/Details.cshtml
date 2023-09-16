@@ -1,0 +1,89 @@
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos.BranchViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+<style>
+    th:first-child {
+        width: 30%;
+    }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thông tin ngành @ViewBag.Loai</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thông tin ngành @ViewBag.Loai</li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh sách ngành @ViewBag.Loai</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Tên : </th>
+                                    <td>@Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tên Latinh: </th>
+                                    <td> @Html.DisplayFor(model => model.NameLatinh)</td>
+                                </tr>
+                                <tr>
+                                    <th>Loại:</th>
+                                    <td>
+                                        @{
+                                            var isType = Convert.ToInt32(Model.Status) == 1 ? "Động vật" : "Thực vật";
+                                        }
+                                        @isType
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+
+                                    <td>
+                                        @{
+                                            var status = Convert.ToInt32(Model.Status) == 1 ? "Bật" : "Tắt";
+                                        }
+                                        @status
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày tạo:</th>
+                                    <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày cập nhật:</th>
+                                    <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div>
+                        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                        {
+                            <a class="btn btn-success" asp-action="Edit" asp-route-Id="@Model.Id">Chỉnh sửa</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

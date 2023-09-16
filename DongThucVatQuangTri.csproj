@@ -33,7 +33,12 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Datas\" />
+    <Folder Include="wwwroot\newsImage\" />
     <Folder Include="wwwroot\user-content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\site.js" />
   </ItemGroup>
 
 </Project>

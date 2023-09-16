@@ -1957,19 +1957,22 @@ progress {
   }
 }
 .table, .dataTable-table {
-  --bs-table-bg: transparent;
-  --bs-table-accent-bg: transparent;
-  --bs-table-striped-color: #212529;
-  --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
-  --bs-table-active-color: #212529;
-  --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-  --bs-table-hover-color: #212529;
-  --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  vertical-align: top;
-  border-color: #dee2e6;
+    border-radius: 10px;
+    overflow:hidden;
+    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    --bs-table-bg: transparent;
+    --bs-table-accent-bg: transparent;
+    --bs-table-striped-color: gray;
+    --bs-table-striped-bg: rgba(0, 120, 23, 0.1);
+    --bs-table-active-color: gray;
+    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+    --bs-table-hover-color: gray;
+    --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+    width: 100%;
+    margin-bottom: 1rem;
+    color: gray;
+    vertical-align: top;
+    border-color: #dee2e6;
 }
 .table > :not(caption) > * > *, .dataTable-table > :not(caption) > * > * {
   padding: 0.5rem 0.5rem;
@@ -1979,10 +1982,13 @@ progress {
 }
 .table > tbody, .dataTable-table > tbody {
   vertical-align: inherit;
+  
 }
-.table > thead, .dataTable-table > thead {
-  vertical-align: bottom;
-}
+    .table > thead, .dataTable-table > thead {
+        vertical-align: bottom;
+        background: #37934E;
+        color: white;
+    }
 .table > :not(:first-child), .dataTable-table > :not(:first-child) {
   border-top: 2px solid currentColor;
 }

@@ -112,21 +112,26 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
 
         public async Task<SetViewModels> getItemById(int id)
         {
-            var item = await _context.DtvBo.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = from b in _context.DtvBo
+                        join l in _context.DtvLop on b.IdDtvLop equals (int)l.Id
+                        where b.Id == id
+                        select new { b, l };
+            var item = await query.FirstOrDefaultAsync();
             if (item == null)
             {
                 return null;
             }
             var lopVm = new SetViewModels()
             {
-                Id = item.Id,
-                IdDtvLop = item.IdDtvLop,
-                Name = item.Name,
-                NameLatinh = item.NameLatinh,
-                Status = item.Status,
-                Loai = item.Loai,
-                CreatedAt = item.CreatedAt,
-                UpdatedAt = item.UpdatedAt,
+                Id = item.b.Id,
+                IdDtvLop = item.b.IdDtvLop,
+                Name = item.b.Name,
+                NameLop = item.l.Name,
+                NameLatinh = item.b.NameLatinh,
+                Status = item.b.Status,
+                Loai = item.b.Loai,
+                CreatedAt = item.b.CreatedAt,
+                UpdatedAt = item.b.UpdatedAt,
             };
             return lopVm;
         }

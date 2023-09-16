@@ -1,0 +1,93 @@
+﻿@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos.NewsCatViewModels
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+<style>
+    th:first-child {
+        width: 30%;
+    }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thông tin danh mục banner</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thông tin danh mục banner </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index">Danh sách danh mục banner</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row mb-3 d-flex justify-content-center">
+                <div class="col-md-4">
+                    <div>Hình ảnh:</div>
+                    @if (!String.IsNullOrEmpty(Model.Image))
+                    {
+                        <img style="height: 250px;width:250px" src="/user-content/@Model.Image" alt="..." class="img-thumbnail">
+                    }
+                    else
+                    {
+                        <img style="height: 250px;width:250px" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Danh mục : </th>
+                                    <td>@Html.DisplayFor(model => model.ParentName)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tiêu đề: </th>
+                                    <td> @Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Alia: </th>
+                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tiêu đề SEO: </th>
+                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                </tr>
+                                <tr>
+                                    <th>Nội dung SEO: </th>
+                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                </tr>
+                                <tr>
+                                    <th>Từ khóa SEO: </th>
+                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                </tr>
+                                <tr>
+                                    <th> Thứ tự sắp xếp:</th>
+                                    <td>@Html.DisplayFor(model => model.SortOrder)</td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+                                    <td>
+                                        @{
+                                            var status = Convert.ToInt32(Model.Status) == 1 ? "Bật" : "Tắt";
+                                        }
+                                        @status
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th> Mô tả:</th>
+                                    <td>@Html.Raw(Model.Description)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div>
+                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

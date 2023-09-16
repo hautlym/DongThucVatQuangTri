@@ -10,37 +10,37 @@
     <h1 class="mt-4">Sửa thông tin người dùng</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Sửa Sửa thông tin người dùng </li>
+        <li class="breadcrumb-item active">Sửa  thông tin người dùng </li>
     </ol>
     <div style="margin: 20px 0;">
         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
         {
             <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
         }
-        
+
     </div>
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
             <form asp-action="Edit">
-                    <input asp-for="Id" type="hidden" class="form-control" />
+                <input asp-for="Id" type="hidden" class="form-control" />
                 <div class="form-group">
-                    <label asp-for="FirstName" class="control-label">Họ tên</label>
+                    <label asp-for="FirstName" class="control-label">Họ tên:</label>
                     <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Phone" class="control-label">Số điện thoại</label>
+                    <label asp-for="Phone" class="control-label">Số điện thoại:</label>
                     <input asp-for="Phone" class="form-control" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Dob" class="control-label">Ngày sinh</label>
+                    <label asp-for="Dob" class="control-label">Ngày sinh:</label>
                     <input asp-for="Dob" class="form-control" type="date" />
                     <span asp-validation-for="Dob" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Address" class="control-label">Địa chỉ</label>
+                    <label asp-for="Address" class="control-label">Địa chỉ:</label>
                     <input asp-for="Address" class="form-control" />
                     <span asp-validation-for="Address" class="text-danger"></span>
                 </div>
@@ -67,34 +67,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Status" class="control-label">Trạng thái:</label>
-                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
-                        <option value="-1" >None</option>
-                        <option value="1">Kích hoạt</option>
-                        <option value="0">Khóa</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Roles" class="control-label">Nhóm quyền:</label>
-                    <select asp-for="Roles" class="form-control" id="dropdown" name="Roles">
-                        <option value="Member">Phân quyền tài khoản</option>
-                        <option value="Admin">Quản trị nội dung</option>
-                        <option value="Administator">Quản trị website</option>
-                    </select>
-                </div>
+                @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                {
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label">Trạng thái:</label>
+                        <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                            <option value="-1">None</option>
+                            <option value="1">Kích hoạt</option>
+                            <option value="0">Khóa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Roles" class="control-label">Nhóm quyền:</label>
+                        <select asp-for="Roles" name="Roles" asp-items="@ViewBag.Roles" class="form-control ">
+                        </select>
+                    </div>
+                }
                 <div class="form-group" style="margin: 20px 0;">
                     <input type="submit" value="Lưu" class="btn btn-primary" />
                     @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                     {
-
                         <button asp-action="Index" asp-controller="User" class="btn btn-secondary">Hủy</button>
                     }
                     else
                     {
                         <a asp-action="Details" asp-controller="User" asp-route-Id="@Model.Id" class="btn btn-secondary">Hủy</a>
                     }
-                    
                 </div>
             </form>
         </div>
