@@ -49,7 +49,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var kq = userPrincipal.FindFirst(ClaimTypes.Role).Value;
             var status = userPrincipal.FindFirst(ClaimTypes.UserData).Value;
             var UserId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (!kq.Contains("Admin")|| status.Contains("-1"))
+            if (kq.Contains("Member")|| status.Contains("-1"))
             {
                 ModelState.AddModelError("", "Tài khoản không tồn tại");
                 return View();

@@ -74,7 +74,7 @@
             @{
                 int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>
@@ -108,7 +108,7 @@
                                 }
                             </th>
                             <td>
-                                <a class="text-decoration-none" asp-action="Edit" asp-controller="BannerCat" asp-route-Id="@item.Id">
+                                <a class="text-decoration-none" asp-action="Details"  asp-route-Id="@item.Id">
                                 @Html.DisplayFor(modelItem => item.Name)
                                 </a>
                             </td>

@@ -85,27 +85,40 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             return await _context.SaveChangesAsync();
         }
 
-        //public async Task<List<FamilyViewModels>> getAllItem()
-        //{
-        //    var data = await _context.DtvHo.Select(request => new FamilyViewModels()
-        //    {
-        //        Id = request.Id,
-        //        IdDtvBo = request.IdDtvBo,
-        //        Name = request.Name,
-        //        NameLatinh = request.NameLatinh,
-        //        Status = request.Status,
-        //        UpdatedAt = request.UpdatedAt,
-        //        CreatedAt = request.CreatedAt,
-        //        Loai = request.Loai,
-        //    }).ToListAsync();
-        //    return data;
-        //}
+        public async Task<List<SpeciesViewModels>> getAllItem()
+        {
+            var data = await _context.DtvLoai.Select(item => new SpeciesViewModels()
+            {
+                Id = item.Id,
+                IdDtvHo = item.IdDtvHo,
+                Name = item.Name,
+                NameLatinh = item.NameLatinh,
+                Status = item.Status,
+                Loai = item.Loai,
+                CreatedAt = item.CreatedAt,
+                UpdatedAt = item.UpdatedAt,
+                GiaTriSuDung = item.GiaTriSuDung,
+                NguonTaiLieu = item.NguonTaiLieu,
+                FileDinhKem = item.FileDinhKem,
+                DacDiem = item.DacDiem,
+                MucDoBaoTonIucn = item.MucDoBaoTonIucn,
+                MucDoBaoTonNd64cp = item.MucDoBaoTonNd64cp,
+                MucDoBaoTonNdcp = item.MucDoBaoTonNdcp,
+                MucDoBaoTonSdvn = item.MucDoBaoTonSdvn,
+                PhanBo = item.PhanBo,
+                TenKhac = item.TenKhac,
+            }).ToListAsync();
+            return data;
+        }
 
         public async Task<ApiResult<PageResult<SpeciesViewModels>>> GetAlllPaging(GetSpeciesRequest request)
         {
             var query = from b in _context.DtvLoai
                         join n in _context.DtvHo on (long)b.IdDtvHo equals n.Id
-                        select new { b, n };
+                        join bo in _context.DtvBo on (long)n.IdDtvBo equals bo.Id
+                        join lop in _context.DtvLop on (long)bo.IdDtvLop equals lop.Id
+                        join nganh in _context.DtvNganh on (long)lop.IdDtvNganh equals nganh.Id
+                        select new { b, n,bo,lop,nganh };
             if (request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
@@ -114,9 +127,45 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
             }
+            if(!string.IsNullOrEmpty(request.keyword2))
+            {
+                query = query.Where(x => x.b.NameLatinh.Contains(request.keyword2));
+            }
             if (request.status == 1 || request.status == 0)
             {
                 query = query.Where(x => x.b.Status == request.status);
+            }
+            if (request.icun!=0)
+            {
+                query = query.Where(x => x.b.MucDoBaoTonIucn == request.icun);
+            }
+            if (request.nd64cp != 0)
+            {
+                query = query.Where(x => x.b.MucDoBaoTonNd64cp == request.nd64cp);
+            }
+            if (request.ndcp != 0)
+            {
+                query = query.Where(x => x.b.MucDoBaoTonNdcp == request.ndcp);
+            }
+            if (request.sdvn != 0)
+            {
+                query = query.Where(x => x.b.MucDoBaoTonSdvn == request.sdvn);
+            }
+            if(request.id_ho != 0)
+            {
+                query = query.Where(x => x.n.Id == request.id_ho);
+            }
+            if (request.id_bo != 0)
+            {
+                query = query.Where(x => x.bo.Id == request.id_bo);
+            }
+            if (request.id_lop != 0)
+            {
+                query = query.Where(x => x.lop.Id == request.id_lop);
+            }
+            if (request.id_nganh != 0)
+            {
+                query = query.Where(x => x.nganh.Id == request.id_nganh);
             }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
@@ -154,31 +203,36 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
 
         public async Task<SpeciesViewModels> getItemById(int id)
         {
-            var item = await _context.DtvLoai.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = from l in _context.DtvLoai
+                        join f in _context.DtvHo on l.IdDtvHo equals (int)f.Id
+                        where l.Id == id
+                        select new {l,f };
+            var item = await query.FirstOrDefaultAsync();
             if (item == null)
             {
                 return null;
             }
             var lopVm = new SpeciesViewModels()
             {
-                Id = item.Id,
-                IdDtvHo = item.IdDtvHo,
-                Name = item.Name,
-                NameLatinh = item.NameLatinh,
-                Status = item.Status,
-                Loai = item.Loai,
-                CreatedAt = item.CreatedAt,
-                UpdatedAt = item.UpdatedAt,
-                GiaTriSuDung = item.GiaTriSuDung,
-                NguonTaiLieu = item.NguonTaiLieu,
-                FileDinhKem = item.FileDinhKem,
-                DacDiem = item.DacDiem,
-                MucDoBaoTonIucn = item.MucDoBaoTonIucn,
-                MucDoBaoTonNd64cp = item.MucDoBaoTonNd64cp,
-                MucDoBaoTonNdcp = item.MucDoBaoTonNdcp,
-                MucDoBaoTonSdvn = item.MucDoBaoTonSdvn,
-                PhanBo = item.PhanBo,
-                TenKhac = item.TenKhac,
+                Id = item.l.Id,
+                IdDtvHo = item.l.IdDtvHo,
+                Name = item.l.Name,
+                NameLatinh = item.l.NameLatinh,
+                Status = item.l.Status,
+                Loai = item.l.Loai,
+                CreatedAt = item.l.CreatedAt,
+                UpdatedAt = item.l.UpdatedAt,
+                GiaTriSuDung = item.l.GiaTriSuDung,
+                NguonTaiLieu = item.l.NguonTaiLieu,
+                FileDinhKem = item.l.FileDinhKem,
+                DacDiem = item.l.DacDiem,
+                MucDoBaoTonIucn = item.l.MucDoBaoTonIucn,
+                MucDoBaoTonNd64cp = item.l.MucDoBaoTonNd64cp,
+                MucDoBaoTonNdcp = item.l.MucDoBaoTonNdcp,
+                MucDoBaoTonSdvn = item.l.MucDoBaoTonSdvn,
+                PhanBo = item.l.PhanBo,
+                TenKhac = item.l.TenKhac,
+                NameHo = item.f.Name
             };
             return lopVm;
         }

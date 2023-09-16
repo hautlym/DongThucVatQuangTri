@@ -1,0 +1,388 @@
+﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+@using DongThucVatQuangTri.Applications.Common;
+@model PageResult<SpeciesViewModels>
+
+@{
+    ViewData["Title"] = "Danh sách loài";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+<script>
+    // $(document).ready(function () {
+    //     $("#formSearch").submit(function (event) {
+    //         // Ngăn chặn việc gửi lại trang
+    //         event.preventDefault();
+
+    //         // Lấy dữ liệu từ các trường biểu mẫu (ví dụ: input có id là "fieldName")
+    //         var formData = {
+    //             keyword: keyword,
+    //             keyword2: keyword2,
+    //             IdLoai: idLoai,
+    //             id_nganh: id_nganh,
+    //             id_lop: id_lop,
+    //             id_bo: id_bo,
+    //             id_ho: id_ho,
+    //             icun: icun,
+    //             sdvn: sdvn,
+    //             ndcp: ndcp,
+    //             nd64cp: nd64cp
+    //         };
+
+    //         // Gọi hàm Ajax
+    //         $.ajax({
+    //             type: "POST", // Hoặc "GET" tùy theo yêu cầu của bạn
+    //             url: "@Url.Action("Index", "Natural")",
+    //             data: {
+    //                 keyword: keyword,
+    //                 keyword2: keyword2,
+    //                 IdLoai: idLoai,
+    //                 id_nganh: id_nganh,
+    //                 id_lop: id_lop,
+    //                 id_bo: id_bo,
+    //                 id_ho: id_ho,
+    //                 icun: icun,
+    //                 sdvn: sdvn,
+    //                 ndcp: ndcp,
+    //                 nd64cp: nd64cp
+    //             }
+    //             success: function (response) {
+    //                 // Xử lý kết quả trả về từ Action (nếu cần)
+    //                 // $("select[name='keyword']").val(formData.keyword);
+    //                 // $("select[name='keyword2']").val(formData.keyword2);
+    //                 // $("select[name='IdLoai']").val(formData.IdLoai);
+    //                 // $("select[name='id_nganh']").val(formData.id_nganh);
+    //                 // $("select[name='id_lop']").val(formData.id_lop);
+    //                 // $("select[name='id_bo']").val(formData.id_bo);
+    //                 // $("select[name='id_ho']").val(formData.id_ho);
+    //                 // $("select[name='icun']").val(formData.icun);
+    //                 // $("select[name='sdvn']").val(formData.sdvn);
+    //                 // $("select[name='ndcp']").val(formData.ndcp);
+    //                 // $("select[name='nd64cp']").val(formData.nd64cp);
+    //                 console.log(response);
+    //             },
+    //             error: function (error) {
+    //                 // Xử lý lỗi (nếu có)
+    //                 console.log(error);
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+<script type="text/javascript">
+    
+    function getListLop(idNganh) {
+        $(".LopSearch").show();
+        $.ajax({
+            url: "@Url.Action("GetListLop", "Natural")",
+            data: { IdNganh: idNganh },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+                var markup = "<option value='0'>Lớp</option>";
+                var markup1 = "<option value='0'>Bộ</option>";
+                var markup2 = "<option value='0'>Họ</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                }
+                $(".LopSearch").html(markup).show();
+                $(".BoSearch").html(markup1).show();
+                $(".HoSearch").html(markup2).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function getListBo(IdLop) {
+        $(".BoSearch").show();
+        $.ajax({
+            url: "@Url.Action("GetListBo", "Natural")",
+            data: { idLop: IdLop },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+                var markup = "<option value='0'>Bộ</option>";
+                var markup2 = "<option value='0'>Họ</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                }
+                $(".BoSearch").html(markup).show();
+                $(".HoSearch").html(markup2).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function getListHo(IdBo) {
+        $(".HoSearch").show();
+        $.ajax({
+            url: "@Url.Action("getListHo", "Natural")",
+            data: { idBo: IdBo },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+                var markup = "<option value='0'>Họ</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                }
+                $(".HoSearch").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>
+
+<style>
+    .noibat {
+        max-width: 800px;
+        margin: 0 auto !important;
+    }
+
+    .tintuc {
+        margin: 0 !important;
+    }
+
+    .noidung a {
+        font-family: 'LoraF' !important;
+        font-weight: bold;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+    }
+
+    .noidung h6 {
+        margin: 0 0 8px;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+    }
+
+    .searchBox {
+        height: auto !important;
+        width: 100% !important;
+        margin: 20px auto !important;
+        padding: 20px 5px;
+        border-radius: unset !important;
+        border: unset !IMPORTANT;
+        box-shadow: unset !IMPORTANT;
+    }
+
+    .naturalOption div {
+        line-height: normal;
+    }
+
+    .BaoTonOption div {
+        line-height: normal;
+    }
+
+    .TextSearch div {
+        line-height: normal;
+    }
+    /* .BaoTonOption select{
+                                margin-left: 20px
+                            } */
+</style>
+<div id="content">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+    <div class="truyxuat">
+        <div class="maincontent">
+            <marquee direction="left" behavior="scroll" scrollamount="3">
+                <h2 style="font-size:2rem;">
+                    Cơ sở dữ liệu đa dạng sinh học Khu bảo tồn thiên nhiên Bắc Hướng Hóa
+                </h2>
+            </marquee>
+            <div class="searchBox">
+                <form id="formSearch" asp-action="Index" asp-controller="Natural">
+                    <input type="hidden" name="idLoai" value="@idLoai" />
+                    <div class="naturalOption">
+                        <div class="row">
+                            <div class="col-md-3"><span>Ngành:</span></div>
+                            <div class="col-md-3"><span>Lớp:</span></div>
+                            <div class="col-md-3"><span>Bộ:</span></div>
+                            <div class="col-md-3"><span>Họ:</span></div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select class="form-control select2" asp-items="@ViewBag.NganhSearch" onchange="getListLop(this.value)">
+                                    <option value="0" name="id_nganh">
+                                        Ngành
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control select2 LopSearch" name="id_lop" onchange="getListBo(this.value)">
+                                    <option value="0">
+                                        Lớp
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control select2 BoSearch" name="id_bo" onchange="getListHo(this.value)">
+                                    <option value="0">
+                                        Bộ
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control select2 HoSearch" name="id_ho">
+                                    <option value="0">
+                                        Họ
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="BaoTonOption ">
+                        <div class="row" style=" margin-top:20px;">
+                            <span>Mức độ bảo tồn:</span>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <select name="icun" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control select2 ">
+                                    <option value="0">
+                                        <i class="fa-solid fa-arrow-down"></i>
+                                        ICUN
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="sdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control select2">
+                                    <option value="0">Sách đỏ Việt Nam</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="ndcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control select2">
+                                    @if (idLoai == 1)
+                                    {
+                                        <option value="0">Nghị định 84/ NĐ-CP</option>
+                                    }
+                                    @if (idLoai == 0)
+                                    {
+                                        <option value="0">Nghị định 32/ NĐ-CP</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                @if (idLoai == 1)
+                                {
+                                    <select name="nd63cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
+                                        <option value="0">Nghị định 64/ NĐ-CP</option>
+                                    </select>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="TextSearch">
+                        <div class="row" style=" margin-top:20px;">
+                            <div class="col-md-5">Tên tiếng Việt:</div>
+                            <div class="col-md-5">Tên khoa học:</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5"><input class="form-control" name="keyword" /></div>
+                            <div class="col-md-4"><input class="form-control" name="keyword2" /></div>
+                            <div class="col-md-3"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button></div>
+                        </div>
+                    </div>
+                </form>
+            </div><!--end searchBox-->
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+    @{
+        int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+    }
+    <div class="tintuc">
+        <div class="maincontent">
+            <div class="noibat">
+                <div class="tinnoibat" style="width:100%">
+                    <h3><a href="javascript:;">Danh sách @ViewBag.Loai - Số lượng: @Model.TotalRecords<span></span></a></h3>
+                    <div class="danhsachtin">
+                        <div class="row">
+                            @foreach (var item in Model.Items)
+                            {
+                                <div class="tin1 col-sm-6">
+                                    <p class="stt">
+                                        @if (i < 10)
+                                        {
+                                            var prefix = 0;
+                                            @prefix @i
+                                        }
+                                        else
+                                        {
+                                            @i
+                                        }
+                                        @{
+                                            i++;
+                                        }.
+                                    </p>
+
+                                    <div class="noidung">
+                                        @if (!String.IsNullOrEmpty(@item.FileDinhKem))
+                                        {
+                                            <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                        }
+                                        else
+                                        {
+                                            <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                        }
+                                        @{
+                                            var Bo = ViewBag.Bo as List<SetViewModels>;
+                                            var Lop = ViewBag.Lop as List<ClassViewModels>;
+                                            var Nganh = ViewBag.Nganh as List<BranchViewModel>;
+                                            var Ho = ViewBag.Ho as List<FamilyViewModels>;
+                                            var itemHo = Ho.Where(x => x.Id == item.IdDtvHo).FirstOrDefault();
+                                            var ItemBo = Bo.Where(x => x.Id == itemHo.IdDtvBo).FirstOrDefault();
+                                            var itemLop = Lop.Where(x => x.Id == ItemBo.IdDtvLop).FirstOrDefault();
+                                            var itemNganh = Nganh.Where(x => x.Id == itemLop.IdDtvNganh).FirstOrDefault();
+                                        }
+                                        <h4><a asp-action="Details" asp-route-Id="@item.Id">Loài: @item.Name</a></h4>
+                                        <h6 style="font-size:12px;"> @item.NameHo</h6>
+                                        <h6 style="font-size:12px;"> @ItemBo.Name</h6>
+                                        <h6 style="font-size:12px;"> @itemLop.Name</h6>
+                                        <h6 style="font-size:12px;">@itemNganh.Name</h6>
+                                        <ul>
+                                            <li><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                        </ul>
+
+
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--end tin1-->
+                            }
+                        </div>
+
+                    </div><!--end danhsachtin-->
+                </div><!--end tinnoibat-->
+                <div style="clear:both;"></div>
+            </div><!--end noibat-->
+            <div style="clear:both;"></div>
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+    @await Component.InvokeAsync("Pagi", Model)
+</div><!--end content-->

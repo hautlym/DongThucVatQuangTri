@@ -37,8 +37,8 @@
     <div style="margin: 20px 0;">
         <a class="btn btn-success" asp-action="Index" asp-controller="NewsCat">Danh sách danh mục</a>
     </div>
-    <div class="row">
-        <div class="col-md-10">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
             <form asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
@@ -68,7 +68,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="ParentId" class="control-label"> Danh mục cha:</label>
-                    <select asp-for="ParentId" name="ParentId" asp-items="@ViewBag.Categories" class="form-control">
+                    <select asp-for="ParentId" name="ParentId" asp-items="@ViewBag.Categories" class="form-control select2">
                         <option value="0">--Danh mục gốc--</option>
                     </select>
                 </div>

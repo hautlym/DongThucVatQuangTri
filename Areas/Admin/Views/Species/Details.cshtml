@@ -1,0 +1,157 @@
+﻿@model DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos.SpeciesViewModels
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@{
+    var idLoai = -1;
+    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 1;
+    }
+    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    {
+        idLoai = 0;
+    }
+}
+<style>
+    th:first-child {
+        width: 30%;
+    }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thông tin loài @ViewBag.Loai</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thông tin loài @ViewBag.Loai </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh sách loài @ViewBag.Loai</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row mb-3 d-flex justify-content-center">
+                <div class="col-md-12">
+                    <div>Hình ảnh:</div>
+                    @{
+                        List<string> ListUrl = new List<string>();
+                        @if (Model != null)
+                        {
+                            if (!String.IsNullOrEmpty(Model.FileDinhKem))
+                            {
+                                ListUrl = (@Model.FileDinhKem.Split(",")).ToList();
+                            }
+                            else
+                            {
+                                ListUrl = null;
+                            }
+                        }
+                        else
+                        {
+                            ListUrl = null;
+                        }
+                    }
+                    @if (ListUrl != null)
+                    {
+                        @foreach (var Url in ListUrl)
+                        {
+                            @if (!String.IsNullOrEmpty(Url))
+                            {
+                                <img style="height: 200px;width:200px;" src="/user-content/@Url" alt="..." class="img-thumbnail">
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <img style="height: 200px;width:200px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Họ: </th>
+                                    <td>@Html.DisplayFor(model => model.NameHo)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tên : </th>
+                                    <td>@Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tên Latinh: </th>
+                                    <td> @Html.DisplayFor(model => model.NameLatinh)</td>
+                                </tr>
+                                <tr>
+                                    <th>Loại:</th>
+                                    <td>
+                                        @{
+                                            var isType = Convert.ToInt32(Model.Status) == 1 ? "Động vật" : "Thực vật";
+                                        }
+                                        @isType
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Tên khác: </th>
+                                    <td> @Html.DisplayFor(model => model.TenKhac)</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn IUCN: </th>
+                                    <td> @ViewBag.MucDoBaoTonICUN</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn SDVN: </th>
+                                    <td> @ViewBag.MucDoBaoTonSDVN</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn NDCP: </th>
+                                    <td> @ViewBag.MucDoBaoTonNDCP</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn Nd64Cp: </th>
+                                    <td> @ViewBag.MucDoBaoTonND64CP</td>
+                                </tr>
+                                <tr>
+                                    <th>Giá trị sử dụng: </th>
+                                    <td> @Html.DisplayFor(model => model.GiaTriSuDung)</td>
+                                </tr>
+                                <tr>
+                                    <th>Nguồn tài liệu: </th>
+                                    <td> @Html.DisplayFor(model => model.NguonTaiLieu)</td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+                                    <td>
+                                        @{
+                                            var status = Convert.ToInt32(Model.Status) == 1 ? "Bật" : "Tắt";
+                                        }
+                                        @status
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày tạo:</th>
+                                    <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày cập nhật:</th>
+                                    <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Đặc điểm:</th>
+                                    <td>@Html.Raw(Model.DacDiem)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div>
+                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

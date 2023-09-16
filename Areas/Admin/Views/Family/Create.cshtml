@@ -24,15 +24,15 @@
         <li class="breadcrumb-item active">Thêm họ @ViewBag.Loai </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index"  asp-route-loai="@idLoai">Danh sách họ @ViewBag.Loai</a>
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh sách họ @ViewBag.Loai</a>
     </div>
-    <div class="row">
-        <form asp-action="Create" class="row">
-            <div class="col-md-6">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Create" class="row">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="IdDtvBo" class="control-label"> Bộ:</label>
-                    <select asp-for="IdDtvBo" name="IdDtvBo" asp-items="@ViewBag.Categories" class="form-control">
+                    <select asp-for="IdDtvBo" name="IdDtvBo" asp-items="@ViewBag.Categories" class="form-control select2">
                     </select>
                 </div>
                 <div class="form-group">
@@ -59,8 +59,8 @@
                     <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
                     <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 

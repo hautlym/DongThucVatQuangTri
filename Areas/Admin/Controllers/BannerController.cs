@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    
+    [Authorize(Policy = "AdministatorOrAdminPolicy")]
     public class BannerController : BaseController
     {
         private readonly IManageBanner _banner;
@@ -158,6 +158,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _banner.getBannerById(Id);
+            return View(result);
         }
     }
 }

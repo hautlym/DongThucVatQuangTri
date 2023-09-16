@@ -135,6 +135,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
                 UpdatedAt = bannerCat.UpdatedAt,
                 Name = bannerCat.Name,
                 ParentId = bannerCat.ParentId,
+                Parentname = _context.BannerCat.Where(x => x.Id == bannerCat.ParentId).Select(x => x.Name).FirstOrDefault(),
                 Path = bannerCat.Path,
                 Level = bannerCat.Level,
                 Image = bannerCat.Image,

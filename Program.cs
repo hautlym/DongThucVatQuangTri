@@ -67,10 +67,27 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim(ClaimTypes.Role, "Admin");
     });
-
     options.AddPolicy("AdministratorPolicy", policy =>
     {
         policy.RequireClaim(ClaimTypes.Role, "Administator");
+    });
+    options.AddPolicy("AdministatorOrNationParkPolicy", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            return context.User.HasClaim(c =>
+                (c.Type == ClaimTypes.Role && c.Value == "NationPark") ||
+                (c.Type == ClaimTypes.Role && c.Value == "Administator"));
+        });
+    });
+    options.AddPolicy("AdministatorOrAdminPolicy", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            return context.User.HasClaim(c =>
+                (c.Type == ClaimTypes.Role && c.Value == "Admin") ||
+                (c.Type == ClaimTypes.Role && c.Value == "Administator"));
+        });
     });
 });
 //builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/admin/Login/Index");

@@ -17,6 +17,7 @@ namespace DongThucVatQuangTri.Applications.Common
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return fileName;
         }
-       
+
+        
     }
 }

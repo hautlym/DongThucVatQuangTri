@@ -113,21 +113,26 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
 
         public async Task<ClassViewModels> getItemById(int id)
         {
-            var lop = await _context.DtvLop.Where(x => x.Id == id).FirstOrDefaultAsync(); 
+            var query = from l in _context.DtvLop
+                        join n in _context.DtvNganh on l.IdDtvNganh equals (int)n.Id
+                        where l.Id == id
+                        select new { l, n };
+            var lop =await query.FirstOrDefaultAsync(); 
             if (lop == null)
             {
                 return null;
             }
             var lopVm = new ClassViewModels()
             {
-                Id = lop.Id,
-                IdDtvNganh = lop.IdDtvNganh,
-                Name = lop.Name,
-                NameLatinh = lop.NameLatinh,
-                Status = lop.Status,
-                Loai = lop.Loai,
-                CreatedAt = lop.CreatedAt,
-                UpdatedAt = lop.UpdatedAt,
+                Id = lop.l.Id,
+                IdDtvNganh = lop.l.IdDtvNganh,
+                Name = lop.l.Name,
+                DtvNganhName = lop.n.Name,
+                NameLatinh = lop.l.NameLatinh,
+                Status = lop.l.Status,
+                Loai = lop.l.Loai,
+                CreatedAt = lop.l.CreatedAt,
+                UpdatedAt = lop.l.UpdatedAt,
             };
             return lopVm;
         }

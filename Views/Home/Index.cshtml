@@ -1,8 +1,122 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model HomeViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+<style>
+    .noibat {
+        max-width:800px;
+        margin: 0 auto !important;
+    }
+</style>
+<div class="slide">
+    @foreach (var item in Model.bannerViews)
+    {
+    <div class="slide1">
+            <img src="/user-content/@item.Src" width="1920" height="773" alt="" />
+        <h5>@item.Name</h5>
+    </div><!--end slide1-->
+        
+    }
+</div><!--end slide-->
+@{
+    int i = 1;
+    int j = 1;
+}
+<div class="tintuc">
+    <div class="maincontent">
+        <div class="noibat">
+            <div class="tinnoibat" style="width:100%">
+                <div class="danhsachtin">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-6"><h3>Động vật:</h3></div>
+                            @foreach (var item in Model.donngvat)
+                            {
+                                <div class="tin1 col-sm-12">
+                                    <p class="stt">
+                                        @if (i < 10)
+                                        {
+                                            var prefix = 0;
+                                            @prefix @i
+                                        }
+                                        else
+                                        {
+                                            @i
+                                        }
+                                        @{
+                                            i++;
+                                        }.
+                                    </p>
+
+                                    <div class="noidung">
+                                        @if (!String.IsNullOrEmpty(@item.FileDinhKem))
+                                        {
+                                            <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                        }
+                                        else
+                                        {
+                                            <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                        }
+                                        <h4><a asp-action="Details" asp-controller="Natural" asp-route-Id="@item.Id">Loài: @item.Name</a></h4>
+                                        <h6 style="font-size:12px;"> @item.NameHo</h6>
+                                        <ul>
+                                            <li><a asp-action="Details" asp-controller="Natural" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--end tin1-->
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-6"><h3>Thực vật:</h3></div>
+                            @foreach (var item in Model.thucvat)
+                            {
+                                <div class="tin1 col-sm-12">
+                                    <p class="stt">
+                                        @if (j < 10)
+                                        {
+                                            var prefix = 0;
+                                            @prefix @j
+                                        }
+                                        else
+                                        {
+                                            @j
+                                        }
+                                        @{
+                                            j++;
+                                        }.
+                                    </p>
+
+                                    <div class="noidung">
+                                        @if (!String.IsNullOrEmpty(@item.FileDinhKem))
+                                        {
+                                            <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                        }
+                                        else
+                                        {
+                                            <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                        }
+                                        <h4><a asp-action="Details" asp-controller="Natural" asp-route-Id="@item.Id">Loài: @item.Name</a></h4>
+                                        <h6 style="font-size:12px;">@item.NameHo</h6>
+                                        <ul>
+                                            <li><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--end tin1-->
+                            }
+                        </div>
+                        
+                    </div>
+
+                </div><!--end danhsachtin-->
+            </div><!--end tinnoibat-->
+            <div style="clear:both;"></div>
+        </div><!--end noibat-->
+        <div style="clear:both;"></div>
+    </div><!--end maincontent-->
+</div><!--end tintuc-->

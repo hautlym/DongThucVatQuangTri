@@ -1,0 +1,115 @@
+﻿@model DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos.BannerViewModels
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+<style>
+    th:first-child {
+        width:30%;
+    }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thông tin banner</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Thông tin banner </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index">Danh sách banner</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row mb-3 d-flex justify-content-center">
+                <div class="col-md-4">
+                    <div >Hình ảnh:</div>
+                    @if (!String.IsNullOrEmpty(Model.Src))
+                    {
+                        <img style="height: 250px;width:250px" src="/user-content/@Model.Src" alt="..." class="img-thumbnail">
+                    }
+                    else
+                    {
+                        <img style="height: 250px;width:250px" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                    }
+                </div>
+                <div class="col-md-4">
+                    <div >Hình ảnh moblie:</div>
+                    @if (!String.IsNullOrEmpty(Model.SrcMobile))
+                    {
+                        <img style="height: 250px;width:250px" src="/user-content/@Model.SrcMobile" alt="..." class="img-thumbnail">
+                    }
+                    else
+                    {
+                        <img style="height: 250px;width:250px" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                    }
+                </div>  
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Danh mục : </th>
+                                    <td>@Html.DisplayFor(model => model.BannerCat)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tiêu đề: </th>
+                                    <td> @Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Đường dẫn:</th>
+                                    <td>@Html.DisplayFor(model => model.Link)</td>
+                                </tr>
+                                <tr>
+                                    <th>Độ rộng:</th>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Width)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Độ dài:</th>
+                                    <td>@Html.DisplayFor(model => model.Height)</td>
+                                </tr>
+                                <tr>
+                                    <th>Loại:</th>
+                                    <td>@Html.DisplayFor(model => model.Type)</td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+                                    
+                                    <td>
+                                        @{
+                                            var status = Convert.ToInt32(Model.Status) == 1 ? "Bật" : "Tắt";
+                                        }
+                                        @status
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th> Mô tả:</th>
+                                    <td>@Html.Raw(Model.Description)</td>
+                                </tr>
+                                <tr>
+                                    <th> Thứ tự sắp xếp:</th>
+                                    <td>@Html.DisplayFor(model => model.SortOrder)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày tạo:</th>
+                                    <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ngày cập nhật:</th>
+                                    <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div>
+                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

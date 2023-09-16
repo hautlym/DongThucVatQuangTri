@@ -193,5 +193,18 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             _context.Banner.Update(banner);
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<List<BannerViewModels>> GetAll()
+        {
+            var data = await _context.Banner.Select(banner => new BannerViewModels()
+            {
+                Id = banner.Id,
+                Name = banner.Name,
+                Src = banner.Src,
+                Status = banner.Status,
+                SortOrder = banner.SortOrder,
+            }).ToListAsync();
+            return data;
+        }
     }
 }

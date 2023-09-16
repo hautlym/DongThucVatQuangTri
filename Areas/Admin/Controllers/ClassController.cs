@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdministratorPolicy")]
+    [Authorize(Policy = "AdministatorOrNationParkPolicy")]
     public class ClassController : BaseController
     {
         private readonly IManageBranch _manageBranch;
@@ -21,6 +21,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             _manageBranch = manageBranch;
             _manageClass = manageClass;
         }
+        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
         public async Task<IActionResult> Index(int loai, string keyword = "", int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetClassRequest()
@@ -48,6 +49,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(data.ResultObj);
         }
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> Create(int loai)
         {
             var ListBranch = await _manageBranch.getAllItem();
@@ -67,6 +70,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> Create(int loai, CreateClassRequest request)
         {
             int LoaiDtv = loai;
@@ -97,6 +102,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -129,6 +136,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> Edit(int loai, UpdateClassRequest request)
         {
             int LoaiDtv = loai;
@@ -161,6 +170,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> Delete(int loai, int Id)
         {
             int LoaiDtv = loai;
@@ -186,6 +197,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
+        [Authorize(Policy = "AdministratorPolicy")]
+
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
             var result = await _manageClass.ChangeStatus(request);
@@ -194,6 +207,21 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
             return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int Id)
+        {
+            var result = await _manageClass.getItemById(Id);
+            var loai = result.Loai;
+            if (loai == 1)
+            {
+                ViewBag.Loai = "Động Vật";
+            }
+            if (loai == 0)
+            {
+                ViewBag.Loai = "Thực vật";
+            }
+            return View(result);
         }
     }
 }

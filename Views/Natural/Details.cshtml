@@ -1,0 +1,218 @@
+﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
+@model DetailsModels
+
+@{
+    ViewData["Title"] = "Thông tin loài";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul, li {
+        margin:0;
+        padding:0;
+    }
+    .noidung{
+        padding: 0 0 0 30px;
+    }
+    .noibat {
+        max-width: 820px;
+        margin: 0 auto !important;
+    }
+
+    .tintuc {
+        margin: 0 !important;
+    }
+
+    .noidung a {
+        font-family: 'LoraF' !important;
+        font-weight: bold;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+
+    .noidung h6 {
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+</style>
+<div id="content" style="margin:0 0 100px">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+
+    <div class="tintuc" id="trangchitiet">
+        <div class="maincontent">
+            <h2><span>Loài <span></span></span></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+
+                                <tr>
+                                    <th>Tên tiếng việt: </th>
+                                    <td>@Html.DisplayFor(model => model.speciesViewModels.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Tên khoa học: </th>
+                                    <td> @Html.DisplayFor(model => model.speciesViewModels.NameLatinh)</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Tên khác: </th>
+                                    <td> @Html.DisplayFor(model => model.speciesViewModels.TenKhac)</td>
+                                </tr>
+                                @{
+                                    var Bo = ViewBag.Bo as List<SetViewModels>;
+                                    var Lop = ViewBag.Lop as List<ClassViewModels>;
+                                    var Nganh = ViewBag.Nganh as List<BranchViewModel>;
+                                    var Ho = ViewBag.Ho as List<FamilyViewModels>;
+                                    var itemHo = Ho.Where(x => x.Id == Model.speciesViewModels.IdDtvHo).FirstOrDefault();
+                                    var ItemBo = Bo.Where(x => x.Id == itemHo.IdDtvBo).FirstOrDefault();
+                                    var itemLop = Lop.Where(x => x.Id == ItemBo.IdDtvLop).FirstOrDefault();
+                                    var itemNganh = Nganh.Where(x => x.Id == itemLop.IdDtvNganh).FirstOrDefault();
+                                }
+                                <tr>
+                                    <th>Họ: </th>
+                                    <td> @itemHo.Name</td>
+                                </tr>
+                                <tr>
+                                    <th>Bộ: </th>
+                                    <td> @ItemBo.Name</td>
+                                </tr>
+                                <tr>
+                                    <th>Lớp: </th>
+                                    <td>@itemLop.Name </td>
+                                </tr>
+                                <tr>
+                                    <th>Ngành: </th>
+                                    <td> @itemNganh.Name</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn IUCN: </th>
+                                    <td> @ViewBag.MucDoBaoTonICUN</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn SDVN: </th>
+                                    <td> @ViewBag.MucDoBaoTonSDVN</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn NDCP: </th>
+                                    <td> @ViewBag.MucDoBaoTonNDCP</td>
+                                </tr>
+                                <tr>
+                                    <th>Mức độ bảo tồn Nd64Cp: </th>
+                                    <td> @ViewBag.MucDoBaoTonND64CP</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Nguồn tài liệu: </th>
+                                    <td> @Html.DisplayFor(model => model.speciesViewModels.NguonTaiLieu)</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </dl>
+
+                </div>
+            </div>
+            <h2><span>Hình ảnh <span></span></span></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    @{
+                        List<string> ListUrl = new List<string>();
+                        @if (Model != null)
+                        {
+                            if (!String.IsNullOrEmpty(Model.speciesViewModels.FileDinhKem))
+                            {
+                                ListUrl = (@Model.speciesViewModels.FileDinhKem.Split(",")).ToList();
+                            }
+                            else
+                            {
+                                ListUrl = null;
+                            }
+                        }
+                        else
+                        {
+                            ListUrl = null;
+                        }
+                    }
+                    @if (ListUrl != null)
+                    {
+                        @foreach (var Url in ListUrl)
+                        {
+                            @if (!String.IsNullOrEmpty(Url))
+                            {
+                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail">
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                    }
+                </div>
+            </div>
+            <h2><span>Đặc điểm <span></span></span></h2>
+            <div class="row">
+                @Html.Raw(Model.speciesViewModels.DacDiem)
+            </div>
+            <h2><span>Công dụng - Giá trị sử dụng <span></span></span></h2>
+            <div class="row">
+                @Model.speciesViewModels.GiaTriSuDung
+            </div>
+            <h2><span>Loài tương tự <span></span></span></h2>
+
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+    @{
+        int i = 1;
+    }
+    <div class="doitac duantieubieu" style="background-color:white">
+        <div class="tintuc">
+            <div class="maincontent">
+                <div class="noibat">
+                    <div class="tinnoibat" style="width:100%">
+                        <div class="danhsachtin">
+                            <div class="row">
+                                @foreach (var item in Model.lisViewModels)
+                                {
+                                    <div class="tin1 col-sm-4">
+                                        <p class="stt">
+                                            @i @{
+                                                i++;
+                                            }.
+                                        </p>
+                                        <div class="noidung">
+                                            <ul>
+                                                @if (!String.IsNullOrEmpty(@item.FileDinhKem))
+                                                {
+                                                    <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="100" height="100" alt="" style="float: left;margin-right: 5px;">
+                                                }
+                                                else
+                                                {
+                                                    <img width="100" height="100" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 5px;">
+                                                }
+                                                <h4><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                                <ul style="list-style:none; margin:0">
+                                                    <li style="margin:0" ><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                                </ul>
+                                        </div><!--end noidung-->
+                                        <div style="clear:both;"></div>
+                                    </div>
+
+                                    <!--end tin1-->
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!--end duantieubieu-->
+</div><!--end content-->

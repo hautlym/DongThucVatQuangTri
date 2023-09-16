@@ -80,6 +80,34 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<List<NewsViewModels>> getAll()
+        {
+            var data = await _context.News.Select(request => new NewsViewModels()
+            {
+                Id = request.Id,
+                Alias = request.Alias,
+                RootNewsCatId = request.RootNewsCatId,
+                NewsCatId = request.NewsCatId,
+                Name = request.Name,
+                Image = request.Image,
+                ShortDescription = request.ShortDescription,
+                Description = request.Description,
+                SortOrder = request.SortOrder,
+                IsHot = request.IsHot,
+                IsSystem = request.IsSystem,
+                Status = request.Status,
+                Author = request.Author,
+                Source = request.Source,
+                PostAt = request.PostAt,
+                TitleSeo = request.TitleSeo,
+                ContentSeo = request.ContentSeo,
+                KeySeo = request.KeySeo,
+                Language = request.Language,
+                IdRelated = request.IdRelated,
+            }).ToListAsync();
+            return data;
+        }
+
         public async Task<ApiResult<PageResult<NewsViewModels>>> GetAlllPaging(GetNewsPagingRequest request)
         {
             var query = from b in _context.News
@@ -147,6 +175,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 Alias = request.b.Alias,
                 RootNewsCatId = request.b.RootNewsCatId,
                 NewsCatId = request.b.NewsCatId,
+                NewsCatName = request.bc.Name,
                 Name = request.b.Name,
                 Image = request.b.Image,
                 ShortDescription = request.b.ShortDescription,
@@ -165,6 +194,16 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 IdRelated = request.b.IdRelated,
             }).FirstOrDefaultAsync();
             return NewsVm;
+        }
+
+        public async Task<int> IncreaseView(int id)
+        {
+            var news = await _context.News.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (news == null)
+                return -1;
+            news.TotalView +=1 ;
+            _context.News.Update(news);
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> updateNews(UpdateNewsRequest request)

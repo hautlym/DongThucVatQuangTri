@@ -11,6 +11,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
     {
         public Task<BannerViewModels> getBannerById(long id);
         Task<long> CreateBanner(CreateBannerRequest request);
+        public Task<List<BannerViewModels>> GetAll();
         public Task<ApiResult<PageResult<BannerViewModels>>> GetAlllPaging(GetBannerPagingRequest request);
         Task<int> deleteBanner(int id);
         public Task<int> updateBanner(UpdateBannerRequest request);

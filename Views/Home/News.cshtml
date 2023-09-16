@@ -1,0 +1,103 @@
+﻿@model NewsModels
+@{
+    ViewData["Title"] = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+
+    <div class="tintuc">
+        <div class="maincontent">
+            <h2><span>Tin tức từ <span></span></span></h2>
+            <div class="noibat">
+                <div class="tinhot">
+                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id" class="imgBox"><img src="/newsImage/@Model.BannerNews.Image" width="770" height="360" alt="" /></a>
+                    <h3><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">@Model.BannerNews.Name</a></h3>
+                    <ul>
+                        <li><span>@Model.BannerNews.PostAt</span></li>
+                        <li><i class="icon"></i></li>
+                        <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">chi tiết<i class="icon"></i></a></li>
+                    </ul>
+                </div><!--end tinhot-->
+                @{
+                    int i = 1;
+                }
+                <div class="tinnoibat">
+                    <h3><a href="javascript:;">Tin tức nổi bật<span></span></a></h3>
+                    <div class="danhsachtin">
+                        @foreach (var item in Model.isHotNew)
+                        {
+                            <div class="tin1">
+                                <p class="stt">
+                                    @i. @{
+                                        i++;
+                                    }
+                                </p>
+                                <div class="noidung">
+                                    <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                    <ul>
+                                        <li><span>@item.PostAt</span></li>
+                                        <li><i class="icon"></i></li>
+                                        <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                    </ul>
+                                </div><!--end noidung-->
+                                <div style="clear:both;"></div>
+                            </div>
+                            <!--end tin1-->
+                        }
+                    </div><!--end danhsachtin-->
+                </div><!--end tinnoibat-->
+                <div style="clear:both;"></div>
+            </div><!--end noibat-->
+
+            <div class="tinmoi">
+                <h3><a href="javascript:;">Tin tức mới nhất</a></h3>
+                <div class="danhsachtin">
+                    @foreach (var item in Model.ListNewsPagi.Items)
+                    {
+                        <div class="tin1">
+                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/newsImage/@item.Image" width="770" height="360" alt="" /></a>
+                            <div class="noidung">
+                                <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                <p>@item.ShortDescription</p>
+                                <ul>
+                                    <li><span>@item.PostAt</span></li>
+                                    <li><i class="icon"></i></li>
+                                    <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                </ul>
+                            </div><!--end noidung-->
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <!--end tin1-->
+                    }
+                </div><!--end danh sachtin-->
+                @await Component.InvokeAsync("Pagi", Model.ListNewsPagi)
+            </div><!--end tinmoi-->
+
+            <div class="tinxemnhieu">
+                <h3><a href="javascript:;">Tin được xem nhiều<span></span></a></h3>
+                <div class="danhsachtin">
+                    @foreach (var item in Model.ViewestNews)
+                    {
+                        <div class="tin1">
+                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/newsImage/@item.Image" width="770" height="360" alt="" /></a>
+                            <div class="noidung">
+                                <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                <ul><li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li></ul>
+                            </div><!--end noidung-->
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <!--end tin1-->
+                    }
+
+                </div><!--end danh sachtin-->
+            </div><!--end tinxemnhieu-->
+            <div style="clear:both;"></div>
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+
+
+</div><!--end content-->
