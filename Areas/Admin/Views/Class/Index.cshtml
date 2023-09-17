@@ -51,7 +51,10 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6 col-xs-12 mt-1">
-                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success">Thêm mới</a>
+                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                    {
+                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i>  Thêm mới</a>
+                    }
                 </div>
                 <div class="col-md-6 col-xs-12 mt-1">
                     <div class="row">

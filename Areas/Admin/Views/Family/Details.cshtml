@@ -28,7 +28,7 @@
         <li class="breadcrumb-item active">Thông tin họ @ViewBag.Loai </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai">Danh sách họ @ViewBag.Loai</a>
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách họ @ViewBag.Loai</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -82,7 +82,11 @@
                     <div>
                         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                         {
-                            <a class="btn btn-success" asp-action="Edit" asp-route-Id="@Model.Id">Chỉnh sửa</a>
+                            <a class="btn btn-success" asp-action="Edit" asp-route-Id="@Model.Id" asp-route-loai="@idLoai">
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                                Chỉnh sửa
+                            </a>
+                          
                         }
                     </div>
                 </div>

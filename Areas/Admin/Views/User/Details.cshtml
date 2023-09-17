@@ -15,7 +15,7 @@
     <div style="margin: 20px 0;">
         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
         {
-            <a class="btn btn-success" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+            <a class="btn btn-success" asp-action="Index" asp-controller="User"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách người dùng</a>
         }
     </div>
     <div class="card mb-4">
@@ -74,8 +74,14 @@
                         </table>
                     </dl>
                     <div>
-                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
-                        <a class="btn btn-primary" @Html.ActionLink("Đổi mật khẩu", "ChangePassword", new { Id = @Model.Id })</a>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
+                            <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                            Chỉnh sửa
+                        </a>
+                        <a class="btn btn-primary" asp-action="ChangePassword" asp-route-id="@Model.Id">
+                            <i class="fa-solid fa-key"></i>
+                            Đổi mật khẩu
+                        </a>
                     </div>
                 </div>
             </div>
