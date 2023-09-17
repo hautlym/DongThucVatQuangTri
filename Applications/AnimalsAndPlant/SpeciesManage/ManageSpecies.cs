@@ -81,6 +81,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             var lop = await _context.DtvLoai.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (lop == null)
                 return -1;
+            if (!String.IsNullOrEmpty(lop.FileDinhKem))
+            {
+                foreach (var item in lop.FileDinhKem.Split(','))
+                {
+                    if(!String.IsNullOrEmpty(item))
+                    {
+                        _manageFile.DeleteFile(item);
+                    }
+                }
+            }
             _context.DtvLoai.Remove(lop);
             return await _context.SaveChangesAsync();
         }
@@ -246,6 +256,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                     return -1;
                 if (request.isDelete)
                 {
+                    if (!String.IsNullOrEmpty(result.FileDinhKem))
+                    {
+                        foreach (var item in result.FileDinhKem.Split(','))
+                        {
+                            if (!String.IsNullOrEmpty(item))
+                            {
+                                _manageFile.DeleteFile(item);
+                            }
+                        }
+                    }
                     result.FileDinhKem = "";
                 }
                 if (request.FileDinhKem != null)

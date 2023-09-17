@@ -7,6 +7,7 @@ using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
 {
@@ -56,6 +57,10 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
             var banner = await _context.BannerCat.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (banner == null)
                 return -1;
+            if (!String.IsNullOrEmpty(banner.Image))
+            {
+                _uploadFile.DeleteFile(banner.Image);
+            }
             _context.BannerCat.Remove(banner);
             return await _context.SaveChangesAsync();
         }
@@ -160,10 +165,18 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
             bannerCat.Path = request.Path;
             if (request.isDelete==true)
             {
+                if (!String.IsNullOrEmpty(bannerCat.Image))
+                {
+                    _uploadFile.DeleteFile(bannerCat.Image);
+                }
                 bannerCat.Image ="" ;
             }
             if (request.Image != null)
             {
+                if (!String.IsNullOrEmpty(bannerCat.Image))
+                {
+                    _uploadFile.DeleteFile(bannerCat.Image);
+                }
                 bannerCat.Image = await _uploadFile.SaveFile(request.Image);
             }
             bannerCat.SortOrder = request.SortOrder;

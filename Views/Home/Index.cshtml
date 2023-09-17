@@ -51,9 +51,21 @@
                                     </p>
 
                                     <div class="noidung">
+                                        @{
+                                            var img = "";
+                                        }
                                         @if (!String.IsNullOrEmpty(@item.FileDinhKem))
                                         {
-                                            <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                            var ListImg = item.FileDinhKem.Split(',').Where(x => !String.IsNullOrEmpty(x)).ToList();
+                                            img = ListImg.FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            img = null;
+                                        }
+                                        @if (!String.IsNullOrEmpty(img))
+                                        {
+                                            <img src="/user-content/@img" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
                                         }
                                         else
                                         {

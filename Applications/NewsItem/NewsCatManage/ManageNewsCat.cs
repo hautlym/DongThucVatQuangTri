@@ -57,6 +57,10 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
             var newscat = await _context.NewsCat.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (newscat == null)
                 return -1;
+            if (!String.IsNullOrEmpty(newscat.Image))
+            {
+                _manageFile.DeleteFile(newscat.Image);
+            }
             _context.NewsCat.Remove(newscat);
             return await _context.SaveChangesAsync();
         }
@@ -168,10 +172,18 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
             newsCat.Path = request.Path;
             if (request.isDelete == true)
             {
+                if (!String.IsNullOrEmpty(newsCat.Image))
+                {
+                    _manageFile.DeleteFile(newsCat.Image);
+                }
                 newsCat.Image = "";
             }
             if (request.Image != null)
             {
+                if (!String.IsNullOrEmpty(newsCat.Image))
+                {
+                    _manageFile.DeleteFile(newsCat.Image);
+                }
                 newsCat.Image = await _manageFile.SaveFile(request.Image);
             }
             newsCat.SortOrder = request.SortOrder;

@@ -57,7 +57,7 @@
                     @foreach (var item in Model.ListNewsPagi.Items)
                     {
                         <div class="tin1">
-                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/newsImage/@item.Image" width="770" height="360" alt="" /></a>
+                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/user-content/@item.Image" width="770" height="360" alt="" /></a>
                             <div class="noidung">
                                 <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
                                 <p>@item.ShortDescription</p>

@@ -28,7 +28,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
 
                 BannerCatId = request.BannerCatId,
                 Name = request.Name,
-                Src = request.Src != null ? await _manageFile.SaveFile(request.Src) : "" ,
+                Src = request.Src != null ? await _manageFile.SaveFile(request.Src) : "",
                 SrcMobile = request.SrcMobile != null ? await _manageFile.SaveFile(request.SrcMobile) : "",
                 Link = request.Link,
                 Width = request.Width,
@@ -52,6 +52,14 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             var banner = await _context.Banner.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (banner == null)
                 return -1;
+            if (!String.IsNullOrEmpty(banner.Src))
+            {
+                _manageFile.DeleteFile(banner.Src);
+            }
+            if (!String.IsNullOrEmpty(banner.Src))
+            {
+                _manageFile.DeleteFile(banner.SrcMobile);
+            }
             _context.Banner.Remove(banner);
             return await _context.SaveChangesAsync();
         }
@@ -60,7 +68,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
         {
             var query = from b in _context.Banner
                         join bc in _context.BannerCat on b.BannerCatId equals bc.Id
-                        select new { b,bc };
+                        select new { b, bc };
             var list = query.ToList();
             if (!string.IsNullOrEmpty(request.Keyword))
             {
@@ -107,14 +115,14 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
         {
             var query = from b in _context.Banner
                         join bc in _context.BannerCat on b.BannerCatId equals bc.Id
-                        where b.Id==id
+                        where b.Id == id
                         select new { b, bc };
             //var bannerCat = await _context.Banner.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (await query.CountAsync() == 0)
             {
                 return null;
             }
-            var BannerCateVm =await query.Select(x => new BannerViewModels()
+            var BannerCateVm = await query.Select(x => new BannerViewModels()
             {
                 Id = x.b.Id,
                 BannerCatId = x.b.BannerCatId,
@@ -147,18 +155,34 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             banner.Name = request.Name;
             if (request.isDelete == true)
             {
+                if (!String.IsNullOrEmpty(banner.Src))
+                {
+                    _manageFile.DeleteFile(banner.Src);
+                }
                 banner.Src = "";
             }
             if (request.Src != null)
             {
+                if (!String.IsNullOrEmpty(banner.Src))
+                {
+                    _manageFile.DeleteFile(banner.Src);
+                }
                 banner.Src = await _manageFile.SaveFile(request.Src);
             }
             if (request.isDeleteMobile == true)
             {
+                if (!String.IsNullOrEmpty(banner.SrcMobile))
+                {
+                    _manageFile.DeleteFile(banner.SrcMobile);
+                }
                 banner.SrcMobile = "";
             }
             if (request.SrcMobile != null)
             {
+                if (!String.IsNullOrEmpty(banner.SrcMobile))
+                {
+                    _manageFile.DeleteFile(banner.SrcMobile);
+                }
                 banner.SrcMobile = await _manageFile.SaveFile(request.SrcMobile);
             }
             banner.Link = request.Link;
