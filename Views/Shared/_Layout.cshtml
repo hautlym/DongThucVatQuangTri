@@ -114,14 +114,15 @@
                     <div class="logo"><a href="javascript:;"><img src="/images/logo.png" width="180" height="180" alt="" /></a></div>
                 </div><!--end info-->
                 <div class="subLink" style="width:70%;">
-                    <ul style="width:30%;">
-                        <li><a href="javascript:;">Giới thiệu</a></li>
-                        <li><a href="javascript:;">CSDL động vật</a></li>
-                        <li><a href="javascript:;">CSDL thực vật</a></li>
-                        <li><a href="javascript:;">Tin tức</a></li>
-                        <li><a href="javascript:;">Địa chỉ</a></li>
+                    <ul style="width:30% !important;">
+                        <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="1">Giới thiệu</a></li>
+                        <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="1">CSDL Động vật</a></li>
+                        <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="0">CSDL Thực vật</a></li>
+                        <li><a asp-action="News" asp-controller="Home">Tin tức</a></li>
+                        <li><a asp-action="Address" asp-controller="Home">Địa chỉ</a></li>
+                        
                     </ul>
-                    <ul style="color:white;width:65%;line-height: 40px;">
+                    <ul style="color:white;width:65% !important;line-height: 40px;">
                         <li> KHU BẢO TỒN THIÊN NHIÊN BẮC HƯỚNG HOÁ</li>
                         <li>Địa chỉ: xã Hướng Phùng, huyện Hướng Hóa, tỉnh Quảng Trị</li>
                         <li>Hotline: (0233) 379 7225</li>
