@@ -17,7 +17,7 @@
         <li class="breadcrumb-item active">Sửa tin </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="News">Danh sách tin tức</a>
+        <a class="btn btn-success" asp-action="Index" asp-controller="News"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách tin tức</a>
     </div>
     <div class="row">
         <form asp-action="Edit" enctype="multipart/form-data">
@@ -112,8 +112,8 @@
             </div>
             <div class="row">
                 <div class="form-group mt-2">
-                    <input type="submit" value="Lưu" class="btn btn-primary" />
-                    <button asp-action="Index" asp-controller="News" class="btn btn-secondary" />Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
                 </div>
             </div>
         </form>

@@ -17,7 +17,7 @@
         <li class="breadcrumb-item active">Sửa danh mục </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="BannerCat">Danh sách danh mục</a>
+        <a class="btn btn-success" asp-action="Index" asp-controller="BannerCat"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách danh mục</a>
     </div>
     <div class="row">
         <form asp-action="Edit" class="row" enctype="multipart/form-data">
@@ -77,9 +77,10 @@
                     <textarea asp-for="Description" id="editor" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
-                    <button asp-action="Index" asp-controller="BannerCat" class="btn btn-secondary" />Hủy</button>
+                <div class="form-group m-2">
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                    
                 </div>
 
             </div>

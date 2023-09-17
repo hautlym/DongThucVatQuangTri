@@ -1,5 +1,5 @@
 ﻿@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos.NewsViewModels
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
@@ -16,7 +16,7 @@
         <li class="breadcrumb-item active">Thông tin tin tức </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index">Danh sách tin</a>
+        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách tin</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -116,7 +116,10 @@
                         </table>
                     </dl>
                     <div>
-                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
+                            <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                            Chỉnh sửa
+                        </a>
                     </div>
                 </div>
             </div>
