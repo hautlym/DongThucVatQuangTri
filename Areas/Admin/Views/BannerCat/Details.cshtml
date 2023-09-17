@@ -16,7 +16,7 @@
         <li class="breadcrumb-item active">Thông tin danh mục banner </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index">Danh sách danh mục banner</a>
+        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách danh mục banner</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -75,7 +75,10 @@
                         </table>
                     </dl>
                     <div>
-                        <a class="btn btn-success" @Html.ActionLink("Chỉnh sửa", "Edit", new { id = @Model.Id })</a>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
+                            <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                            Chỉnh sửa
+                        </a>
                     </div>
                 </div>
             </div>

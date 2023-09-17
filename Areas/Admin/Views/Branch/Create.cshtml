@@ -23,7 +23,7 @@
         <li class="breadcrumb-item active">Thêm ngành @ViewBag.Loai </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="Branch" asp-route-loai="@idLoai">Danh sách ngành @ViewBag.Loai</a>
+        <a class="btn btn-success" asp-action="Index" asp-controller="Branch" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách ngành @ViewBag.Loai</a>
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-md-6">
@@ -47,11 +47,15 @@
                         <option value="0">Tắt</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-2">
                     <input type="hidden" asp-for="Loai" value="@idLoai" />
                     <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
-                    <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
-                    <button asp-action="Index" asp-controller="Branch" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button>
+
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+
+                    @* <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
+                    <button asp-action="Index" asp-controller="Branch" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
                 </div>
             </form>
         </div>

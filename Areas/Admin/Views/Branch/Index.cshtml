@@ -43,7 +43,7 @@
 <div class="container-fluid px-4">
     <h1 class="mt-4">Ngành @ViewBag.Loai </h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"> Trang chủ</a></li>
         <li class="breadcrumb-item active">Ngành @ViewBag.Loai </li>
     </ol>
 
@@ -51,7 +51,11 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6 col-xs-12 mt-1">
-                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success">Thêm mới</a>
+                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                    {
+                        
+                    <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i>  Thêm mới</a>
+                    }
                 </div>
                 <div class="col-md-6 col-xs-12 mt-1">
                     <div class="row">
