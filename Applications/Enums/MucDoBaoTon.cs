@@ -28,11 +28,11 @@ namespace DongThucVatQuangTri.Applications.Enums
         };
         public static Dictionary<int, Dictionary<int, string>> MuDoBaoTonNDCP = new Dictionary<int, Dictionary<int, string>>
         {
-            { 0, new Dictionary<int, string> 
-                { 
+            { 0, new Dictionary<int, string>
+                {
                     { 31, "Nhóm IA" },
                     { 32, "Nhóm IIA" }
-                } 
+                }
             },
             { 1, new Dictionary<int, string>
                 {

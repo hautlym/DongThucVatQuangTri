@@ -9,6 +9,13 @@ namespace DongThucVatQuangTri.Applications.Common
         {
             _storageService = storageService;
         }
+
+        public async Task<string> DeleteFile(string fileName )
+        {
+            await _storageService.DeleteFileAsync(fileName);
+            return fileName;
+        }
+
         public async Task<string> SaveFile(IFormFile file)
         {
 
