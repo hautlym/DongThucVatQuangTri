@@ -3,7 +3,7 @@
     public class CreateFamilyRequest
     {
         public string Name { get; set; }
-        public string? NameLatinh { get; set; }
+        public string NameLatinh { get; set; }
         public short? Loai { get; set; }
         public int? IdDtvBo { get; set; }
         public short? Status { get; set; }

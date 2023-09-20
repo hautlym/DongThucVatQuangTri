@@ -29,11 +29,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
 
         public async Task<long> createItem(CreateClassRequest request)
         {
+            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item != null) return -2;
             var lop = new DtvLop()
             {
                 IdDtvNganh = request.IdDtvNganh,
                 Name = request.Name,
-                NameLatinh = request.NameLatinh,
+                NameLatinh = request.NameLatinh.Trim().ToUpper(),
                 Status = request.Status,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -100,6 +102,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
+                    CreatedBy= x.b.CreatedBy,
+                    UpdatedBy = x.b.UpdatedBy,
                 }).ToListAsync();
             var pageResult = new PageResult<ClassViewModels>
             {
@@ -133,12 +137,17 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
                 Loai = lop.l.Loai,
                 CreatedAt = lop.l.CreatedAt,
                 UpdatedAt = lop.l.UpdatedAt,
+                CreatedBy = lop.l.CreatedBy,
+                UpdatedBy = lop.l.UpdatedBy,
             };
             return lopVm;
         }
 
         public async Task<int> updateItem(UpdateClassRequest request)
         {
+            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item != null) return -2;
+
             var result = await _context.DtvLop.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;
