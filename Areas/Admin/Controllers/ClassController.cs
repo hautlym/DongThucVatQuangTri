@@ -7,6 +7,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage.Dtos;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DongThucVatQuangTri.Applications.Common;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -21,7 +22,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             _manageBranch = manageBranch;
             _manageClass = manageClass;
         }
-        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
+        
         public async Task<IActionResult> Index(int loai, string keyword = "", int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetClassRequest()
@@ -46,10 +47,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 ViewBag.SuscessMsg = TempData["result"];
             }
+            if (TempData["error"] != null)
+            {
+                ViewBag.ErrorMsg = TempData["error"];
+            }
             return View(data.ResultObj);
         }
         [HttpGet]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> Create(int loai)
         {
@@ -70,7 +74,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> Create(int loai, CreateClassRequest request)
         {
@@ -92,6 +95,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View();
             var result = await _manageClass.createItem(request);
+            if (result == -2)
+            {
+                ViewBag.ErrorMsg = "Lớp đã tồn tại";
+                return View();
+            }
             if (result > 0)
             {
                 TempData["result"] = "Thêm thành công";
@@ -102,12 +110,16 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> Edit(int id)
         {
 
             var result = await _manageClass.getItemById(id);
+            if (!HelperMethod.CheckUser(result.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index", new { loai = result.Loai });
+            }
             var ListBranch = await _manageBranch.getAllItem();
             ViewBag.Categories = ListBranch.Where(x => x.Loai == result.Loai).Select(x => new SelectListItem()
             {
@@ -136,7 +148,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> Edit(int loai, UpdateClassRequest request)
         {
@@ -159,6 +170,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return View();
 
             var result = await _manageClass.updateItem(request);
+            if (result == -2)
+            {
+                ViewBag.ErrorMsg = "Lớp đã tồn tại";
+                return View();
+
+            }
             if (result > 0)
             {
                 TempData["result"] = "Cập nhật thông tin thành công";
@@ -170,7 +187,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> Delete(int loai, int Id)
         {
@@ -185,8 +201,14 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", new { loai = LoaiDtv });
-
+            var item = await _manageClass.getItemById(Id);
+            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền xóa";
+                return RedirectToAction("Index", new { loai = item.Loai });
+            }
             var result = await _manageClass.deleteItem(Id);
+            
             if (result > 0)
             {
                 TempData["result"] = "Xóa  thành công";
@@ -197,16 +219,20 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
 
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
+            var item = await _manageClass.getItemById(request.Id);
+            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            {
+                return Json(new { success = false, message = "Bạn không có quyền thay đổi" });
+            }
             var result = await _manageClass.ChangeStatus(request);
             if (result > 0)
             {
                 return Json(new { success = true, message = "Thuộc tính đã được thay đổi." });
             }
-            return Json(new { success = true, message = "Thuộc tính không được thay đổi." });
+            return Json(new { success = false, message = "Thuộc tính không được thay đổi." });
         }
         [HttpGet]
         public async Task<IActionResult> Details(int Id)
