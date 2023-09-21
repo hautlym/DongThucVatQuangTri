@@ -40,6 +40,7 @@ namespace DongThucVatQuangTri.Models.EF
         public virtual DbSet<DtvBo> DtvBo { get; set; }
         public virtual DbSet<DtvHo> DtvHo { get; set; }
         public virtual DbSet<DtvLoai> DtvLoai { get; set; }
+        public virtual DbSet<DtvLoai_VQG> DtvLoai_VQGs { get; set; }
         public virtual DbSet<DtvLop> DtvLop { get; set; }
         public virtual DbSet<DtvNganh> DtvNganh { get; set; }
         public virtual DbSet<EmailLetter> EmailLetter { get; set; }
@@ -625,12 +626,6 @@ namespace DongThucVatQuangTri.Models.EF
 
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
-                entity.Property(e => e.DacDiem).HasColumnName("dac_diem");
-
-                entity.Property(e => e.FileDinhKem).HasColumnName("file_dinh_kem");
-
-                entity.Property(e => e.GiaTriSuDung).HasColumnName("gia_tri_su_dung");
-
                 entity.Property(e => e.IdDtvHo).HasColumnName("id_dtv_ho");
 
                 entity.Property(e => e.Loai).HasColumnName("loai");
@@ -651,19 +646,7 @@ namespace DongThucVatQuangTri.Models.EF
                     .HasMaxLength(255)
                     .HasColumnName("name_latinh");
 
-                entity.Property(e => e.NguonTaiLieu)
-                    .HasMaxLength(255)
-                    .HasColumnName("nguon_tai_lieu");
-
-                entity.Property(e => e.PhanBo)
-                    .HasMaxLength(255)
-                    .HasColumnName("phan_bo");
-
                 entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.Property(e => e.TenKhac)
-                    .HasMaxLength(255)
-                    .HasColumnName("ten_khac");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")
@@ -671,7 +654,37 @@ namespace DongThucVatQuangTri.Models.EF
 
                 entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
             });
+            modelBuilder.Entity<DtvLoai_VQG>(entity =>
+            {
+                entity.ToTable("dtv_loaiVqg", "dongthucvat");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Loai).HasColumnName("loai");
 
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at");
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updated_at");
+                entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+                entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
+                entity.Property(e => e.TenKhac)
+                    .HasMaxLength(255)
+                    .HasColumnName("ten_khac");
+                entity.Property(e => e.NguonTaiLieu)
+                    .HasMaxLength(255)
+                    .HasColumnName("nguon_tai_lieu");
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.PhanBo)
+                    .HasMaxLength(255)
+                    .HasColumnName("phan_bo");
+                entity.Property(e => e.DacDiem).HasColumnName("dac_diem");
+
+                entity.Property(e => e.FileDinhKem).HasColumnName("file_dinh_kem");
+
+                entity.Property(e => e.GiaTriSuDung).HasColumnName("gia_tri_su_dung");
+            });
             modelBuilder.Entity<DtvLop>(entity =>
             {
                 entity.ToTable("dtv_lop", "dongthucvat");

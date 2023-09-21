@@ -52,6 +52,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
             var lop = await _context.DtvLop.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (lop == null)
                 return -1;
+            var child = _context.DtvBo.Where(x => x.IdDtvLop == lop.Id).ToList();
+            if (child.Count > 0)
+            {
+                return -1;
+            }
             _context.DtvLop.Remove(lop);
             return await _context.SaveChangesAsync();
         }

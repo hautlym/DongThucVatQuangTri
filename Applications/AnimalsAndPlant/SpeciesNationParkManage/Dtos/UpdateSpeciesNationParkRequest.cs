@@ -1,6 +1,6 @@
-﻿namespace DongThucVatQuangTri.Models.Entities
+﻿namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.Dtos
 {
-    public class DtvLoai_VQG
+    public class UpdateSpeciesNationParkRequest
     {
         public int Id { get; set; }
         public int IdDtvLoai { get; set; }
@@ -8,12 +8,12 @@
         public string? DacDiem { get; set; }
         public string? GiaTriSuDung { get; set; }
         public string? PhanBo { get; set; }
-        public short? Status { get; set; }
+        public string? HinhAnh { set; get; }
+        public bool isDelete { get; set; }
         public short? Loai { get; set; }
-        public string? FileDinhKem { get; set; }
+        public short? Status { get; set; }
+        public List<IFormFile>? FileDinhKem { get; set; }
         public string? NguonTaiLieu { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
     }

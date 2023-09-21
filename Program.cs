@@ -3,6 +3,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
@@ -104,6 +105,8 @@ builder.Services.AddTransient<IManageClass, ManageClass>();
 builder.Services.AddTransient<IManageSet, ManageSet>();
 builder.Services.AddTransient<IManageFamily, ManageFamily>();
 builder.Services.AddTransient<IManageSpecies, ManageSpecies>();
+builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
+builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>

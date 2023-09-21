@@ -51,6 +51,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
             var item = await _context.DtvBo.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (item == null)
                 return -1;
+            var child = _context.DtvHo.Where(x => x.IdDtvBo == item.Id).ToList();
+            if (child.Count > 0)
+            {
+                return -1;
+            }
             _context.DtvBo.Remove(item);
             return await _context.SaveChangesAsync();
         }
