@@ -145,9 +145,9 @@
                     {
                         @foreach (var Url in ListUrl)
                         {
-                            @if (!String.IsNullOrEmpty(Url))
+                            @if (!String.IsNullOrEmpty(Url.Trim()))
                             {
-                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail">
+                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
                             }
                         }
                     }

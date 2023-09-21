@@ -53,6 +53,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             var branch = await _context.DtvNganh.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (branch == null)
                 return -1;
+            var child = _context.DtvLop.Where(x => x.IdDtvNganh == branch.Id).ToList();
+            if(child.Count>0)
+            {
+                return -1;
+            }
             _context.DtvNganh.Remove(branch);
             return await _context.SaveChangesAsync();
         }

@@ -1,7 +1,7 @@
-﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.Dtos;
 @using DongThucVatQuangTri.Applications.Common;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model PageResult<SpeciesViewModels>
+@model PageResult<SpeciesNationParkViewModel>
 @{
     ViewData["Title"] = "Danh sách loài";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
@@ -9,11 +9,11 @@
 
 @{
     var idLoai = -1;
-    if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
+    if (string.Equals(ViewBag.Loai, "động vật", StringComparison.CurrentCultureIgnoreCase))
     {
         idLoai = 1;
     }
-    if (string.Equals(ViewBag.Loai, "Thực Vật", StringComparison.CurrentCultureIgnoreCase))
+    if (string.Equals(ViewBag.Loai, "thực vật", StringComparison.CurrentCultureIgnoreCase))
     {
         idLoai = 0;
     }
@@ -27,7 +27,7 @@
     <script>
         function changeStatus(id, status) {
             $.ajax({
-                url: '@Url.Action("ChangeStatus", "Species")',
+                url: '@Url.Action("ChangeStatus", "SpeciesNationPark")',
                 type: 'POST',
                 data: { id: id, status: status },
                 success: function (result) {
@@ -45,10 +45,10 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Loài @ViewBag.Loai </h1>
+    <h1 class="mt-4">Loài @ViewBag.Loai vườn quốc gia</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Loài @ViewBag.Loai </li>
+        <li class="breadcrumb-item active">Loài @ViewBag.Loai vườn quốc gia</li>
     </ol>
 
     <div class="card mb-12">
@@ -93,7 +93,7 @@
                 </div>
             }
             @{
-                int i =(( Model.PageIndex -1)*Model.PageSize)+1;
+                int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
             <table class="table table-striped table-bordered">
                 <thead>
@@ -105,7 +105,7 @@
                             Tên tiếng Việt
                         </th>
                         <th>
-                            Tên Latinh
+                            Tên khác
                         </th>
                         <th>
                             Họ
@@ -136,7 +136,7 @@
                             </td>
 
                             <td class="align-middle" style="width:30%">
-                                @Html.DisplayFor(modelItem => item.NameLatinh)
+                                @Html.DisplayFor(modelItem => item.TenKhac)
                             </td>
                             <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.NameHo)
@@ -161,7 +161,7 @@
                                 </button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal@{
-                                                @item.Id
+                                                    @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         @using (Html.BeginForm("Delete", "Species", new { loai = idLoai }, FormMethod.Post))
@@ -178,7 +178,7 @@
                                                     <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
                                                     <input type="hidden" name="Id" value="@item.Id">
                                                     <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
-                                                        Xóa 
+                                                        Xóa
                                                     </button>
                                                 </div>
                                             </div>
@@ -192,4 +192,3 @@
         </div>
     </div>
 </div>
-
