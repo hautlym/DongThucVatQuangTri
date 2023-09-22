@@ -178,16 +178,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 Loai = item.l.Loai,
                 CreatedAt = item.l.CreatedAt,
                 UpdatedAt = item.l.UpdatedAt,
-                GiaTriSuDung = dtvLoai_VQG.GiaTriSuDung.Trim(),
-                NguonTaiLieu = dtvLoai_VQG.NguonTaiLieu.Trim(),
-                FileDinhKem = dtvLoai_VQG.FileDinhKem.Trim(),
-                DacDiem = dtvLoai_VQG.DacDiem.Trim(),
+                GiaTriSuDung = dtvLoai_VQG.GiaTriSuDung,
+                NguonTaiLieu = dtvLoai_VQG.NguonTaiLieu,
+                FileDinhKem = dtvLoai_VQG.FileDinhKem,
+                DacDiem = dtvLoai_VQG.DacDiem,
                 MucDoBaoTonIucn = item.l.MucDoBaoTonIucn,
                 MucDoBaoTonNd64cp = item.l.MucDoBaoTonNd64cp,
                 MucDoBaoTonNdcp = item.l.MucDoBaoTonNdcp,
                 MucDoBaoTonSdvn = item.l.MucDoBaoTonSdvn,
-                PhanBo = dtvLoai_VQG.PhanBo.Trim(),
-                TenKhac = dtvLoai_VQG.TenKhac.Trim(),
+                PhanBo = dtvLoai_VQG.PhanBo,
+                TenKhac = dtvLoai_VQG.TenKhac,
                 NameHo = item.f.Name
             };
             return lopVm;
