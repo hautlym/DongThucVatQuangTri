@@ -1,39 +1,52 @@
 ﻿@{
     ViewData["Title"] = "Địa chỉ";
 }
+<script>
+    function ChangeSrcMap(value) { 
+        var iframe = document.getElementById("MapDtv");
+        // Gán giá trị mới cho thuộc tính src
+        iframe.src = value;
+    }
+</script>
 <style>
-    .address{
-        display:flex;
-        justify-content:center;
+    .address {
+        display: flex;
+        justify-content: center;
         margin: 30px auto 50px;
+        max-width:1100px;
+        max-height: 600px;
     }
 
-    .info{
-        text-align: center;
-        margin: 0 20px;
-    }
-    .address-banner{
+    .address-banner {
         text-align: center;
         padding: 100px 0;
         background: url(/images/address_banner.png)center /cover no-repeat;
     }
+
+    iframe{
+        width:100%;
+    }
 </style>
 <div class="address-banner">
-    <h2 style="font-size: 2rem;">Thông tin địa chỉ</h2>
+    <h2 style="font-size: 2rem;">Bản đồ</h2>
+</div>
+<div class="row m-2 justify-content-center">
+    <div class="col-sm-4">
+        <label class="control-label"> Bản đồ: </label>
+        <select class="form-control select2" onchange="ChangeSrcMap(this.value)" i>
+            <option value="https://www.google.com/maps/d/embed?mid=1qCgZdz4hepER3l3xbNl9N2rIvOELBLk&hl=vi&ehbc=2E312F">
+                test 1
+            </option>
+            <option value="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7238.360896267295!2d105.79574715433812!3d20.983398408715544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1svi!2s!4v1695199138413!5m2!1svi!2s">
+                test 2
+            </option>
+            <option value="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.1956758718543!2d105.79625707491459!3d20.984791980653558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135acc6bdc7f95f%3A0x58ffc66343a45247!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2jhu4cgR2lhbyB0aMO0bmcgVuG6rW4gdOG6o2k!5e0!3m2!1svi!2s!4v1695199186636!5m2!1svi!2s">
+                test 3
+            </option>
+        </select>
+    </div>
 </div>
 <div class="address">
-    <div class="info">
-        <div class="logo"><img src="/images/logo.png" width="75" height="75" alt="" />
-            <br />
-            <span style="font-size:20px">KHU BẢO TỒN THIÊN NHIÊN BẮC HƯỚNG HOÁ</span>
-        </div>
-        <ul>
-            <li><strong>Địa chỉ:</strong> xã Hướng Phùng, huyện Hướng Hóa, tỉnh Quảng Trị</li>
-            <li><strong>Hotline:</strong> (0233) 379 7225</li>
-            <li><strong>Email:</strong>  info@vnuforest.com.vn</li>
-        </ul>
-    </div><!--end info-->
-    <iframe src="https://www.google.com/maps/d/embed?mid=1qCgZdz4hepER3l3xbNl9N2rIvOELBLk&hl=vi&ehbc=2E312F" width="640" height="480"></iframe>
-
+    <iframe id="MapDtv" src="https://www.google.com/maps/d/embed?mid=1qCgZdz4hepER3l3xbNl9N2rIvOELBLk&hl=vi&ehbc=2E312F" width="640" height="480"></iframe>
 </div>
 

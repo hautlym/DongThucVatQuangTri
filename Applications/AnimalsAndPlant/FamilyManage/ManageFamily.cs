@@ -29,11 +29,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
 
         public async Task<long> createItem(CreateFamilyRequest request)
         {
+            var item2 = _context.DtvHo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null) return -2;
             var item = new DtvHo()
             {
                 IdDtvBo = request.IdDtvBo,
                 Name = request.Name,
-                NameLatinh = request.NameLatinh,
+                NameLatinh = request.NameLatinh.Trim().ToUpper(),
                 Status = request.Status,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -50,6 +52,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
             var lop = await _context.DtvHo.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (lop == null)
                 return -1;
+            var child = _context.DtvLoai.Where(x => x.IdDtvHo == lop.Id).ToList();
+            if (child.Count > 0)
+            {
+                return -1;
+            }
             _context.DtvHo.Remove(lop);
             return await _context.SaveChangesAsync();
         }
@@ -65,6 +72,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
                 Status = request.Status,
                 UpdatedAt = request.UpdatedAt,
                 CreatedAt = request.CreatedAt,
+                CreatedBy= request.CreatedBy,
+                UpdatedBy = request.UpdatedBy,
                 Loai = request.Loai,
             }).ToListAsync();
             return data;
@@ -100,6 +109,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
+                    CreatedBy = x.b.CreatedBy,
+                    UpdatedBy = x.b.UpdatedBy,
                 }).ToListAsync();
             var pageResult = new PageResult<FamilyViewModels>
             {
@@ -133,12 +144,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
                 Loai = item.h.Loai,
                 CreatedAt = item.h.CreatedAt,
                 UpdatedAt = item.h.UpdatedAt,
+                CreatedBy = item.h.CreatedBy,
+                UpdatedBy = item.h.UpdatedBy,
             };
             return lopVm;
         }
 
         public async Task<int> updateItem(UpdateFamilyRequest request)
         {
+            var item2 = _context.DtvHo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null) return -2;
             var result = await _context.DtvHo.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;

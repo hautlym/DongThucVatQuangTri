@@ -33,26 +33,23 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
         {
             try
             {
+                var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+                if (item2 != null) return -2;
                 var item = new DtvLoai()
                 {
                     IdDtvHo = request.IdDtvHo,
                     Name = request.Name,
-                    NameLatinh = request.NameLatinh,
+                    NameLatinh = request.NameLatinh.Trim().ToUpper(),
                     Status = request.Status,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     CreatedBy = request.CreatedBy,
                     Loai = request.Loai,
-                    GiaTriSuDung = request.GiaTriSuDung,
-                    NguonTaiLieu = request.NguonTaiLieu,
-                    FileDinhKem = request.FileDinhKem != null ? await SaveMultipleFileAsync(request.FileDinhKem) : "",
-                    DacDiem = request.DacDiem,
                     MucDoBaoTonIucn = request.MucDoBaoTonIucn,
                     MucDoBaoTonNd64cp = request.MucDoBaoTonNd64cp,
                     MucDoBaoTonNdcp = request.MucDoBaoTonNdcp,
                     MucDoBaoTonSdvn = request.MucDoBaoTonSdvn,
-                    PhanBo = request.PhanBo,
-                    TenKhac = request.TenKhac,
+                  
                 };
                 _context.DtvLoai.Add(item);
                 await _context.SaveChangesAsync();
@@ -81,15 +78,10 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             var lop = await _context.DtvLoai.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (lop == null)
                 return -1;
-            if (!String.IsNullOrEmpty(lop.FileDinhKem))
+            var child = _context.DtvLoai_VQGs.Where(x => x.IdDtvLoai == lop.Id).ToList();
+            if(child.Count >0)
             {
-                foreach (var item in lop.FileDinhKem.Split(','))
-                {
-                    if(!String.IsNullOrEmpty(item))
-                    {
-                        _manageFile.DeleteFile(item);
-                    }
-                }
+                return -1;
             }
             _context.DtvLoai.Remove(lop);
             return await _context.SaveChangesAsync();
@@ -107,16 +99,12 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 Loai = item.Loai,
                 CreatedAt = item.CreatedAt,
                 UpdatedAt = item.UpdatedAt,
-                GiaTriSuDung = item.GiaTriSuDung,
-                NguonTaiLieu = item.NguonTaiLieu,
-                FileDinhKem = item.FileDinhKem,
-                DacDiem = item.DacDiem,
+               
                 MucDoBaoTonIucn = item.MucDoBaoTonIucn,
                 MucDoBaoTonNd64cp = item.MucDoBaoTonNd64cp,
                 MucDoBaoTonNdcp = item.MucDoBaoTonNdcp,
                 MucDoBaoTonSdvn = item.MucDoBaoTonSdvn,
-                PhanBo = item.PhanBo,
-                TenKhac = item.TenKhac,
+                
             }).ToListAsync();
             return data;
         }
@@ -137,45 +125,10 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
             }
-            if(!string.IsNullOrEmpty(request.keyword2))
-            {
-                query = query.Where(x => x.b.NameLatinh.Contains(request.keyword2));
-            }
+          
             if (request.status == 1 || request.status == 0)
             {
                 query = query.Where(x => x.b.Status == request.status);
-            }
-            if (request.icun!=0)
-            {
-                query = query.Where(x => x.b.MucDoBaoTonIucn == request.icun);
-            }
-            if (request.nd64cp != 0)
-            {
-                query = query.Where(x => x.b.MucDoBaoTonNd64cp == request.nd64cp);
-            }
-            if (request.ndcp != 0)
-            {
-                query = query.Where(x => x.b.MucDoBaoTonNdcp == request.ndcp);
-            }
-            if (request.sdvn != 0)
-            {
-                query = query.Where(x => x.b.MucDoBaoTonSdvn == request.sdvn);
-            }
-            if(request.id_ho != 0)
-            {
-                query = query.Where(x => x.n.Id == request.id_ho);
-            }
-            if (request.id_bo != 0)
-            {
-                query = query.Where(x => x.bo.Id == request.id_bo);
-            }
-            if (request.id_lop != 0)
-            {
-                query = query.Where(x => x.lop.Id == request.id_lop);
-            }
-            if (request.id_nganh != 0)
-            {
-                query = query.Where(x => x.nganh.Id == request.id_nganh);
             }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
@@ -190,16 +143,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
-                    GiaTriSuDung = x.b.GiaTriSuDung,
-                    NguonTaiLieu = x.b.NguonTaiLieu,
-                    FileDinhKem = x.b.FileDinhKem,
-                    DacDiem = x.b.DacDiem,
+                    CreatedBy=x.b.CreatedBy,
+                    UpdatedBy = x.b.UpdatedBy,
                     MucDoBaoTonIucn = x.b.MucDoBaoTonIucn,
                     MucDoBaoTonNd64cp = x.b.MucDoBaoTonNd64cp,
                     MucDoBaoTonNdcp = x.b.MucDoBaoTonNdcp,
                     MucDoBaoTonSdvn = x.b.MucDoBaoTonSdvn,
-                    PhanBo = x.b.PhanBo,
-                    TenKhac = x.b.TenKhac,
+                  
                 }).ToListAsync();
             var pageResult = new PageResult<SpeciesViewModels>
             {
@@ -232,16 +182,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 Loai = item.l.Loai,
                 CreatedAt = item.l.CreatedAt,
                 UpdatedAt = item.l.UpdatedAt,
-                GiaTriSuDung = item.l.GiaTriSuDung,
-                NguonTaiLieu = item.l.NguonTaiLieu,
-                FileDinhKem = item.l.FileDinhKem,
-                DacDiem = item.l.DacDiem,
+                CreatedBy = item.l.CreatedBy,
+                UpdatedBy = item.l.UpdatedBy,
                 MucDoBaoTonIucn = item.l.MucDoBaoTonIucn,
                 MucDoBaoTonNd64cp = item.l.MucDoBaoTonNd64cp,
                 MucDoBaoTonNdcp = item.l.MucDoBaoTonNdcp,
                 MucDoBaoTonSdvn = item.l.MucDoBaoTonSdvn,
-                PhanBo = item.l.PhanBo,
-                TenKhac = item.l.TenKhac,
+             
                 NameHo = item.f.Name
             };
             return lopVm;
@@ -251,43 +198,22 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
         {
             try
             {
+                var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+                if (item2 != null) return -2;
                 var result = await _context.DtvLoai.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
                 if (result == null)
                     return -1;
-                if (request.isDelete)
-                {
-                    if (!String.IsNullOrEmpty(result.FileDinhKem))
-                    {
-                        foreach (var item in result.FileDinhKem.Split(','))
-                        {
-                            if (!String.IsNullOrEmpty(item))
-                            {
-                                _manageFile.DeleteFile(item);
-                            }
-                        }
-                    }
-                    result.FileDinhKem = "";
-                }
-                if (request.FileDinhKem != null)
-                {
-                    string url = result.FileDinhKem;
-                    result.FileDinhKem = result.FileDinhKem + "," + await SaveMultipleFileAsync(request.FileDinhKem);
-                }
+               
                 result.Status = request.Status;
                 result.IdDtvHo = request.IdDtvHo;
                 result.Name = request.Name;
                 result.NameLatinh = request.NameLatinh;
                 result.UpdatedBy = request.UpdatedBy;
                 result.UpdatedAt = DateTime.Now;
-                result.GiaTriSuDung = request.GiaTriSuDung;
-                result.NguonTaiLieu = request.NguonTaiLieu;
-                result.DacDiem = request.DacDiem;
                 result.MucDoBaoTonIucn = request.MucDoBaoTonIucn;
                 result.MucDoBaoTonNd64cp = request.MucDoBaoTonNd64cp;
                 result.MucDoBaoTonNdcp = request.MucDoBaoTonNdcp;
                 result.MucDoBaoTonSdvn = request.MucDoBaoTonSdvn;
-                result.PhanBo = request.PhanBo;
-                result.TenKhac = request.TenKhac;
                 _context.DtvLoai.Update(result);
                 return await _context.SaveChangesAsync();
             }catch(Exception ex)

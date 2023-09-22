@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DongThucVatQuangTri.Migrations
+namespace DongThucVatQuangTri.Datas.Migrations
 {
     [DbContext(typeof(DongThucVatContext))]
-    [Migration("20230807163019_initialDB")]
-    partial class initialDB
+    [Migration("20230921092614_editLoai")]
+    partial class editLoai
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -852,8 +852,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("created_by");
 
                     b.Property<int?>("IdDtvLop")
@@ -882,8 +882,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");
@@ -904,8 +904,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("created_by");
 
                     b.Property<int?>("IdDtvBo")
@@ -934,8 +934,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");
@@ -956,21 +956,9 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("created_by");
-
-                    b.Property<string>("DacDiem")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("dac_diem");
-
-                    b.Property<string>("FileDinhKem")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("file_dinh_kem");
-
-                    b.Property<string>("GiaTriSuDung")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("gia_tri_su_dung");
 
                     b.Property<int?>("IdDtvHo")
                         .HasColumnType("int")
@@ -1006,12 +994,70 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("name_latinh");
 
+                    b.Property<short?>("Status")
+                        .HasColumnType("smallint")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("dtv_loai", "dongthucvat");
+                });
+
+            modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.DtvLoai_VQG", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("DacDiem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("dac_diem");
+
+                    b.Property<string>("FileDinhKem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("file_dinh_kem");
+
+                    b.Property<string>("GiaTriSuDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("gia_tri_su_dung");
+
+                    b.Property<int>("IdDtvLoai")
+                        .HasColumnType("int");
+
+                    b.Property<short?>("Loai")
+                        .HasColumnType("smallint")
+                        .HasColumnName("loai");
+
                     b.Property<string>("NguonTaiLieu")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("nguon_tai_lieu");
 
                     b.Property<string>("PhanBo")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("phan_bo");
@@ -1021,6 +1067,7 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnName("status");
 
                     b.Property<string>("TenKhac")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("ten_khac");
@@ -1029,13 +1076,13 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");
 
-                    b.ToTable("dtv_loai", "dongthucvat");
+                    b.ToTable("dtv_loaiVqg", "dongthucvat");
                 });
 
             modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.DtvLop", b =>
@@ -1051,8 +1098,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("created_by");
 
                     b.Property<int?>("IdDtvNganh")
@@ -1081,8 +1128,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");
@@ -1103,8 +1150,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("created_by");
 
                     b.Property<short?>("Loai")
@@ -1129,8 +1176,8 @@ namespace DongThucVatQuangTri.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");

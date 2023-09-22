@@ -4,6 +4,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
 using DongThucVatQuangTri.Applications.Enums;
 using DongThucVatQuangTri.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace DongThucVatQuangTri.Controllers
         private readonly IManageClass _manageClass;
         private readonly IManageSet _manageSet;
         private readonly IManageFamily _manageFamily;
-        private readonly IManageSpecies _manageSpecies;
+        private readonly IPublicManageSpecies _manageSpecies;
         public NaturalController(IManageBranch manageBranch, IManageClass manageClass, IManageFamily manageFamily,
-            IManageSet manageSet, IManageSpecies manageSpecies)
+            IManageSet manageSet, IPublicManageSpecies manageSpecies)
         {
             _manageBranch = manageBranch;
             _manageClass = manageClass;
@@ -32,7 +33,7 @@ namespace DongThucVatQuangTri.Controllers
    
         public async Task<IActionResult> Index(SearchModel searchModel, int PageIndex=1,int PageSize=20)
         {
-            var request = new GetSpeciesRequest()
+            var request = new getSpeciesPublicRequest()
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
