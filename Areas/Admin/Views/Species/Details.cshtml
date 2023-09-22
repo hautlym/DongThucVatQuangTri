@@ -33,7 +33,7 @@
         <div class="card-body">
             <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-md-12">
-                    <div>Hình ảnh:</div>
+                    @* <div>Hình ảnh:</div>
                     @{
                         List<string> ListUrl = new List<string>();
                         @if (Model != null)
@@ -66,7 +66,7 @@
                     {
                         <img style="height: 200px;width:200px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
                     }
-                </div>
+                </div> *@
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -94,10 +94,7 @@
                                         @isType
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Tên khác: </th>
-                                    <td> @Html.DisplayFor(model => model.TenKhac)</td>
-                                </tr>
+                                
                                 <tr>
                                     <th>Mức độ bảo tồn IUCN: </th>
                                     <td> @ViewBag.MucDoBaoTonICUN</td>
@@ -114,14 +111,7 @@
                                     <th>Mức độ bảo tồn Nd64Cp: </th>
                                     <td> @ViewBag.MucDoBaoTonND64CP</td>
                                 </tr>
-                                <tr>
-                                    <th>Giá trị sử dụng: </th>
-                                    <td> @Html.DisplayFor(model => model.GiaTriSuDung)</td>
-                                </tr>
-                                <tr>
-                                    <th>Nguồn tài liệu: </th>
-                                    <td> @Html.DisplayFor(model => model.NguonTaiLieu)</td>
-                                </tr>
+                                
                                 <tr>
                                     <th> Trạng thái:</th>
                                     <td>
@@ -139,10 +129,7 @@
                                     <th> Ngày cập nhật:</th>
                                     <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
                                 </tr>
-                                <tr>
-                                    <th> Đặc điểm:</th>
-                                    <td>@Html.Raw(Model.DacDiem)</td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </dl>

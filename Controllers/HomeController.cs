@@ -19,8 +19,8 @@ namespace DongThucVatQuangTri.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IManageBanner _manageBanner;
         private readonly IManageNews _manageNews;
-        private readonly IManageSpecies _manageSpecies;
-        public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews, IManageSpecies manageSpecies)
+        private readonly IPublicManageSpecies _manageSpecies;
+        public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews, IPublicManageSpecies manageSpecies)
         {
             _logger = logger;
             _manageBanner = manageBanner;

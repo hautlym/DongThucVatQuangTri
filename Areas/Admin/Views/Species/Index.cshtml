@@ -31,7 +31,11 @@
                 type: 'POST',
                 data: { id: id, status: status },
                 success: function (result) {
-
+                    console.log(result)
+                    if (!result.success) {
+                        alert(result.message);
+                        location.reload()
+                    }
                 },
                 error: function (error) {
                     alert("Đã xảy ra lỗi: " + error);
@@ -80,6 +84,12 @@
             {
                 <div id="msgAlert" class="alert alert-success" role="alert">
                     @ViewBag.SuscessMsg
+                </div>
+            }
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
                 </div>
             }
             @{

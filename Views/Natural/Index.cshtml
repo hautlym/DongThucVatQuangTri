@@ -3,8 +3,9 @@
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
 @using DongThucVatQuangTri.Applications.Common;
-@model PageResult<SpeciesViewModels>
+@model PageResult<SpeciesPublicViewModel>
 
 @{
     ViewData["Title"] = "Danh sách loài";
@@ -211,7 +212,7 @@
         <div class="maincontent">
             <marquee direction="left" behavior="scroll" scrollamount="3">
                 <h2 style="font-size:2rem;">
-                    Cơ sở dữ liệu đa dạng sinh học Khu bảo tồn thiên nhiên Bắc Hướng Hóa
+                    Cơ sở dữ liệu đa dạng sinh học 
                 </h2>
             </marquee>
             <div class="searchBox">

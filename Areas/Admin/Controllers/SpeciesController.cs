@@ -8,6 +8,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
 using DongThucVatQuangTri.Applications.Enums;
 using System.Linq;
+using DongThucVatQuangTri.Applications.Common;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -46,6 +47,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (TempData["result"] != null)
             {
                 ViewBag.SuscessMsg = TempData["result"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.ErrorMsg = TempData["error"];
             }
             return View(data.ResultObj);
         }
@@ -122,6 +127,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View();
             var result = await _manageSpecies.createItem(request);
+            if (result == -2)
+            {
+                ViewBag.ErrorMsg = "loài đã tồn tại";
+                return View();
+            }
             if (result > 0)
             {
                 TempData["result"] = "Thêm thành công";
@@ -136,6 +146,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
 
             var result = await _manageSpecies.getItemById(id);
+            if (!HelperMethod.CheckUser(result.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index", new { loai = result.Loai });
+            }
             var ListItem = await _manageFamily.getAllItem();
             ViewBag.Categories = ListItem.Where(x => x.Loai == result.Loai).Select(x => new SelectListItem()
             {
@@ -174,15 +189,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     NameLatinh = result.NameLatinh,
                     Status = result.Status,
                     IdDtvHo = result.IdDtvHo,
-                    GiaTriSuDung= result.GiaTriSuDung,
-                    DacDiem= result.DacDiem,
-                    PhanBo= result.PhanBo,
-                    HinhAnh = result.FileDinhKem,
                     MucDoBaoTonIucn = result.MucDoBaoTonIucn,
                     MucDoBaoTonNd64cp = result.MucDoBaoTonNd64cp,
                     MucDoBaoTonNdcp = result.MucDoBaoTonNdcp,
                     MucDoBaoTonSdvn = result.MucDoBaoTonSdvn,
-                    TenKhac = result.TenKhac,
                     Id = result.Id,
                 };
                 return View(updateRequest);
@@ -228,6 +238,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return View();
 
             var result = await _manageSpecies.updateItem(request);
+            if (result == -2)
+            {
+                ViewBag.ErrorMsg = "loài đã tồn tại";
+                return View();
+
+            }
             if (result > 0)
             {
                 TempData["result"] = "Cập nhật thông tin thành công";
@@ -252,7 +268,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", new { loai = LoaiDtv });
-
+            var item = await _manageSpecies.getItemById(Id);
+            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền xóa";
+                return RedirectToAction("Index", new { loai = item.Loai });
+            }
             var result = await _manageSpecies.deleteItem(Id);
             if (result > 0)
             {
@@ -266,6 +287,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
+            var item = await _manageSpecies.getItemById(request.Id);
+            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            {
+                return Json(new { success = false, message = "Bạn không có quyền thay đổi" });
+            }
             var result = await _manageSpecies.ChangeStatus(request);
             if (result > 0)
             {
@@ -277,6 +303,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Details(int Id)
         {
             var result = await _manageSpecies.getItemById(Id);
+
             var loai = result.Loai;
             
             ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn!=0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn]:"";

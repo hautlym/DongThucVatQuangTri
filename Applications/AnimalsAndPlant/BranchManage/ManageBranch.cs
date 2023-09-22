@@ -30,10 +30,12 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
 
         public async Task<long> createItem(CreateBranchRequest request)
         {
+            var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item != null) return -2;
             var branch = new DtvNganh()
             {
                 Name = request.Name,
-                NameLatinh = request.NameLatinh,
+                NameLatinh = request.NameLatinh.Trim().ToUpper(),
                 Status = request.Status,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -49,8 +51,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public async Task<int> deleteItem(int id)
         {
             var branch = await _context.DtvNganh.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (branch == null) 
+            if (branch == null)
                 return -1;
+            var child = _context.DtvLop.Where(x => x.IdDtvNganh == branch.Id).ToList();
+            if(child.Count>0)
+            {
+                return -1;
+            }
             _context.DtvNganh.Remove(branch);
             return await _context.SaveChangesAsync();
         }
@@ -65,6 +72,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 Status = request.Status,
                 UpdatedAt = request.UpdatedAt,
                 CreatedAt = request.CreatedAt,
+                CreatedBy= request.CreatedBy,
+                UpdatedBy = request.UpdatedBy,
                 Loai = request.Loai,
             }).ToListAsync();
             return data;
@@ -73,11 +82,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public async Task<ApiResult<PageResult<BranchViewModel>>> GetAlllPaging(GetBranchRequest request)
         {
             var query = from b in _context.DtvNganh
-                           select new { b};
-            if(request.loai == 1 || request.loai == 0)
+                        select new { b };
+            if (request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
-            }    
+            }
             if (!string.IsNullOrEmpty(request.keyword))
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
@@ -97,6 +106,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
+                    CreatedBy = x.b.CreatedBy,
+                    UpdatedBy = x.b.UpdatedBy,
                 }).ToListAsync();
             var pageResult = new PageResult<BranchViewModel>
             {
@@ -112,7 +123,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         {
             //var LongId = Convert.ToInt64(id);
             var branchList = await _context.DtvNganh.ToListAsync();
-            var branch = branchList.Where(x=>x.Id == id).FirstOrDefault();
+            var branch = branchList.Where(x => x.Id == id).FirstOrDefault();
             if (branch == null)
             {
                 return null;
@@ -126,6 +137,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 Loai = branch.Loai,
                 CreatedAt = branch.CreatedAt,
                 UpdatedAt = branch.UpdatedAt,
+                CreatedBy = branch.CreatedBy,
+                UpdatedBy = branch.UpdatedBy,
             };
             return branchVm;
         }
@@ -137,14 +150,17 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
 
         public async Task<int> updateItem(UpdateBranchRequest request)
         {
-            var branch =await _context.DtvNganh.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
+            var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh)).FirstOrDefault();
+            if (item != null) 
+                return -2;
+            var branch = await _context.DtvNganh.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (branch == null)
                 return -1;
             branch.Status = request.Status;
             branch.Name = request.Name;
             branch.NameLatinh = request.NameLatinh;
             branch.UpdatedBy = request.UpdatedBy;
-            branch.UpdatedAt= DateTime.Now;
+            branch.UpdatedAt = DateTime.Now;
             _context.DtvNganh.Update(branch);
             return await _context.SaveChangesAsync();
         }

@@ -28,11 +28,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
 
         public async Task<long> createItem(CreateSetRequest request)
         {
+            var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null) return -2;
             var item = new DtvBo()
             {
                 IdDtvLop = request.IdDtvLop,
                 Name = request.Name,
-                NameLatinh = request.NameLatinh,
+                NameLatinh = request.NameLatinh.Trim().ToUpper(),
                 Status = request.Status,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -49,6 +51,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
             var item = await _context.DtvBo.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (item == null)
                 return -1;
+            var child = _context.DtvHo.Where(x => x.IdDtvBo == item.Id).ToList();
+            if (child.Count > 0)
+            {
+                return -1;
+            }
             _context.DtvBo.Remove(item);
             return await _context.SaveChangesAsync();
         }
@@ -65,6 +72,9 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                 UpdatedAt = request.UpdatedAt,
                 CreatedAt = request.CreatedAt,
                 Loai = request.Loai,
+                CreatedBy= request.CreatedBy,
+                UpdatedBy = request.UpdatedBy,
+               
             }).ToListAsync();
             return data;
         }
@@ -99,6 +109,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
+                    CreatedBy= x.b.CreatedBy,
+                    UpdatedBy= x.b.UpdatedBy,
                 }).ToListAsync();
             var pageResult = new PageResult<SetViewModels>
             {
@@ -132,12 +144,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                 Loai = item.b.Loai,
                 CreatedAt = item.b.CreatedAt,
                 UpdatedAt = item.b.UpdatedAt,
+                CreatedBy = item.b.CreatedBy,
+                UpdatedBy = item.b.UpdatedBy,
             };
             return lopVm;
         }
 
         public async Task<int> updateItem(UpdateSetRequest request)
         {
+            var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null) return -2;
             var result = await _context.DtvBo.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;

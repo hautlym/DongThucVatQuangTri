@@ -6,6 +6,13 @@
     ViewData["Title"] = "Sửa loài";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+}
 @{
     var idLoai = -1;
     if (string.Equals(ViewBag.Loai, "Động Vật", StringComparison.CurrentCultureIgnoreCase))
@@ -32,11 +39,16 @@
     <div style="margin: 20px 0;">
         <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách loài</a>
     </div>
-    <div class="row">
-        <form asp-action="Edit" asp-route-loai="@idLoai" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row justify-content-center">
+        <form asp-action="Edit" asp-route-loai="@idLoai" enctype="multipart/form-data" class="col-md-6">
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <input type="hidden" asp-for="Id" class="form-control" />
                     <div class="form-group">
                         <label asp-for="IdDtvHo" class="control-label">Họ:</label>
@@ -53,21 +65,7 @@
                         <input asp-for="NameLatinh" class="form-control" />
                         <span asp-validation-for="NameLatinh" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="TenKhac" class="control-label">Tên khác:</label>
-                        <input asp-for="TenKhac" class="form-control" />
-                        <span asp-validation-for="TenKhac" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="PhanBo" class="control-label">Vùng phân bố:</label>
-                        <input asp-for="PhanBo" class="form-control" />
-                        <span asp-validation-for="PhanBo" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="NguonTaiLieu" class="control-label">Nguồn tài liệu:</label>
-                        <input asp-for="NguonTaiLieu" class="form-control" />
-                        <span asp-validation-for="NguonTaiLieu" class="text-danger"></span>
-                    </div>
+                    
                     <div class="form-group">
                         <label class="control-label">Mức độ bảo tồn IUCN:</label>
                         <div class="d-flex flex-row">
@@ -106,23 +104,9 @@
                             <option value="0">Tắt</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="FileDinhKem" class="control-label">Ảnh đính kèm:</label>
-                        <input type="file" multiple asp-for="FileDinhKem" class="form-control" />
-                        <span asp-validation-for="FileDinhKem" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="GiaTriSuDung" class="control-label">Công dụng/ Giá trị sử dụng:</label>
-                        <textarea placeholder="Tối đa 255 kí tự" style="height:100px;" maxlength="255" asp-for="GiaTriSuDung" class="form-control"></textarea>
-                        <span asp-validation-for="GiaTriSuDung" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="DacDiem" class="control-label">Đặc điểm hình thái, sinh thái:</label>
-                        <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
-                        <span asp-validation-for="DacDiem" class="text-danger"></span>
-                    </div>
+                   
                 </div>
-                <div class="col-md-6">
+               @*  <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="HinhAnh" class="control-label" style="display:block">Hình ảnh:</label>
                         @{
@@ -166,7 +150,7 @@
 
 
                     </div>
-                </div>
+                </div> *@
             </div>
             <div class="row">
                 <div class="form-group mt-2">
@@ -174,7 +158,6 @@
                     <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
                     <a asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
 
-                    
                 </div>
             </div>
         </form>

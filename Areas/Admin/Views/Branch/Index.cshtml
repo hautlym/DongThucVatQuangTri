@@ -31,10 +31,14 @@
                 type: 'POST',
                 data: { id: id, status: status },
                 success: function (result) {
-
+                    console.log(result)
+                    if (!result.success) {
+                        alert(result.message);
+                        location.reload()
+                    }
                 },
                 error: function (error) {
-                    alert("Đã xảy ra lỗi: " + error);
+                    console.log()
                 }
             });
         }
@@ -51,11 +55,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6 col-xs-12 mt-1">
-                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
-                    {
-                        
                     <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i>  Thêm mới</a>
-                    }
                 </div>
                 <div class="col-md-6 col-xs-12 mt-1">
                     <div class="row">
@@ -80,12 +80,19 @@
             </div>
         </div>
         <div class="card-body align-middle">
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
             @if (ViewBag.SuscessMsg != null)
             {
                 <div id="msgAlert" class="alert alert-success" role="alert">
                     @ViewBag.SuscessMsg
                 </div>
             }
+
             @{
                 int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
@@ -123,7 +130,7 @@
                                 }
                             </th>
                             <td class="align-middle" style="width:25%">
-                                <a class="text-decoration-none" asp-action="Details"  asp-route-Id="@item.Id">
+                                <a class="text-decoration-none" asp-action="Details" asp-route-Id="@item.Id">
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </a>
                             </td>
@@ -140,9 +147,7 @@
                                     <option value="0">Tắt</option>
                                 </select>
                             </td>
-                            @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
-                            {
-                                
+
                             <td class="align-middle">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
                                     <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
@@ -154,10 +159,10 @@
                                 </button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal@{
-                                            @item.Id
+                                                    @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        @using (Html.BeginForm("Delete", "Branch", new {loai = idLoai},FormMethod.Post))
+                                        @using (Html.BeginForm("Delete", "Branch", new { loai = idLoai }, FormMethod.Post))
                                         {
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -177,7 +182,6 @@
                                             </div>
                                         }
                             </td>
-                            }
                         </tr>
                     }
                 </tbody>
