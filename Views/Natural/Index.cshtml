@@ -228,8 +228,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                <select class="form-control select2" asp-items="@ViewBag.NganhSearch" onchange="getListLop(this.value)">
-                                    <option value="0" name="id_nganh">
+                                <select class="form-control select2" name="id_nganh" asp-items="@ViewBag.NganhSearch" onchange="getListLop(this.value)">
+                                    <option value="0" >
                                         Ngành
                                     </option>
                                 </select>
