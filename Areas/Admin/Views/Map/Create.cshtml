@@ -1,0 +1,58 @@
+﻿@using DongThucVatQuangTri.Applications.Maps.Dtos;
+@using System.Security.Claims;
+@model CreateMapRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Thêm bản đồ";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+        
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-controller="Map"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách bản đồ</a>
+    </div>
+    <div class="row">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Tên:</label>
+                        <input asp-for="Name" onkeyup="createAlias(this.value)" class="form-control" id="Name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="linkMap" class="control-label">File bản đồ:</label>
+                        <input type="file" asp-for="linkMap" class="form-control" />
+                        <span asp-validation-for="linkMap" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="CreateBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"> Mô tả:</label>
+                        <textarea asp-for="Description" id="editor" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group m-2">
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Thêm bản đồ </button>
+                    <button type="reset" class="btn btn-secondary" /><i class="fa-solid fa-eraser" style="color: #ffffff;"></i> Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

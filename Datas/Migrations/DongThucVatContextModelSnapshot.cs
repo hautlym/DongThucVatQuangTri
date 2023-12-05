@@ -1027,35 +1027,33 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnName("created_by");
 
                     b.Property<string>("DacDiem")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("dac_diem");
 
                     b.Property<string>("FileDinhKem")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("file_dinh_kem");
 
                     b.Property<string>("GiaTriSuDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("gia_tri_su_dung");
 
                     b.Property<int>("IdDtvLoai")
                         .HasColumnType("int");
 
+                    b.Property<string>("KinhDo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<short?>("Loai")
                         .HasColumnType("smallint")
                         .HasColumnName("loai");
 
                     b.Property<string>("NguonTaiLieu")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("nguon_tai_lieu");
 
                     b.Property<string>("PhanBo")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("phan_bo");
@@ -1065,7 +1063,6 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnName("status");
 
                     b.Property<string>("TenKhac")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("ten_khac");
@@ -1077,6 +1074,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
+
+                    b.Property<string>("ViDo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1525,6 +1525,43 @@ namespace DongThucVatQuangTri.Datas.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("log_subscribe_error", "dongthucvat");
+                });
+
+            modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.Map", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("linkMap")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("map");
                 });
 
             modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.Menus", b =>
@@ -2280,6 +2317,61 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasName("PK_tag_rel_tag_id");
 
                     b.ToTable("tag_rel", "dongthucvat");
+                });
+
+            modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.Tour", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short?>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("TotalView")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tour");
                 });
 
             modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.User", b =>

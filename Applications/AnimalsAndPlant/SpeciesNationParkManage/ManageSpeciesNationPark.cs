@@ -46,6 +46,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                     DacDiem = request.DacDiem,
                     PhanBo = request.PhanBo,
                     TenKhac = request.TenKhac,
+                    KinhDo= request.KinhDo,
+                    ViDo = request.ViDo,
                 };
                 _context.DtvLoai_VQGs.Add(item);
                 await _context.SaveChangesAsync();
@@ -97,12 +99,16 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 Loai = item.Loai,
                 CreatedAt = item.CreatedAt,
                 UpdatedAt = item.UpdatedAt,
+                CreatedBy = item.CreatedBy,
+                IdDtvLoai=item.IdDtvLoai,
                 GiaTriSuDung = item.GiaTriSuDung,
                 NguonTaiLieu = item.NguonTaiLieu,
                 FileDinhKem = item.FileDinhKem,
                 DacDiem = item.DacDiem,
                 PhanBo = item.PhanBo,
                 TenKhac = item.TenKhac,
+                KinhDo= item.KinhDo,
+                ViDo=item.ViDo
             }).ToListAsync();
             return data;
         }
@@ -133,13 +139,15 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 {
                     Id = x.lv.Id,
                     IdDtvHo = x.b.IdDtvHo,
+                    IdDtvLoai = (int)x.b.Id,
                     NameHo = x.n.Name,
                     Name = x.b.Name,
                     NameLatinh = x.b.NameLatinh,
-                    Status = x.b.Status,
+                    Status = x.lv.Status,
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
+                    CreatedBy=x.lv.CreatedBy,
                     GiaTriSuDung = x.lv.GiaTriSuDung,
                     NguonTaiLieu = x.lv.NguonTaiLieu,
                     FileDinhKem = x.lv.FileDinhKem,
@@ -150,6 +158,9 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                     MucDoBaoTonSdvn = x.b.MucDoBaoTonSdvn,
                     PhanBo = x.lv.PhanBo,
                     TenKhac = x.lv.TenKhac,
+                    KinhDo = x.lv.KinhDo,
+                    ViDo=x.lv.ViDo,
+                    NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<SpeciesNationParkViewModel>
             {
@@ -166,7 +177,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
             var query = from lv in _context.DtvLoai_VQGs
                         join l in _context.DtvLoai on lv.IdDtvLoai equals l.Id
                         where lv.Id == id
-                        select new { lv, l};
+                        select new { lv, l };
             var item = await query.FirstOrDefaultAsync();
             if (item == null)
             {
@@ -195,6 +206,9 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 MucDoBaoTonSdvn = item.l.MucDoBaoTonSdvn,
                 PhanBo = item.lv.PhanBo,
                 TenKhac = item.lv.TenKhac,
+                KinhDo = item.lv.KinhDo,
+                ViDo=item.lv.ViDo,
+                NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(item.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
         }
@@ -234,6 +248,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 result.DacDiem = request.DacDiem;
                 result.PhanBo = request.PhanBo;
                 result.TenKhac = request.TenKhac;
+                result.KinhDo = request.KinhDo;
+                result.ViDo= request.ViDo;
                 _context.DtvLoai_VQGs.Update(result);
                 return await _context.SaveChangesAsync();
             }

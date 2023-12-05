@@ -20,8 +20,9 @@
         public short? MucDoBaoTonNd64cp { get; set; }
         public short? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public int? UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
+        public string? NameCreate { get; set; }
     }
 }

@@ -84,7 +84,7 @@
     // });
 </script>
 <script type="text/javascript">
-    
+
     function getListLop(idNganh) {
         $(".LopSearch").show();
         $.ajax({
@@ -202,9 +202,13 @@
     .TextSearch div {
         line-height: normal;
     }
+
+    .NationParkOption div {
+        line-height: normal;
+    }
     /* .BaoTonOption select{
-                                margin-left: 20px
-                            } */
+                                    margin-left: 20px
+                                } */
 </style>
 <div id="content">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
@@ -212,7 +216,7 @@
         <div class="maincontent">
             <marquee direction="left" behavior="scroll" scrollamount="3">
                 <h2 style="font-size:2rem;">
-                    Cơ sở dữ liệu đa dạng sinh học 
+                    Cơ sở dữ liệu đa dạng sinh học
                 </h2>
             </marquee>
             <div class="searchBox">
@@ -229,7 +233,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <select class="form-control select2" name="id_nganh" asp-items="@ViewBag.NganhSearch" onchange="getListLop(this.value)">
-                                    <option value="0" >
+                                    <option value="0">
                                         Ngành
                                     </option>
                                 </select>
@@ -299,6 +303,23 @@
                         </div>
 
                     </div>
+                    <div class="NationParkOption ">
+                        <div class="col-md-3">Vườn quốc gia: </div>
+                        <div class="col-md-9">
+                            <select class="form-control col-md-9 " name="vqg">
+                                <option value="0">
+                                    Tất cả
+                                </option>
+                                <option value="1">
+                                    Vườn quốc gia Mường Tè
+                                </option>
+                                <option value="2">
+                                    Vườn quốc gia Nam Giang
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
                     <div class="TextSearch">
                         <div class="row" style=" margin-top:20px;">
                             <div class="col-md-5">Tên tiếng Việt:</div>
@@ -343,10 +364,12 @@
                                     </p>
 
                                     <div class="noidung">
-                                        @{ var img = "";}
+                                        @{
+                                            var img = "";
+                                        }
                                         @if (!String.IsNullOrEmpty(@item.FileDinhKem))
                                         {
-                                            var ListImg = item.FileDinhKem.Split(',').Where(x=>!String.IsNullOrEmpty(x)).ToList();
+                                            var ListImg = item.FileDinhKem.Split(',').Where(x => !String.IsNullOrEmpty(x)).ToList();
                                             img = ListImg.FirstOrDefault();
                                         }
                                         else

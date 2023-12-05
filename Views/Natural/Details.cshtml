@@ -10,12 +10,14 @@
 }
 <style>
     ul, li {
-        margin:0;
-        padding:0;
+        margin: 0;
+        padding: 0;
     }
-    .noidung{
+
+    .noidung {
         padding: 0 0 0 30px;
     }
+
     .noibat {
         max-width: 820px;
         margin: 0 auto !important;
@@ -40,19 +42,23 @@
         -webkit-line-clamp: 2;
         overflow: hidden;
     }
+
+    h3 {
+        font-size: 25px;
+        font-weight: 500;
+    }
 </style>
 <div id="content" style="margin:0 0 100px">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
 
     <div class="tintuc" id="trangchitiet">
         <div class="maincontent">
-            <h2><span>Loài <span></span></span></h2>
+            <h2><span>Thông tin loài <span></span></span></h2>
             <div class="row">
                 <div class="col-md-12">
                     <dl class="row">
                         <table class="table table-striped">
                             <tbody>
-
                                 <tr>
                                     <th>Tên tiếng việt: </th>
                                     <td>@Html.DisplayFor(model => model.speciesViewModels.Name)</td>
@@ -62,10 +68,10 @@
                                     <td> @Html.DisplayFor(model => model.speciesViewModels.NameLatinh)</td>
                                 </tr>
 
-                                <tr>
-                                    <th>Tên khác: </th>
-                                    <td> @Html.DisplayFor(model => model.speciesViewModels.TenKhac)</td>
-                                </tr>
+                                @*    <tr>
+                                <th>Tên khác: </th>
+                                <td> @Html.DisplayFor(model => model.speciesViewModels.TenKhac)</td>
+                                </tr> *@
                                 @{
                                     var Bo = ViewBag.Bo as List<SetViewModels>;
                                     var Lop = ViewBag.Lop as List<ClassViewModels>;
@@ -88,10 +94,10 @@
                                     <th>Lớp: </th>
                                     <td>@itemLop.Name </td>
                                 </tr>
-                                <tr>
-                                    <th>Phân bố: </th>
-                                    <td> @Html.DisplayFor(model => model.speciesViewModels.PhanBo)</td>
-                                </tr>
+                                @*     <tr>
+                                <th>Phân bố: </th>
+                                <td> @Html.DisplayFor(model => model.speciesViewModels.PhanBo)</td>
+                                </tr> *@
                                 <tr>
                                     <th>Ngành: </th>
                                     <td> @itemNganh.Name</td>
@@ -112,63 +118,121 @@
                                     <th>Mức độ bảo tồn Nd64Cp: </th>
                                     <td> @ViewBag.MucDoBaoTonND64CP</td>
                                 </tr>
-
-                                <tr>
-                                    <th>Nguồn tài liệu: </th>
-                                    <td> @Html.DisplayFor(model => model.speciesViewModels.NguonTaiLieu)</td>
-                                </tr>
-
+                                @*   <tr>
+                                <th>Nguồn tài liệu: </th>
+                                <td> @Html.DisplayFor(model => model.speciesViewModels.NguonTaiLieu)</td>
+                                </tr> *@
                             </tbody>
                         </table>
                     </dl>
 
                 </div>
             </div>
-            <h2><span>Hình ảnh <span></span></span></h2>
+            <h2><span>Thông tin tại BQL rừng phòng hộ Nam Giang <span></span></span></h2>
             <div class="row">
                 <div class="col-md-12">
-                    @{
-                        List<string> ListUrl = new List<string>();
-                        @if (Model != null)
+                    <div class="row text-center">
+                        @if (Model.speciesViewModels.VQgNamGiang != null)
                         {
-                            if (!String.IsNullOrEmpty(Model.speciesViewModels.FileDinhKem))
+                            <h3>Hình ảnh</h3>
+                            List<string> ListUrl = new List<string>();
+                            @if (Model != null)
                             {
-                                ListUrl = (@Model.speciesViewModels.FileDinhKem.Split(",")).ToList();
+                                if (!String.IsNullOrEmpty(Model.speciesViewModels.VQgNamGiang.FileDinhKem))
+                                {
+                                    ListUrl = (Model.speciesViewModels.VQgNamGiang.FileDinhKem.Split(",")).ToList();
+                                }
+                                else
+                                {
+                                    ListUrl = null;
+                                }
                             }
                             else
                             {
                                 ListUrl = null;
                             }
-                        }
-                        else
-                        {
-                            ListUrl = null;
-                        }
-                    }
-                    @if (ListUrl != null)
-                    {
-                        @foreach (var Url in ListUrl)
-                        {
-                            @if (!String.IsNullOrEmpty(Url.Trim()))
+
+                            @if (ListUrl != null)
                             {
-                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                @foreach (var Url in ListUrl)
+                                {
+                                    @if (!String.IsNullOrEmpty(Url.Trim()))
+                                    {
+                                        <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                    }
+                                }
                             }
+                            else
+                            {
+                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                            }
+                            <h3>Tên khác</h3>
+                            <h4>@Model.speciesViewModels.VQgNamGiang.TenKhac</h4>
+                            <h3>Phân bố</h3>
+                            <h4>@Model.speciesViewModels.VQgNamGiang.PhanBo</h4>
+                            <h3>Nguồn tài liệu</h3>
+                            <h4>@Model.speciesViewModels.VQgNamGiang.NguonTaiLieu</h4>
+                            <h3>Đặc điểm</h3>
+                            <h4>@Html.Raw(Model.speciesViewModels.VQgNamGiang.DacDiem)</h4>
+                            <h3>Công dụng - Giá trị sử dụng</h3>
+                            <h4>@Model.speciesViewModels.VQgNamGiang.GiaTriSuDung</h4>
                         }
-                    }
-                    else
-                    {
-                        <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
-                    }
+                    </div>
+
                 </div>
             </div>
-            <h2><span>Đặc điểm <span></span></span></h2>
+            <h2><span>Thông tin tại BQL rừng phòng hộ Mường Tè <span></span></span></h2>
             <div class="row">
-                @Html.Raw(Model.speciesViewModels.DacDiem)
-            </div>
-            <h2><span>Công dụng - Giá trị sử dụng <span></span></span></h2>
-            <div class="row">
-                @Model.speciesViewModels.GiaTriSuDung
-            </div>
+                <div class="col-md-12">
+                    <div class="row text-center">
+                        @if (Model.speciesViewModels.VQGMuongTe != null)
+                        {
+                            <h3>Hình ảnh</h3>
+                            List<string> ListUrl = new List<string>();
+                            @if (Model != null)
+                            {
+                                if (!String.IsNullOrEmpty(Model.speciesViewModels.VQGMuongTe.FileDinhKem))
+                                {
+                                    ListUrl = (Model.speciesViewModels.VQGMuongTe.FileDinhKem.Split(",")).ToList();
+                                }
+                                else
+                                {
+                                    ListUrl = null;
+                                }
+                            }
+                            else
+                            {
+                                ListUrl = null;
+                            }
+
+                            @if (ListUrl != null)
+                            {
+                                @foreach (var Url in ListUrl)
+                                {
+                                    @if (!String.IsNullOrEmpty(Url.Trim()))
+                                    {
+                                        <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                            }
+                            <h3>Tên khác</h3>
+                            <h4>@Model.speciesViewModels.VQGMuongTe.TenKhac</h4>
+                            <h3>Phân bố</h3>
+                            <h4>@Model.speciesViewModels.VQGMuongTe.PhanBo</h4>
+                            <h3>Nguồn tài liệu</h3>
+                            <h4>@Model.speciesViewModels.VQGMuongTe.NguonTaiLieu</h4>
+                            <h3>Đặc điểm</h3>
+                            <h4>@Html.Raw(Model.speciesViewModels.VQGMuongTe.DacDiem)</h4>
+                            <h3>Công dụng - Giá trị sử dụng</h3>
+                            <h4>@Model.speciesViewModels.VQGMuongTe.GiaTriSuDung</h4>
+                        }
+                    </div>
+
+                </div>
             <h2><span>Loài tương tự <span></span></span></h2>
 
         </div><!--end maincontent-->
@@ -203,7 +267,7 @@
                                                 }
                                                 <h4><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
                                                 <ul style="list-style:none; margin:0">
-                                                    <li style="margin:0" ><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                                    <li style="margin:0"><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
                                                 </ul>
                                         </div><!--end noidung-->
                                         <div style="clear:both;"></div>

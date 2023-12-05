@@ -11,6 +11,10 @@ using System.Linq;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.Dtos;
 using DongThucVatQuangTri.Applications.Common;
+using System.Security.Claims;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -20,10 +24,19 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
     {
         private readonly IManageSpecies _manageSpeciesGeneral;
         private readonly IManageSpeciesNationPark _manageSpecies;
-        public SpeciesNationParkController(IManageSpecies manageSpeciesGeneral, IManageSpeciesNationPark manageSpecies)
+        private readonly IManageBranch _manageBranch;
+        private readonly IManageClass _manageClass;
+        private readonly IManageSet _manageSet;
+        private readonly IManageFamily _manageFamily;
+        public SpeciesNationParkController(IManageSpecies manageSpeciesGeneral, IManageSpeciesNationPark manageSpecies,
+           IManageBranch manageBranch, IManageClass manageClass, IManageSet manageSet, IManageFamily manageFamily)
         {
             _manageSpeciesGeneral = manageSpeciesGeneral;
             _manageSpecies = manageSpecies;
+            _manageBranch = manageBranch;
+            _manageClass = manageClass;
+            _manageSet = manageSet;
+            _manageFamily = manageFamily;
         }
 
         public async Task<IActionResult> Index(int loai, string keyword = "", int PageIndex = 1, int PageSize = 10)
@@ -45,6 +58,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
 
             var data = await _manageSpecies.GetAlllPaging(request);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!User.FindFirstValue(ClaimTypes.Role).Contains("Administator"))
+            {
+                data.ResultObj.Items = data.ResultObj.Items.Where(x => x.CreatedBy == userId.ToString()).ToList();
+            }
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {
@@ -77,7 +95,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create(int loai,[FromForm] CreateSpeciesNationParkRequest request)
+        public async Task<IActionResult> Create(int loai, [FromForm] CreateSpeciesNationParkRequest request)
         {
             int LoaiDtv = loai;
             var ListItem = await _manageSpeciesGeneral.getAllItem();
@@ -96,6 +114,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
                 return View();
+            if (request.IdDtvLoai == 0)
+            {
+                ModelState.AddModelError("", "Vui lòng chọn loài");
+                return View();
+            }
             var result = await _manageSpecies.createItem(request);
             if (result > 0)
             {
@@ -122,7 +145,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Text = x.Name,
                 Value = x.Id.ToString(),
             });
-            
+
             if (result.Loai == 1)
             {
                 ViewBag.Loai = "Động Vật";
@@ -135,14 +158,16 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 var updateRequest = new UpdateSpeciesNationParkRequest()
                 {
-                    
+
                     Status = result.Status,
                     IdDtvLoai = result.IdDtvLoai,
                     GiaTriSuDung = result.GiaTriSuDung,
                     DacDiem = result.DacDiem,
-                    Loai= result.Loai,
+                    Loai = result.Loai,
                     PhanBo = result.PhanBo,
                     HinhAnh = result.FileDinhKem,
+                    KinhDo = result.KinhDo,
+                    ViDo = result.ViDo,
                     TenKhac = result.TenKhac,
                     Id = (int)result.Id,
                 };
@@ -152,7 +177,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         }
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Edit(int loai,[FromForm] UpdateSpeciesNationParkRequest request)
+        public async Task<IActionResult> Edit(int loai, [FromForm] UpdateSpeciesNationParkRequest request)
         {
             int LoaiDtv = loai;
             var ListItem = await _manageSpeciesGeneral.getAllItem();
@@ -243,5 +268,26 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> AutoCompleteInfoSpecies(int Id)
+        {
+            if (Id == 0)
+                return null;
+            var result = await _manageSpeciesGeneral.getItemById(Id);
+            if (result == null)
+                return null;
+            var ho = await _manageFamily.getItemById(result.IdDtvHo ?? 0);
+            var bo = await _manageSet.getItemById(ho.IdDtvBo ?? 0);
+            var lop = await _manageClass.getItemById(bo.IdDtvLop ?? 0);
+            var nganh = await _manageBranch.getItemById(lop.IdDtvNganh ?? 0);
+            return Json(new
+            {
+                NameHo = ho.Name,
+                NameBo = bo.Name,
+                NameLop = lop.Name,
+                NameNganh = nganh.Name
+            });
+        }
+
     }
 }

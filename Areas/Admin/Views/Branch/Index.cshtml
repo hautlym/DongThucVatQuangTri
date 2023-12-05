@@ -112,6 +112,9 @@
                             Ngày cập nhật
                         </th>
                         <th>
+                            Người tạo
+                        </th>
+                        <th>
                             Trạng thái
                         </th>
                         <th></th>
@@ -138,8 +141,12 @@
                             <td class="align-middle" style="width:25%">
                                 @Html.DisplayFor(modelItem => item.NameLatinh)
                             </td>
+                            
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td class="align-middle" >
+                                @Html.DisplayFor(modelItem => item.NameCreate)
                             </td>
                             <td class="align-middle">
                                 <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">

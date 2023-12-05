@@ -7,10 +7,58 @@
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 @section Scripts{
-    
+
     <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         CKEDITOR.replace('editor');
+    </script>
+    <script>
+        function ShowInfor(id, status) {
+            $.ajax({
+                url: '@Url.Action("AutoCompleteInfoSpecies", "SpeciesNationPark")',
+                type: 'GET',
+                data: { Id: id },
+                success: function (result) {
+                    console.log(result);
+
+                    // Truy cập các giá trị từ đối tượng JSON và gán vào thẻ input
+                    $("input[name='NameHo']").val(result.nameHo);
+                    $("input[name='NameBo']").val(result.nameBo);
+                    $("input[name='NameLop']").val(result.nameLop);
+                    $("input[name='NameNganh']").val(result.nameNganh);
+                },
+                error: function (error) {
+                    $("input[name='NameHo']").val("");
+                    $("input[name='NameBo']").val("");
+                    $("input[name='NameLop']").val("");
+                    $("input[name='NameNganh']").val("");
+                }
+            });
+        }
+    </script>
+    <script>
+        // Creating map options
+        var mapOptions = {
+            center: [16.506174, 80.648015],
+            zoom: 7
+        }
+        var map = new L.map('map', mapOptions);    // Creating a map object
+        var marker;
+        // Creating a Layer object
+        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        map.addLayer(layer); // Adding layer to the map
+        map.on("click", function (e) {
+            console.log(marker)
+            if (marker) {
+                consloe.log(marker)
+                map.removeLayer(marker); // Xóa marker cũ nếu đã có
+            }
+            marker =  L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+            $("input[name='KinhDo']").val(e.latlng.lng)
+            $("input[name='ViDo']").val(e.latlng.lat)
+        })
     </script>
 }
 @{
@@ -36,11 +84,28 @@
     <div class="row">
         <form asp-action="Create" asp-route-loai="@idLoai" enctype="multipart/form-data" class="row">
             <div class="col-md-6">
-                
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="IdDtvLoai" class="control-label"> Loài:</label>
-                    <select asp-for="IdDtvLoai" name="IdDtvLoai" asp-items="@ViewBag.Categories" class="form-control select2">
+                    <select asp-for="IdDtvLoai" name="IdDtvLoai" asp-items="@ViewBag.Categories" class="form-control select2" onchange="ShowInfor(this.options[this.selectedIndex].value)">
+                        <option value="0">Chọn loài</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Họ:</label>
+                    <input type="text" name="NameHo" class="form-control" disabled />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Bộ:</label>
+                    <input type="text" name="NameBo" class="form-control" disabled />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Lớp:</label>
+                    <input type="text" name="NameLop" class="form-control" disabled />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Ngành:</label>
+                    <input type="text" name="NameNganh" class="form-control" disabled />
                 </div>
                 <div class="form-group">
                     <label asp-for="TenKhac" class="control-label">Tên khác:</label>
@@ -80,15 +145,31 @@
                     <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
                     <span asp-validation-for="DacDiem" class="text-danger"></span>
                 </div>
-                <div class="form-group m-2">
-                    <input type="hidden" asp-for="Loai" value="@idLoai" />
-                    <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
-
-                    @*      <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
-                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label asp-for="KinhDo" class="control-label">Kinh độ:</label>
+                        <input asp-for="KinhDo" class="form-control" name="KinhDo" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ViDo" class="control-label">Vĩ độ:</label>
+                        <input asp-for="ViDo" class="form-control" name="ViDo"  />
+                    </div>
                 </div>
+                <div>
+                    <label class="control-label">Bản đồ:</label>
+                    <div id="map" style="width: 100%; height: 580px"></div>
+                </div>
+            </div>
+            <div class="form-group m-2">
+                <input type="hidden" asp-for="Loai" value="@idLoai" />
+                <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+
+                @*      <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
+                <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
             </div>
         </form>
     </div>

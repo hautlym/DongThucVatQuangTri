@@ -1,0 +1,75 @@
+﻿@using DongThucVatQuangTri.Applications.Common;
+@using DongThucVatQuangTri.Areas.Admin.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PageResult<ImageModel>
+@{
+    ViewData["Title"] = "Thư viện ảnh";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+    <script>
+        function changeSpecies(id) {
+            $.ajax({
+                url: '@Url.Action("ManageImage", "Home")',
+                type: 'GET',
+                data: { idLoai: id },
+                success: function (result) {
+
+                },
+                error: function (error) {
+                    alert("Đã xảy ra lỗi: " + error);
+                }
+            });
+        }
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"] </h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
+    </ol>
+    <div class="card mb-12">
+        <div class="card-header">
+            Hiển thị:
+            <form asp-action="ManageImage" asp-controller="Home" method="get">
+                <select asp-items="@ViewBag.Loai" name="idLoai" class="form-control select2" onchange="this.form.submit()" style="width:200px;">
+                    <option value="0">
+                        - Tất cả các loài-
+                    </option>
+                </select>
+            </form>
+        </div>
+        <div class="card-body align-middle row justify-content-center">
+            @{
+                int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+            }
+            @foreach (var item in Model.Items)
+            {
+                var Url = item.NameImg.Trim().Split(",");
+                if (Url.Length > 0)
+                {
+                    foreach (var item2 in Url)
+                    {
+                        <div class="card m-2" style="width: 15rem;">
+                            <img src="/user-content/@item2" class="card-img-top" style="height:180px;" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 15px;">Loài: @item.Loai</h5>
+                                <p class="card-text" style="font-size: 15px;">@item2</p>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+
+    </div>
+</div>
+

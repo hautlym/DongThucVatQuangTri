@@ -115,6 +115,9 @@
                             Ngày cập nhật
                         </th>
                         <th>
+                            Người tạo
+                        </th>
+                        <th>
                             Trạng thái
                         </th>
                         <th></th>
@@ -130,20 +133,23 @@
                                     i++;
                                 }
                             </th>
-                            <td class="align-middle" style="width:20%">
+                            <td class="align-middle" style="width:15%">
                                 <a class="text-decoration-none" asp-action="Details" asp-route-Id="@item.Id">
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </a>
                             </td>
 
-                            <td class="align-middle" style="width:20%">
+                            <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.NameLatinh)
                             </td>
                             <td class="align-middle" style="width:20%">
                                 @Html.DisplayFor(modelItem => item.NameLop)
                             </td>
-                            <td class="align-middle">
+                            <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.NameCreate)
                             </td>
                             <td class="align-middle">
                                 <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">

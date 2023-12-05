@@ -69,11 +69,10 @@
                                         <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                         <div class="col-md-2">
-                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Species",new {keyword = "",loai=idLoai})">Reset</a>
+                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","SpeciesNationPark",new {keyword = "",loai=idLoai})">Reset</a>
                         </div>
                     </div>
                 </div>
@@ -114,6 +113,9 @@
                             Ngày cập nhật
                         </th>
                         <th>
+                            Người tạo
+                        </th>
+                        <th>
                             Trạng thái
                         </th>
                         <th></th>
@@ -135,7 +137,7 @@
                                 </a>
                             </td>
 
-                            <td class="align-middle" style="width:30%">
+                            <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.TenKhac)
                             </td>
                             <td class="align-middle" style="width:15%">
@@ -143,6 +145,9 @@
                             </td>
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.NameCreate)
                             </td>
                             <td class="align-middle">
                                 <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">

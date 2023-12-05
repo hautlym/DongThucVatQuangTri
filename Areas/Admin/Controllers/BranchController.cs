@@ -81,6 +81,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
                 return View();
+            request.CreatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _manageBranch.createItem(request);
             if(result==-2)
             {
@@ -143,18 +144,17 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View();
 
+            request.UpdatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _manageBranch.updateItem(request);
             if (result == -2)
             {
                 ViewBag.ErrorMsg = "Ngành đã tồn tại";
                 return View();
-
             }
             if (result > 0)
             {
                 TempData["result"] = "Cập nhật thông tin thành công";
                 return RedirectToAction("Index", new { loai = LoaiDtv });
-
             }
 
             ModelState.AddModelError("", "Cập nhật không thành công");

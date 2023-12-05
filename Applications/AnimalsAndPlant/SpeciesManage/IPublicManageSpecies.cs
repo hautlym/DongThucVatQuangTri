@@ -8,7 +8,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
     public interface IPublicManageSpecies
     {
         public Task<List<SpeciesPublicViewModel>> getAllItem();
-        public Task<SpeciesPublicViewModel> getItemById(int id);
+        public Task<DetailPublicSpeciesModel> getItemById(int id);
         public Task<ApiResult<PageResult<SpeciesPublicViewModel>>> GetAlllPaging(getSpeciesPublicRequest request);
         
     }

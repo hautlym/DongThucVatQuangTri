@@ -49,7 +49,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                     MucDoBaoTonNd64cp = request.MucDoBaoTonNd64cp,
                     MucDoBaoTonNdcp = request.MucDoBaoTonNdcp,
                     MucDoBaoTonSdvn = request.MucDoBaoTonSdvn,
-                  
+
                 };
                 _context.DtvLoai.Add(item);
                 await _context.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             if (lop == null)
                 return -1;
             var child = _context.DtvLoai_VQGs.Where(x => x.IdDtvLoai == lop.Id).ToList();
-            if(child.Count >0)
+            if (child.Count > 0)
             {
                 return -1;
             }
@@ -99,12 +99,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 Loai = item.Loai,
                 CreatedAt = item.CreatedAt,
                 UpdatedAt = item.UpdatedAt,
-               
+                CreatedBy = item.CreatedBy,
+                UpdatedBy = item.UpdatedBy,
                 MucDoBaoTonIucn = item.MucDoBaoTonIucn,
                 MucDoBaoTonNd64cp = item.MucDoBaoTonNd64cp,
                 MucDoBaoTonNdcp = item.MucDoBaoTonNdcp,
                 MucDoBaoTonSdvn = item.MucDoBaoTonSdvn,
-                
+
             }).ToListAsync();
             return data;
         }
@@ -116,7 +117,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                         join bo in _context.DtvBo on (long)n.IdDtvBo equals bo.Id
                         join lop in _context.DtvLop on (long)bo.IdDtvLop equals lop.Id
                         join nganh in _context.DtvNganh on (long)lop.IdDtvNganh equals nganh.Id
-                        select new { b, n,bo,lop,nganh };
+                        select new { b, n, bo, lop, nganh };
             if (request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
@@ -125,7 +126,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
             }
-          
+
             if (request.status == 1 || request.status == 0)
             {
                 query = query.Where(x => x.b.Status == request.status);
@@ -143,13 +144,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
-                    CreatedBy=x.b.CreatedBy,
+                    CreatedBy = x.b.CreatedBy,
                     UpdatedBy = x.b.UpdatedBy,
                     MucDoBaoTonIucn = x.b.MucDoBaoTonIucn,
                     MucDoBaoTonNd64cp = x.b.MucDoBaoTonNd64cp,
                     MucDoBaoTonNdcp = x.b.MucDoBaoTonNdcp,
                     MucDoBaoTonSdvn = x.b.MucDoBaoTonSdvn,
-                  
+                    NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<SpeciesViewModels>
             {
@@ -166,7 +167,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             var query = from l in _context.DtvLoai
                         join f in _context.DtvHo on l.IdDtvHo equals (int)f.Id
                         where l.Id == id
-                        select new {l,f };
+                        select new { l, f };
             var item = await query.FirstOrDefaultAsync();
             if (item == null)
             {
@@ -188,8 +189,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 MucDoBaoTonNd64cp = item.l.MucDoBaoTonNd64cp,
                 MucDoBaoTonNdcp = item.l.MucDoBaoTonNdcp,
                 MucDoBaoTonSdvn = item.l.MucDoBaoTonSdvn,
-             
-                NameHo = item.f.Name
+                NameCreate=_context.appUsers.Where(c => c.Id.ToString().Equals(item.l.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
+
             };
             return lopVm;
         }
@@ -203,7 +204,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 var result = await _context.DtvLoai.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
                 if (result == null)
                     return -1;
-               
+
                 result.Status = request.Status;
                 result.IdDtvHo = request.IdDtvHo;
                 result.Name = request.Name;
@@ -216,7 +217,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 result.MucDoBaoTonSdvn = request.MucDoBaoTonSdvn;
                 _context.DtvLoai.Update(result);
                 return await _context.SaveChangesAsync();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return -1;
             }

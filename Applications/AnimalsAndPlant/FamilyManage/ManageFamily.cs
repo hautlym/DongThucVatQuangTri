@@ -83,7 +83,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
         {
             var query = from b in _context.DtvHo
                         join n in _context.DtvBo on (long)b.IdDtvBo equals n.Id
-                        select new { b, n };
+                        select new { b, n};
             if (request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
@@ -111,6 +111,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
                     UpdatedAt = x.b.UpdatedAt,
                     CreatedBy = x.b.CreatedBy,
                     UpdatedBy = x.b.UpdatedBy,
+                    NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<FamilyViewModels>
             {
@@ -146,6 +147,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
                 UpdatedAt = item.h.UpdatedAt,
                 CreatedBy = item.h.CreatedBy,
                 UpdatedBy = item.h.UpdatedBy,
+                NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(item.h.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
         }

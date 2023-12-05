@@ -1,0 +1,46 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Thông kê";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+    }
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
+    </ol>
+    <div>
+        <h1 class="text-center mt-2">Thống kê thông tin loài</h1>
+        @if (ViewBag.ErrorMsg != null)
+        {
+            <div id="msgAlert" class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMsg
+            </div>
+        }
+        @if (ViewBag.SuscessMsg != null)
+        {
+            <div id="msgAlert" class="alert alert-success" role="alert">
+                @ViewBag.SuscessMsg
+            </div>
+        }
+        <form class="text-center" asp-action="ExportExcel" method="post">
+            <select class=" form-control mt-3" style="width:30%; margin:auto;" name="vqg">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <option selected value="0">--Chọn vườn quốc gia---</option>
+                <option value="1">VQG Mường Tè</option>
+                <option value="2">VQG Nam Giang</option>
+            </select>
+            <input type="text" name="fileName" style="width:30%; margin:auto;" placeholder="Nhập tên file..." class="form-control mt-3" />
+            <button type="submit" class="btn btn-primary mt-3">Xuất file Excel</button>
+        </form>
+
+    </div>
+</div>
+
