@@ -54,7 +54,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
             if (branch == null)
                 return -1;
             var child = _context.DtvLop.Where(x => x.IdDtvNganh == branch.Id).ToList();
-            if(child.Count>0)
+            if (child.Count > 0)
             {
                 return -1;
             }
@@ -72,7 +72,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 Status = request.Status,
                 UpdatedAt = request.UpdatedAt,
                 CreatedAt = request.CreatedAt,
-                CreatedBy= request.CreatedBy,
+                CreatedBy = request.CreatedBy,
                 UpdatedBy = request.UpdatedBy,
                 Loai = request.Loai,
             }).ToListAsync();
@@ -108,6 +108,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                     UpdatedAt = x.b.UpdatedAt,
                     CreatedBy = x.b.CreatedBy,
                     UpdatedBy = x.b.UpdatedBy,
+                    NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<BranchViewModel>
             {
@@ -122,6 +123,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public async Task<BranchViewModel> getItemById(int id)
         {
             //var LongId = Convert.ToInt64(id);
+
             var branchList = await _context.DtvNganh.ToListAsync();
             var branch = branchList.Where(x => x.Id == id).FirstOrDefault();
             if (branch == null)
@@ -139,6 +141,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
                 UpdatedAt = branch.UpdatedAt,
                 CreatedBy = branch.CreatedBy,
                 UpdatedBy = branch.UpdatedBy,
+                NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(branch.CreatedBy)).Select(x => x.FirstName).FirstOrDefault(),
             };
             return branchVm;
         }
@@ -151,7 +154,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
         public async Task<int> updateItem(UpdateBranchRequest request)
         {
             var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh)).FirstOrDefault();
-            if (item != null) 
+            if (item != null)
                 return -2;
             var branch = await _context.DtvNganh.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (branch == null)

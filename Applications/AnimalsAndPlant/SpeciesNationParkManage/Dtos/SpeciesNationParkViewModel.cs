@@ -24,6 +24,8 @@
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
         public int IdDtvLoai { get; set; }
-       
+       public string? NameCreate { get; set; }
+        public string? KinhDo { get; set; }
+        public string? ViDo { get; set; }
     }
 }

@@ -25,6 +25,8 @@ namespace DongThucVatQuangTri.Models.EF
         //}
         public DbSet<AppUser> appUsers { get; set; }
         public DbSet<AppRoles> appRoles { get; set; }
+        public virtual DbSet<Tour> tour { get; set; }
+        public virtual DbSet<Map> map { get; set; }
         public virtual DbSet<AuthAssignment> AuthAssignment { get; set; }
         public virtual DbSet<AuthItem> AuthItem { get; set; }
         public virtual DbSet<AuthItemChild> AuthItemChild { get; set; }

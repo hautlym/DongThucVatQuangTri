@@ -13,6 +13,8 @@
         public short? Loai { get; set; }
         public short? Status { get; set; }
         public List<IFormFile>? FileDinhKem { get; set; }
+        public string? KinhDo { get; set; }
+        public string? ViDo { get; set; }
         public string? NguonTaiLieu { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }

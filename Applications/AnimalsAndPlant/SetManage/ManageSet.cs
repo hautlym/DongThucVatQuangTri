@@ -111,6 +111,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                     UpdatedAt = x.b.UpdatedAt,
                     CreatedBy= x.b.CreatedBy,
                     UpdatedBy= x.b.UpdatedBy,
+                    NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<SetViewModels>
             {
@@ -146,6 +147,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                 UpdatedAt = item.b.UpdatedAt,
                 CreatedBy = item.b.CreatedBy,
                 UpdatedBy = item.b.UpdatedBy,
+                NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(item.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
         }

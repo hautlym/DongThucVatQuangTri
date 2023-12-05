@@ -5,6 +5,8 @@ using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Enums;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
+using DongThucVatQuangTri.Applications.Tours;
+using DongThucVatQuangTri.Applications.Tours.Dtos;
 using DongThucVatQuangTri.Models;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +22,15 @@ namespace DongThucVatQuangTri.Controllers
         private readonly IManageBanner _manageBanner;
         private readonly IManageNews _manageNews;
         private readonly IPublicManageSpecies _manageSpecies;
-        public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews, IPublicManageSpecies manageSpecies)
+        private readonly IManageTour _manageTour;
+        public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews,
+            IPublicManageSpecies manageSpecies, IManageTour manageTour)
         {
             _logger = logger;
             _manageBanner = manageBanner;
             _manageNews = manageNews;
             _manageSpecies = manageSpecies;
+            _manageTour = manageTour;
         }
 
         public async Task<IActionResult> Index()
@@ -45,6 +50,7 @@ namespace DongThucVatQuangTri.Controllers
         }
         public IActionResult Address()
         {
+
             return View();
         }
         public async Task<IActionResult> News( int PageIndex = 1, int PageSize = 5)
@@ -56,7 +62,6 @@ namespace DongThucVatQuangTri.Controllers
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
-                
             };
             var pagi =await _manageNews.GetAlllPaging(request);
             var NewsFirst = ListNews.OrderByDescending(x => x.PostAt).FirstOrDefault();
@@ -67,6 +72,25 @@ namespace DongThucVatQuangTri.Controllers
                 ListNewsPagi = pagi.ResultObj,
                 ViewestNews = ViewNews,
             };
+            return View(item);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Tour(int PageIndex = 1, int PageSize = 5)
+        {
+            var request = new GetTourPagingRequest()
+            {
+                PageIndex = PageIndex,
+                PageSize = PageSize,
+            };
+            var pagi = await _manageTour.GetAlllPaging(request);
+            pagi.ResultObj.Items = pagi.ResultObj.Items.OrderBy(x => x.CreatedAt).ToList();
+            return View(pagi.ResultObj);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DetailsTour(int Id)
+        {
+            var item = await _manageTour.getTourById(Id);
+            _manageTour.IncreaseView(Id);
             return View(item);
         }
         [HttpGet]

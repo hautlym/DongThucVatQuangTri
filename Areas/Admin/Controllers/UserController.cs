@@ -206,6 +206,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Details(Guid Id)
         {
             var result = await _userService.GetById(Id);
+            var role = result.ResultObj.Roles;
+            result.ResultObj.Roles = Permittion.Roles[role];
             return View(result.ResultObj);
         }
     }

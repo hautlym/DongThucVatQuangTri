@@ -80,7 +80,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
         public async Task<ApiResult<PageResult<ClassViewModels>>> GetAlllPaging(GetClassRequest request)
         {
             var query = from b in _context.DtvLop
-                        join n in _context.DtvNganh on  (long)b.IdDtvNganh equals n.Id
+                        join n in _context.DtvNganh on (long)b.IdDtvNganh equals n.Id
                         select new { b,n};
             if (request.loai == 1 || request.loai == 0)
             {
@@ -109,6 +109,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
                     UpdatedAt = x.b.UpdatedAt,
                     CreatedBy= x.b.CreatedBy,
                     UpdatedBy = x.b.UpdatedBy,
+                    NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<ClassViewModels>
             {
@@ -124,8 +125,9 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
         {
             var query = from l in _context.DtvLop
                         join n in _context.DtvNganh on l.IdDtvNganh equals (int)n.Id
+      
                         where l.Id == id
-                        select new { l, n };
+                        select new { l, n};
             var lop =await query.FirstOrDefaultAsync(); 
             if (lop == null)
             {
@@ -144,6 +146,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
                 UpdatedAt = lop.l.UpdatedAt,
                 CreatedBy = lop.l.CreatedBy,
                 UpdatedBy = lop.l.UpdatedBy,
+                NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(lop.l.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
         }

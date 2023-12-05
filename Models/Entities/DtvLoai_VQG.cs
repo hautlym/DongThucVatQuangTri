@@ -16,5 +16,7 @@
         public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
+        public string? KinhDo { get; set; }
+        public string? ViDo { get; set; }
     }
 }

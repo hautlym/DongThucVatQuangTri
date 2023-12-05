@@ -5,6 +5,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Enums;
 using DongThucVatQuangTri.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,18 +21,19 @@ namespace DongThucVatQuangTri.Controllers
         private readonly IManageSet _manageSet;
         private readonly IManageFamily _manageFamily;
         private readonly IPublicManageSpecies _manageSpecies;
+        private readonly IManageSpeciesNationPark _manageSpeciesNationPark;
         public NaturalController(IManageBranch manageBranch, IManageClass manageClass, IManageFamily manageFamily,
-            IManageSet manageSet, IPublicManageSpecies manageSpecies)
+            IManageSet manageSet, IPublicManageSpecies manageSpecies, IManageSpeciesNationPark manageSpeciesNationPark)
         {
             _manageBranch = manageBranch;
             _manageClass = manageClass;
             _manageFamily = manageFamily;
             _manageSet = manageSet;
             _manageSpecies = manageSpecies;
-
+            _manageSpeciesNationPark = manageSpeciesNationPark;
         }
-   
-        public async Task<IActionResult> Index(SearchModel searchModel, int PageIndex=1,int PageSize=20)
+
+        public async Task<IActionResult> Index(SearchModel searchModel, int PageIndex = 1, int PageSize = 20)
         {
             var request = new getSpeciesPublicRequest()
             {
@@ -40,17 +42,18 @@ namespace DongThucVatQuangTri.Controllers
                 keyword = searchModel.keyword,
                 loai = searchModel.IdLoai,
                 keyword2 = searchModel.keyword2,
-                sdvn= searchModel.sdvn,
+                sdvn = searchModel.sdvn,
                 ndcp = searchModel.ndcp,
                 nd64cp = searchModel.nd64cp,
-                icun=searchModel.icun,
+                icun = searchModel.icun,
                 id_bo = searchModel.id_bo,
                 id_ho = searchModel.id_ho,
-                id_lop=searchModel.id_lop,
+                id_lop = searchModel.id_lop,
                 id_nganh = searchModel.id_nganh,
-                status=1
+                vqg = searchModel.vqg,
+                status = 1
             };
-            
+
             if (searchModel.IdLoai == 1)
             {
                 ViewBag.Loai = "Động Vật";
@@ -67,7 +70,7 @@ namespace DongThucVatQuangTri.Controllers
             });
             var data = await _manageSpecies.GetAlllPaging(request);
             ViewBag.Keyword = searchModel.keyword;
-            ViewBag.Nganh = item ;
+            ViewBag.Nganh = item;
             ViewBag.Lop = await _manageClass.getAllItem();
             ViewBag.Bo = await _manageSet.getAllItem();
             ViewBag.Ho = await _manageFamily.getAllItem();
@@ -92,7 +95,7 @@ namespace DongThucVatQuangTri.Controllers
                 Text = x.Value,
                 Value = x.Key.ToString(),
             });
-            
+
             return View(data.ResultObj);
         }
         [HttpGet]
@@ -106,8 +109,14 @@ namespace DongThucVatQuangTri.Controllers
             ViewBag.Lop = await _manageClass.getAllItem();
             ViewBag.Bo = await _manageSet.getAllItem();
             ViewBag.Ho = await _manageFamily.getAllItem();
-            ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";
-            ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+            if (MucDoBaoTon.MuDoBaoTonIUCN.ContainsKey(result.MucDoBaoTonIucn ?? 100))
+            {
+                ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";
+            }
+            if (MucDoBaoTon.MuDoBaoTonSDVN.ContainsKey(result.MucDoBaoTonSdvn ?? 100))
+            {
+                ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+            }
             ViewBag.MucDoBaoTonNDCP = !String.IsNullOrEmpty(result.MucDoBaoTonNdcp.ToString()) && result.MucDoBaoTonNdcp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNdcp] : "";
             ViewBag.MucDoBaoTonND64CP = !String.IsNullOrEmpty(result.MucDoBaoTonNd64cp.ToString()) && result.MucDoBaoTonNd64cp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNd64cp] : "";
             if (loai == 1)
@@ -118,6 +127,7 @@ namespace DongThucVatQuangTri.Controllers
             {
                 ViewBag.Loai = "Thực vật";
             }
+            var listVQG = (await _manageSpeciesNationPark.getAllItem()).Where(x => x.IdDtvLoai == result.Id).ToList();
             var detailsModels = new DetailsModels()
             {
                 lisViewModels = (await _manageSpecies.getAllItem()).Where(x => x.IdDtvHo == result.IdDtvHo && x.Id != result.Id).Take(3).ToList(),
@@ -126,10 +136,11 @@ namespace DongThucVatQuangTri.Controllers
             return View(detailsModels);
         }
         [HttpPost]
-        public  async Task<IActionResult> GetListLop(int IdNganh)
+        public async Task<IActionResult> GetListLop(int IdNganh)
         {
             var item = (await _manageClass.getAllItem()).Where(x => x.IdDtvNganh == IdNganh)
-                .Where(x => x.Status == 1).Select(x=>new SelectListItem {
+                .Where(x => x.Status == 1).Select(x => new SelectListItem
+                {
                     Text = x.Name,
                     Value = x.Id.ToString(),
                 }).ToList();

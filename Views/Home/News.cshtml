@@ -12,7 +12,7 @@
             <h2><span>Tin tức từ <span></span></span></h2>
             <div class="noibat">
                 <div class="tinhot">
-                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id" class="imgBox"><img src="/newsImage/@Model.BannerNews.Image" width="770" height="360" alt="" /></a>
+                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id" class="imgBox"><img src="/user-content/@Model.BannerNews.Image" width="770" height="360" alt="" /></a>
                     <h3><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">@Model.BannerNews.Name</a></h3>
                     <ul>
                         <li><span>@Model.BannerNews.PostAt</span></li>

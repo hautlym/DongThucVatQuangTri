@@ -71,7 +71,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _news.CreateNews(request);
             if (result > 0)
             {
-                TempData["result"] = "Thêm banner thành công";
+                TempData["result"] = "Thêm tin tức thành công";
                 return RedirectToAction("Index");
 
             }

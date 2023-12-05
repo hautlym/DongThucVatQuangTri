@@ -7,8 +7,10 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
+using DongThucVatQuangTri.Applications.Tours;
 using DongThucVatQuangTri.Applications.UserManage;
 using DongThucVatQuangTri.Applications.Validation;
 using DongThucVatQuangTri.Models.EF;
@@ -77,7 +79,8 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAssertion(context =>
         {
             return context.User.HasClaim(c =>
-                (c.Type == ClaimTypes.Role && c.Value == "NationPark") ||
+                (c.Type == ClaimTypes.Role && c.Value == "NationParkNamGiang") ||
+                (c.Type == ClaimTypes.Role && c.Value == "NationParkMuongTe") ||
                 (c.Type == ClaimTypes.Role && c.Value == "Administator"));
         });
     });
@@ -105,6 +108,8 @@ builder.Services.AddTransient<IManageClass, ManageClass>();
 builder.Services.AddTransient<IManageSet, ManageSet>();
 builder.Services.AddTransient<IManageFamily, ManageFamily>();
 builder.Services.AddTransient<IManageSpecies, ManageSpecies>();
+builder.Services.AddTransient<IManageTour, ManageTour>();
+builder.Services.AddTransient<IManageMap, ManageMap>();
 builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

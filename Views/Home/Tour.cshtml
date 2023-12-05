@@ -1,0 +1,52 @@
+﻿@using DongThucVatQuangTri.Applications.Common;
+@using DongThucVatQuangTri.Applications.Tours.Dtos;
+@model PageResult<TourViewModel>
+@{
+    ViewData["Title"] = "Tour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .noidung p {
+        font-family: 'LoraF' !important;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+    }
+</style>
+<div id="content">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+    <div class="tintuc">
+        <h2 style="font-size:2rem; text-align:center;">
+            Thông tin du lịch
+        </h2>
+        <div class="maincontent">
+            <div class="tinmoi">
+                <div class="danhsachtin row">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="tin1 col-md-4">
+                            <a asp-action="DetailsTour" style="float:unset; width:100%" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/user-content/@item.Image" width="770" height="360" alt="" style="height:150px" /></a>
+                            <div class="noidung text-center" style="padding:0;">
+                                <h4><a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                <p>@item.ShortDescription</p>
+                                <ul>
+                                    <li><span>@item.CreatedAt</span></li>
+                                    <li><i class="icon"></i></li>
+                                    @* <li><a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li> *@
+                                </ul>
+                            </div><!--end noidung-->
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <!--end tin1-->
+                    }
+                </div><!--end danh sachtin-->
+                @await Component.InvokeAsync("Pagi", Model)
+            </div><!--end tinmoi-->
+            <div style="clear:both;"></div>
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+
+
+</div><!--end content-->

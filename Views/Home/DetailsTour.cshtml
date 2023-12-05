@@ -1,0 +1,31 @@
+﻿@using DongThucVatQuangTri.Applications.Tours.Dtos;
+@model TourViewModel
+@{
+    ViewData["Title"] = "DetailsTour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Chi tiết tin du lịch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="content">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+
+    <div class="tintuc" id="trangchitiet">
+        <div class="maincontent">
+            <div class="duongdan">
+                <ul>
+                    <li><a asp-action="Tour" asp-controller="Home" id="homeBtn2">&nbsp;<span></span></a></li>
+                    <li><a href="javascript:;">Du lịch<span></span></a></li>
+                </ul>
+            </div><!--end duongdan-->
+            <h1>@Model.Name</h1>
+            <p class="time"><i class="icon"></i>@Model.CreatedAt bởi @Model.Author</p>
+            <div class="noidungchitiet">
+                <img src="/user-content/@Model.Image" width="1170" height="486" alt="" /><br />
+                @Html.Raw(Model.Description);
+            </div><!--end noidungchitiet-->
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+</div><!--end content-->
