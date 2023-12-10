@@ -40,7 +40,7 @@
     <script>
         // Creating map options
         var mapOptions = {
-            center: [16.506174, 80.648015],
+            center: [21.809870820489394,105.4755813202779],
             zoom: 7
         }
         var map = new L.map('map', mapOptions);    // Creating a map object
@@ -51,7 +51,7 @@
         map.on("click", function (e) {
             console.log(marker)
             if (marker) {
-                consloe.log(marker)
+                console.log(marker)
                 map.removeLayer(marker); // Xóa marker cũ nếu đã có
             }
             marker =  L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);

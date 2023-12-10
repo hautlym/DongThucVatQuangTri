@@ -92,25 +92,56 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
 
         public async Task<List<SpeciesNationParkViewModel>> getAllItem()
         {
-            var data = await _context.DtvLoai_VQGs.Select(item => new SpeciesNationParkViewModel()
+            var query = from lv in _context.DtvLoai_VQGs
+                        join b in _context.DtvLoai on lv.IdDtvLoai equals b.Id
+                        join n in _context.DtvHo on (long)b.IdDtvHo equals n.Id
+                        select new { lv, b, n };
+            var data2 =await query.Select(x => new SpeciesNationParkViewModel()
             {
-                Id = item.Id,
-                Status = item.Status,
-                Loai = item.Loai,
-                CreatedAt = item.CreatedAt,
-                UpdatedAt = item.UpdatedAt,
-                CreatedBy = item.CreatedBy,
-                IdDtvLoai=item.IdDtvLoai,
-                GiaTriSuDung = item.GiaTriSuDung,
-                NguonTaiLieu = item.NguonTaiLieu,
-                FileDinhKem = item.FileDinhKem,
-                DacDiem = item.DacDiem,
-                PhanBo = item.PhanBo,
-                TenKhac = item.TenKhac,
-                KinhDo= item.KinhDo,
-                ViDo=item.ViDo
+                Id = x.lv.Id,
+                IdDtvHo = x.b.IdDtvHo,
+                IdDtvLoai = (int)x.b.Id,
+                NameHo = x.n.Name,
+                Name = x.b.Name,
+                NameLatinh = x.b.NameLatinh,
+                Status = x.lv.Status,
+                Loai = x.b.Loai,
+                CreatedAt = x.b.CreatedAt,
+                UpdatedAt = x.b.UpdatedAt,
+                CreatedBy = x.lv.CreatedBy,
+                GiaTriSuDung = x.lv.GiaTriSuDung,
+                NguonTaiLieu = x.lv.NguonTaiLieu,
+                FileDinhKem = x.lv.FileDinhKem,
+                DacDiem = x.lv.DacDiem,
+                MucDoBaoTonIucn = x.b.MucDoBaoTonIucn,
+                MucDoBaoTonNd64cp = x.b.MucDoBaoTonNd64cp,
+                MucDoBaoTonNdcp = x.b.MucDoBaoTonNdcp,
+                MucDoBaoTonSdvn = x.b.MucDoBaoTonSdvn,
+                PhanBo = x.lv.PhanBo,
+                TenKhac = x.lv.TenKhac,
+                KinhDo = x.lv.KinhDo,
+                ViDo = x.lv.ViDo,
+                NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             }).ToListAsync();
-            return data;
+            //var data = await _context.DtvLoai_VQGs.Select(item => new SpeciesNationParkViewModel()
+            //{
+            //    Id = item.Id,
+            //    Status = item.Status,
+            //    Loai = item.Loai,
+            //    CreatedAt = item.CreatedAt,
+            //    UpdatedAt = item.UpdatedAt,
+            //    CreatedBy = item.CreatedBy,
+            //    IdDtvLoai=item.IdDtvLoai,
+            //    GiaTriSuDung = item.GiaTriSuDung,
+            //    NguonTaiLieu = item.NguonTaiLieu,
+            //    FileDinhKem = item.FileDinhKem,
+            //    DacDiem = item.DacDiem,
+            //    PhanBo = item.PhanBo,
+            //    TenKhac = item.TenKhac,
+            //    KinhDo= item.KinhDo,
+            //    ViDo=item.ViDo
+            //}).ToListAsync();
+            return data2;
         }
 
         public async Task<ApiResult<PageResult<SpeciesNationParkViewModel>>> GetAlllPaging(getSpeciesNationParkRequest request)

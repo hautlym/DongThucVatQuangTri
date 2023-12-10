@@ -1,5 +1,7 @@
 ﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
+using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.Dtos;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Enums;
@@ -8,6 +10,7 @@ using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.Tours;
 using DongThucVatQuangTri.Applications.Tours.Dtos;
 using DongThucVatQuangTri.Models;
+using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,14 +26,19 @@ namespace DongThucVatQuangTri.Controllers
         private readonly IManageNews _manageNews;
         private readonly IPublicManageSpecies _manageSpecies;
         private readonly IManageTour _manageTour;
+        private readonly IManageSpeciesNationPark _manageSpeciesNationPark;
+        private readonly DongThucVatContext _context;
         public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews,
-            IPublicManageSpecies manageSpecies, IManageTour manageTour)
+            IPublicManageSpecies manageSpecies, IManageTour manageTour, IManageSpeciesNationPark manageSpeciesNationPark,
+            DongThucVatContext context)
         {
             _logger = logger;
             _manageBanner = manageBanner;
             _manageNews = manageNews;
             _manageSpecies = manageSpecies;
             _manageTour = manageTour;
+            _manageSpeciesNationPark = manageSpeciesNationPark;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -48,10 +56,39 @@ namespace DongThucVatQuangTri.Controllers
             };
             return View(item);
         }
-        public IActionResult Address()
+        [HttpGet]
+        public async Task<IActionResult> Address(int vqg = 0)
         {
-
-            return View();
+            var data=await _manageSpeciesNationPark.getAllItem();
+            data = data.Where(x=>!String.IsNullOrEmpty(x.ViDo)&& !String.IsNullOrEmpty(x.KinhDo)).ToList();
+            var listModel = new List<SpeciesNationParkViewModel>();
+            if (vqg==0)
+            {
+                foreach (var item in data)
+                {
+                    var checkUser = _context.appUsers.Where(x=>x.Id.ToString() == item.CreatedBy).Select(x=>x.Roles).FirstOrDefault();
+                    if(checkUser!=null && checkUser.Contains("NationParkMuongTe")){
+                        listModel.Add(item);
+                    }
+                }
+            }
+            if(vqg==1)
+            {
+                foreach (var item in data)
+                {
+                    var checkUser = _context.appUsers.Where(x => x.Id.ToString() == item.CreatedBy).Select(x => x.Roles).FirstOrDefault();
+                    if (checkUser != null && checkUser.Contains("NationParkNamGiang"))
+                    {
+                        listModel.Add(item);
+                    }
+                }
+            }
+            var model = new addressModel()
+            {
+                SpeciesAnimal = listModel.Where(x => x.Loai == 1).ToList(),
+                SpeciesPlant = listModel.Where(x => x.Loai == 0).ToList(),
+            };
+            return View(model);
         }
         public async Task<IActionResult> News( int PageIndex = 1, int PageSize = 5)
         {

@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">Sửa  thông tin người dùng </li>
     </ol>
     <div style="margin: 20px 0;">
-        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+        @if (User.FindFirstValue(ClaimTypes.Role).Equals("Administator"))
         {
             <a class="btn btn-success" asp-action="Index" asp-controller="User"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách người dùng</a>
         }

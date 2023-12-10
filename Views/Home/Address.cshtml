@@ -1,8 +1,44 @@
-﻿@{
+﻿@model addressModel
+@{
     ViewData["Title"] = "Địa chỉ";
 }
+<style>
+    #map {
+        height: 100vh;
+        width: 100%;
+    }
+
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
+
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+    .legend {
+        line-height: 18px;
+        color: #555;
+        background: beige;
+        padding: 5px 5px 5px 5px;
+    }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+</style>
 <script>
-    function ChangeSrcMap(value) { 
+    function ChangeSrcMap(value) {
         var iframe = document.getElementById("MapDtv");
         // Gán giá trị mới cho thuộc tính src
         iframe.src = value;
@@ -13,8 +49,7 @@
         display: flex;
         justify-content: center;
         margin: 30px auto 50px;
-        max-width:1100px;
-        max-height: 600px;
+        max-width: 1100px;
     }
 
     .address-banner {
@@ -23,30 +58,183 @@
         background: url(/images/address_banner.png)center /cover no-repeat;
     }
 
-    iframe{
-        width:100%;
+    iframe {
+        width: 100%;
     }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="/dataMaps/data/muongte_rrx_wgs84.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
+<script type="text/javascript" src="/dataMaps/js/dist/Leaflet.Coordinates-0.1.5.min.js"></script>
+<link rel="stylesheet" href="/dataMaps/js/dist/Leaflet.Coordinates-0.1.5.css" />
 <div class="address-banner">
     <h2 style="font-size: 2rem;">Bản đồ</h2>
 </div>
 <div class="row m-2 justify-content-center">
     <div class="col-sm-4">
         <label class="control-label"> Bản đồ: </label>
-        <select class="form-control select2" onchange="ChangeSrcMap(this.value)" i>
-            <option value="https://www.google.com/maps/d/embed?mid=1qCgZdz4hepER3l3xbNl9N2rIvOELBLk&hl=vi&ehbc=2E312F">
-                test 1
-            </option>
-            <option value="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7238.360896267295!2d105.79574715433812!3d20.983398408715544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1svi!2s!4v1695199138413!5m2!1svi!2s">
-                test 2
-            </option>
-            <option value="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.1956758718543!2d105.79625707491459!3d20.984791980653558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135acc6bdc7f95f%3A0x58ffc66343a45247!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2jhu4cgR2lhbyB0aMO0bmcgVuG6rW4gdOG6o2k!5e0!3m2!1svi!2s!4v1695199186636!5m2!1svi!2s">
-                test 3
-            </option>
-        </select>
+        <form asp-action="Address" asp-controller="Home" method="get">
+            <select class="form-control select2" name="vqg" onchange="this.form.submit()">
+                <option value="0">
+                    Bản đồ động thực vật VQG Mường Tè
+                </option>
+                <option value="1">
+                    Bản đồ động thực vật VQG Nam Giang
+                </option>
+            </select>
+        </form>
     </div>
 </div>
 <div class="address">
-    <iframe id="MapDtv" src="https://www.google.com/maps/d/embed?mid=1qCgZdz4hepER3l3xbNl9N2rIvOELBLk&hl=vi&ehbc=2E312F" width="640" height="480"></iframe>
+    <div id="map"></div>
+    <script>
+
+        /*===================================================
+                        MAPS  LAYER
+        ===================================================*/
+        var mapOptions = {
+            center: [22.481854, 102.616594],
+            zoom: 11,
+            attributionControl: false
+        }
+        var map = new L.map('map', mapOptions); // Creating a map object
+        var basemaps = {
+
+            GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }),
+            GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }),
+            GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }),
+            GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }),
+            OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+        };
+
+        L.control.layers(basemaps).addTo(map);
+        basemaps.GoogleHybrid.addTo(map);
+        var popup = L.popup();
+        /*===================================================
+                        Attribution options
+        ===================================================*/
+        var attrOptions = {
+            prefix: 'Creater: Cường nv'
+        };
+        var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+        var attr = L.control.attribution(attrOptions);
+        var scale = L.control.scale(); // Creating scale control
+        //L.geoJson(muongte_rgxa).addTo(map)
+        scale.addTo(map); // Adding scale control to the map
+        attr.addTo(map);  // Adding attribution to the map
+        // L.Control.geocoder().addTo(map); // Add search to maps
+        // Add coornidates
+        L.control.coordinates({
+            position: "bottomright", //optional default "bootomright"
+            decimals: 2, //optional default 4
+            decimalSeperator: ".", //optional default "."
+            labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+            labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+            enableUserInput: true, //optional default true
+            useDMS: false, //optional default false
+            useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+            markerType: L.marker, //optional default L.marker
+            markerProps: {}, //optional default {},
+            labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+            labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+            //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+        }).addTo(map);
+        /*===================================================
+                        Chú thích
+        ===================================================*/
+        var legend = L.control({ position: "bottomleft" });
+        legend.onAdd = function (map1) {
+            var div = L.DomUtil.create("div", "legend");
+            div.innerHTML += "<h4>Chú thích</h4>";
+            div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
+            div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+            return div;
+        };
+        legend.addTo(map);
+        /*===================================================
+                        Printer
+        ===================================================*/
+        L.easyPrint({
+            title: 'Máy in',
+            position: 'bottomright',
+            filename: 'IFEE-ĐenVa',
+            exportOnly: true,
+            sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
+        }).addTo(map);
+        /*===================================================
+                        maker point
+        ===================================================*/
+        // Icon ảnh
+        var normal = L.icon({
+            iconUrl: "/dataMaps/pic/treeicon.png",
+            iconSize: [30, 30], // size of the icon
+            iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+
+        var noble = L.icon({
+            iconUrl: "/dataMaps/pic/Elephant.png",
+            iconSize: [30, 30], // size of the icon
+            iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+
+        /*===================================================
+                        listpoint dtv
+        ===================================================*/
+        var planesAnimal = [
+        @foreach (var item in Model.SpeciesAnimal)
+        {
+            var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo}],";
+            @Html.Raw(text)
+        }
+                ];
+        var planesPlant = [
+        @foreach (var item in Model.SpeciesPlant)
+        {
+            var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo}],";
+            @Html.Raw(text)
+        }
+                        ];
+
+        for (var i = 0; i < planesAnimal.length; i++) {
+            marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
+                .bindPopup(planesAnimal[i][0])
+                .addTo(map);
+            marker.id = planesAnimal[i][0];
+            marker.on('click', markerOnClick);
+        }
+
+        for (var i = 0; i < planesPlant.length; i++) {
+            marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
+                .bindPopup(planesPlant[i][0])
+                .addTo(map);
+            marker.id = planesPlant[i][0];
+            marker.on('click', markerOnClick);
+        }
+
+        /*===================================================
+                        AJAX get data dtv from maker
+        ===================================================*/
+        function markerOnClick(e) {
+            alert(this.id);
+        }
+    </script>
 </div>
 
