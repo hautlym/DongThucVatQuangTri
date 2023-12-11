@@ -164,7 +164,7 @@
                             }
                             else
                             {
-                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." style="width: 150px; height: 150px;" class="img-thumbnail">
                             }
                             <h3>Tên khác</h3>
                             <h4>@Model.speciesViewModels.VQgNamGiang.TenKhac</h4>
@@ -217,7 +217,7 @@
                             }
                             else
                             {
-                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width: 150px; height: 150px;" alt="..." class="img-thumbnail">
                             }
                             <h3>Tên khác</h3>
                             <h4>@Model.speciesViewModels.VQGMuongTe.TenKhac</h4>
@@ -257,14 +257,26 @@
                                         </p>
                                         <div class="noidung">
                                             <ul>
-                                                @if (!String.IsNullOrEmpty(@item.FileDinhKem))
-                                                {
-                                                    <img src="/user-content/@item.FileDinhKem.Trim(',')[0]" width="100" height="100" alt="" style="float: left;margin-right: 5px;">
-                                                }
-                                                else
-                                                {
-                                                    <img width="100" height="100" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 5px;">
-                                                }
+                                                    @{
+                                                        var img = "";
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(@item.FileDinhKem))
+                                                    {
+                                                        var ListImg = item.FileDinhKem.Split(',').Where(x => !String.IsNullOrEmpty(x)).ToList();
+                                                        img = ListImg.FirstOrDefault();
+                                                    }
+                                                    else
+                                                    {
+                                                        img = null;
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(img))
+                                                    {
+                                                        <img src="/user-content/@img" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                                    }
                                                 <h4><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
                                                 <ul style="list-style:none; margin:0">
                                                     <li style="margin:0"><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>

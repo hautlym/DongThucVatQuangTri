@@ -83,17 +83,19 @@ namespace DongThucVatQuangTri.Controllers
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
-
+                Selected= x.Key.ToString().Equals(searchModel.icun)
             });
             ViewBag.MucDoBaoTonSDVN = MucDoBaoTon.MuDoBaoTonSDVN.Select(x => new SelectListItem()
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
+                Selected = x.Key.ToString().Equals(searchModel.sdvn)
             });
             ViewBag.MucDoBaoTonNDCP = MucDoBaoTon.MuDoBaoTonNDCP[searchModel.IdLoai].Select(x => new SelectListItem()
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
+                Selected = x.Key.ToString().Equals(searchModel.ndcp)
             });
 
             return View(data.ResultObj);
