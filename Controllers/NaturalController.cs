@@ -132,7 +132,7 @@ namespace DongThucVatQuangTri.Controllers
             var listVQG = (await _manageSpeciesNationPark.getAllItem()).Where(x => x.IdDtvLoai == result.Id).ToList();
             var detailsModels = new DetailsModels()
             {
-                lisViewModels = (await _manageSpecies.getAllItem()).Where(x => x.IdDtvHo == result.IdDtvHo && x.Id != result.Id).Take(3).ToList(),
+                lisViewModels = (await _manageSpecies.getAllItem()).Where(x => x.IdDtvHo == result.IdDtvHo && x.Id != result.Id).Take(2).ToList(),
                 speciesViewModels = result
             };
             return View(detailsModels);
