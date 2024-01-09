@@ -11,6 +11,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
         public Task<NewsViewModels> getNewsById(long id);
         Task<long> CreateNews(CreateNewsRequest request);
         public Task<ApiResult<PageResult<NewsViewModels>>> GetAlllPaging(GetNewsPagingRequest request);
+        public Task<ApiResult<PageResult<NewsViewModels>>> PublicNewsPaging(GetNewsPagingRequest request);
         Task<int> deleteNews(int id);
         public Task<int> updateNews(UpdateNewsRequest request);
         public Task<int> ChangeStatus(ChangeStatusRequest request);

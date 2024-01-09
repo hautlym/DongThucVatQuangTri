@@ -12,6 +12,7 @@ namespace DongThucVatQuangTri.Applications.Tours
         Task<long> CreateTour(CreateTourRequest request);
         public Task<ApiResult<PageResult<TourViewModel>>> GetAlllPaging(GetTourPagingRequest request);
         Task<int> deleteTour(int id);
+        public Task<ApiResult<PageResult<TourViewModel>>> PublicTourPaging(GetTourPagingRequest request);
         public Task<int> updateTour(UpdateTourRequest request);
         public Task<int> ChangeStatus(ChangeStatusRequest request);
         public Task<int> IncreaseView(int id);

@@ -2,6 +2,7 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
+using DongThucVatQuangTri.Applications.Tours.Dtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
@@ -44,6 +45,9 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
 
         public async Task<long> CreateNews(CreateNewsRequest request)
         {
+            var checkExist = _context.News.Where(x=>x.Name == request.Name|| x.Alias==request.Alias).FirstOrDefault();
+            if (checkExist != null)
+                return -1;
             var item = new News()
             {
                 Alias = request.Alias,
@@ -208,6 +212,100 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             news.TotalView +=1 ;
             _context.News.Update(news);
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<ApiResult<PageResult<NewsViewModels>>> PublicNewsPaging(GetNewsPagingRequest request)
+        {
+            var query = from b in _context.News
+                        join bc in _context.NewsCat on b.NewsCatId equals Convert.ToInt32(bc.Id)
+                        select new { b, bc };
+            var list = query.ToList();
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                query = query.Where(x => x.b.Name.Contains(request.Keyword));
+            }
+            if (request.status == 1 || request.status == 0)
+            {
+                query = query.Where(x => x.b.Status == request.status);
+            }
+            
+            var tempdata = await query.Select(request => new NewsViewModels()
+                {
+                    Id = request.b.Id,
+                    Alias = request.b.Alias,
+                    RootNewsCatId = request.b.RootNewsCatId,
+                    NewsCatId = request.b.NewsCatId,
+                    Name = request.b.Name,
+                    Image = request.b.Image,
+                    ShortDescription = request.b.ShortDescription,
+                    Description = request.b.Description,
+                    SortOrder = request.b.SortOrder,
+                    IsHot = request.b.IsHot,
+                    IsSystem = request.b.IsSystem,
+                    Status = request.b.Status,
+                    Author = request.b.Author,
+                    Source = request.b.Source,
+                    PostAt = request.b.PostAt,
+                    TitleSeo = request.b.TitleSeo,
+                    ContentSeo = request.b.ContentSeo,
+                    KeySeo = request.b.KeySeo,
+                    Language = request.b.Language,
+                    IdRelated = request.b.IdRelated,
+                    NewsCatName = request.bc.Name
+                }).ToListAsync();
+            if (request.type != 0)
+            {
+                var listnewData = new List<NewsViewModels>();
+                if (request.type == 2)
+                {
+                    foreach (var item in tempdata)
+                    {
+                        var vqgLoai = _context.News.Where(x => x.Id == item.Id).ToList();
+                        if (vqgLoai.Count > 0)
+                        {
+                            foreach (var item2 in vqgLoai)
+                            {
+                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
+                                if (checkRoleUser == "NationParkMuongTe")
+                                {
+                                    listnewData.Add(item);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (request.type == 1)
+                {
+                    foreach (var item in tempdata)
+                    {
+                        var vqgLoai = _context.News.Where(x => x.Id == item.Id).ToList();
+                        if (vqgLoai.Count > 0)
+                        {
+                            foreach (var item2 in vqgLoai)
+                            {
+                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
+                                if (checkRoleUser == "NationParkNamGiang")
+                                {
+                                    listnewData.Add(item);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                tempdata = listnewData;
+            }
+            int totalRow = tempdata.Count;
+            var data = tempdata.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var pageResult = new PageResult<NewsViewModels>
+            {
+                TotalRecords = totalRow,
+                Items = data,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+            };
+            return new ApiSuccessResult<PageResult<NewsViewModels>>(pageResult);
         }
 
         public async Task<int> updateNews(UpdateNewsRequest request)

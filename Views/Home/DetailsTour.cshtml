@@ -23,7 +23,7 @@
             <h1>@Model.Name</h1>
             <p class="time"><i class="icon"></i>@Model.CreatedAt bởi @Model.Author</p>
             <div class="noidungchitiet">
-                <img src="/user-content/@Model.Image" width="1170" height="486" alt="" /><br />
+                <img src="/user-content/@Model.Image" width="1170" height="486" alt="" style="max-height: 400px;" /><br />
                 @Html.Raw(Model.Description);
             </div><!--end noidungchitiet-->
         </div><!--end maincontent-->

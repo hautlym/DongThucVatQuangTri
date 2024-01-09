@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using DongThucVatQuangTri.Models.Entities;
+using System.Security.Claims;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdministatorOrAdminPolicy")]
+    [Authorize]
     public class NewsController : BaseController
     {
         private readonly IManageNews _news;
@@ -67,7 +68,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-
+            request.Author = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _news.CreateNews(request);
             if (result > 0)
             {
@@ -75,6 +76,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index");
 
             }
+            ModelState.AddModelError("Name", "Tin đã tồn tại");
+            ModelState.AddModelError("Alias", "alias đã tồn tại");
             return View(request);
         }
 

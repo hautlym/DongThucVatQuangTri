@@ -53,7 +53,7 @@
 
     <div class="tintuc" id="trangchitiet">
         <div class="maincontent">
-            <h2><span>Thông tin loài <span></span></span></h2>
+            <h2><span style="font-family:LoraF;">Thông tin loài <span></span></span></h2>
             <div class="row">
                 <div class="col-md-12">
                     <dl class="row">
@@ -128,114 +128,145 @@
 
                 </div>
             </div>
-            <h2><span>Thông tin tại BQL rừng phòng hộ Nam Giang <span></span></span></h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row text-center">
-                        @if (Model.speciesViewModels.VQgNamGiang != null)
-                        {
-                            <h3>Hình ảnh</h3>
-                            List<string> ListUrl = new List<string>();
-                            @if (Model != null)
-                            {
-                                if (!String.IsNullOrEmpty(Model.speciesViewModels.VQgNamGiang.FileDinhKem))
-                                {
-                                    ListUrl = (Model.speciesViewModels.VQgNamGiang.FileDinhKem.Split(",")).ToList();
-                                }
-                                else
-                                {
-                                    ListUrl = null;
-                                }
-                            }
-                            else
-                            {
-                                ListUrl = null;
-                            }
-
-                            @if (ListUrl != null)
-                            {
-                                @foreach (var Url in ListUrl)
-                                {
-                                    @if (!String.IsNullOrEmpty(Url.Trim()))
+            <div class="accordion " id="accordionPanelsStayOpenExample">
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header mb-1" id="panelsStayOpen-headingOne">
+                        <button class="accordion-button collapsed p-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                            <h3><span>Thông tin tại BQL rừng phòng hộ Nam Giang <span></span></span></h3>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse " aria-labelledby="panelsStayOpen-headingOne" >
+                        <div class="accordion-body row">
+                            <div class="col-md-12">
+                                <div class="row text-center">
+                                    @if (Model.speciesViewModels.VQgNamGiang != null)
                                     {
-                                        <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." style="width: 150px; height: 150px;" class="img-thumbnail">
-                            }
-                            <h3>Tên khác</h3>
-                            <h4>@Model.speciesViewModels.VQgNamGiang.TenKhac</h4>
-                            <h3>Phân bố</h3>
-                            <h4>@Model.speciesViewModels.VQgNamGiang.PhanBo</h4>
-                            <h3>Nguồn tài liệu</h3>
-                            <h4>@Model.speciesViewModels.VQgNamGiang.NguonTaiLieu</h4>
-                            <h3>Đặc điểm</h3>
-                            <h4>@Html.Raw(Model.speciesViewModels.VQgNamGiang.DacDiem)</h4>
-                            <h3>Công dụng - Giá trị sử dụng</h3>
-                            <h4>@Model.speciesViewModels.VQgNamGiang.GiaTriSuDung</h4>
-                        }
-                    </div>
+                                        <h3>Hình ảnh</h3>
+                                        List<string> ListUrl = new List<string>();
+                                        @if (Model != null)
+                                        {
+                                            if (!String.IsNullOrEmpty(Model.speciesViewModels.VQgNamGiang.FileDinhKem))
+                                            {
+                                                ListUrl = (Model.speciesViewModels.VQgNamGiang.FileDinhKem.Split(",")).ToList();
+                                            }
+                                            else
+                                            {
+                                                ListUrl = null;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ListUrl = null;
+                                        }
 
+                                        @if (ListUrl != null)
+                                        {
+                                            @foreach (var Url in ListUrl)
+                                            {
+                                                @if (!String.IsNullOrEmpty(Url.Trim()))
+                                                {
+                                                    <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." style="width: 150px; height: 150px;" class="img-thumbnail">
+                                        }
+                                        <h3>Tên khác</h3>
+                                        <p>@Model.speciesViewModels.VQgNamGiang.TenKhac</p>
+                                        <h3>Phân bố</h3>
+                                        <p>@Model.speciesViewModels.VQgNamGiang.PhanBo</p>
+                                        <h3>Nguồn tài liệu</h3>
+                                        <p>@Model.speciesViewModels.VQgNamGiang.NguonTaiLieu</p>
+                                        <h3>Đặc điểm</h3>
+                                        <p>@Html.Raw(Model.speciesViewModels.VQgNamGiang.DacDiem)</p>
+                                        <h3>Công dụng - Giá trị sử dụng</h3>
+                                        <p>@Model.speciesViewModels.VQgNamGiang.GiaTriSuDung</p>
+                                    }
+                                    else
+                                    {
+                                        <h3 class="p-2">
+                                            Không có thông tin
+                                        </h3>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header mb-1" id="panelsStayOpen-headingTwo">
+                        <button class="accordion-button collapsed p-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
+                            <h3><span>Thông tin tại BQL rừng phòng hộ Mường Tè <span></span></span></h3>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo" data-bs-parent="#accordionPanelsStayOpenExample">
+                        <div class="accordion-body row">
+                            <div class="col-md-12">
+                                <div class="row text-center">
+                                    @if (Model.speciesViewModels.VQGMuongTe != null)
+                                    {
+                                        <h3>Hình ảnh</h3>
+                                        List<string> ListUrl = new List<string>();
+                                        @if (Model != null)
+                                        {
+                                            if (!String.IsNullOrEmpty(Model.speciesViewModels.VQGMuongTe.FileDinhKem))
+                                            {
+                                                ListUrl = (Model.speciesViewModels.VQGMuongTe.FileDinhKem.Split(",")).ToList();
+                                            }
+                                            else
+                                            {
+                                                ListUrl = null;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ListUrl = null;
+                                        }
+
+                                        @if (ListUrl != null)
+                                        {
+                                            @foreach (var Url in ListUrl)
+                                            {
+                                                @if (!String.IsNullOrEmpty(Url.Trim()))
+                                                {
+                                                    <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width: 150px; height: 150px;" alt="..." class="img-thumbnail">
+                                        }
+                                        <h3 style="">Tên khác</h3>
+                                        <p>@Model.speciesViewModels.VQGMuongTe.TenKhac</p>
+                                        <h3>Phân bố</h3>
+                                        <p>@Model.speciesViewModels.VQGMuongTe.PhanBo</p>
+                                        <h3>Nguồn tài liệu</h3>
+                                        <p>@Model.speciesViewModels.VQGMuongTe.NguonTaiLieu</p>
+                                        <h3>Đặc điểm</h3>
+                                        <p>@Html.Raw(Model.speciesViewModels.VQGMuongTe.DacDiem)</p>
+                                        <h3>Công dụng - Giá trị sử dụng</h3>
+                                        <p>@Model.speciesViewModels.VQGMuongTe.GiaTriSuDung</p>
+                                    }
+                                    else
+                                    {
+                                        <h3>Không có thông tin</h3>
+                                    }
+                                </div>
+
+                            </div>
+                            
+
+                        </div><!--end maincontent-->
+
+                    </div>
                 </div>
             </div>
-            <h2><span>Thông tin tại BQL rừng phòng hộ Mường Tè <span></span></span></h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row text-center">
-                        @if (Model.speciesViewModels.VQGMuongTe != null)
-                        {
-                            <h3>Hình ảnh</h3>
-                            List<string> ListUrl = new List<string>();
-                            @if (Model != null)
-                            {
-                                if (!String.IsNullOrEmpty(Model.speciesViewModels.VQGMuongTe.FileDinhKem))
-                                {
-                                    ListUrl = (Model.speciesViewModels.VQGMuongTe.FileDinhKem.Split(",")).ToList();
-                                }
-                                else
-                                {
-                                    ListUrl = null;
-                                }
-                            }
-                            else
-                            {
-                                ListUrl = null;
-                            }
-
-                            @if (ListUrl != null)
-                            {
-                                @foreach (var Url in ListUrl)
-                                {
-                                    @if (!String.IsNullOrEmpty(Url.Trim()))
-                                    {
-                                        <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width: 150px; height: 150px;" alt="..." class="img-thumbnail">
-                            }
-                            <h3>Tên khác</h3>
-                            <h4>@Model.speciesViewModels.VQGMuongTe.TenKhac</h4>
-                            <h3>Phân bố</h3>
-                            <h4>@Model.speciesViewModels.VQGMuongTe.PhanBo</h4>
-                            <h3>Nguồn tài liệu</h3>
-                            <h4>@Model.speciesViewModels.VQGMuongTe.NguonTaiLieu</h4>
-                            <h3>Đặc điểm</h3>
-                            <h4>@Html.Raw(Model.speciesViewModels.VQGMuongTe.DacDiem)</h4>
-                            <h3>Công dụng - Giá trị sử dụng</h3>
-                            <h4>@Model.speciesViewModels.VQGMuongTe.GiaTriSuDung</h4>
-                        }
-                    </div>
-
-                </div>
-            <h2><span>Loài tương tự <span></span></span></h2>
-
-        </div><!--end maincontent-->
+           
+            <h3><span style="font-family: 'LoraF';">Loài tương tự <span></span></span></h3>
     </div><!--end tintuc-->
     @{
         int i = 1;
@@ -277,7 +308,7 @@
                                                 {
                                                         <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
                                                 }
-                                                <h4><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                                <h4 style="float:left;"><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
                                                 <ul style="list-style:none; margin:0">
                                                     <li style="margin:0"><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
                                                 </ul>

@@ -4,100 +4,236 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="content">
-    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
-
+<style>
+    /*  #content {
+                    background-color: #F3F3F9;
+                } */
+</style>
+<div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+<div class="d-flex justify-content-center mb-5">
+    <a asp-action="News" asp-controller="Home" asp-route-type="0" class="btn btn-primary mr-1 border optionNationPark" style="margin-right:10px;">
+        Tất cả
+    </a>
+    <a asp-action="News" asp-controller="Home" asp-route-type="1" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
+        Nam Giang
+    </a>
+    <a asp-action="News" asp-controller="Home" asp-route-type="2" class="btn btn-light border bg-white optionNationPark">
+        Mường Tè
+    </a>
+</div>
+@if (Model.ListNewsPagi.TotalRecords == 0)
+{
+    <div class="d-flex justify-content-center mb-5">
+        <h2>Không có tin tức nào</h2>
+    </div>
+}
+else
+{
     <div class="tintuc">
         <div class="maincontent">
             <h2><span>Tin tức từ <span></span></span></h2>
-            <div class="noibat">
-                <div class="tinhot">
-                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id" class="imgBox"><img src="/user-content/@Model.BannerNews.Image" width="770" height="360" alt="" /></a>
+            <div class="noibat row justify-content-between ">
+                <div class="tinhot col-lg-8 col-md-6 col-12" style="float:unset;">
+                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id" class="imgBox">
+                        @if (String.IsNullOrEmpty(@Model.BannerNews.Image))
+                        {
+                            <img src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width:100%; max-height:350px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img class="rounded" src="/user-content/@Model.BannerNews.Image" style="width:100%; max-height:350px; object-fit:fill;" />
+
+                        }
+                    </a>
                     <h3><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">@Model.BannerNews.Name</a></h3>
-                    <ul>
-                        <li><span>@Model.BannerNews.PostAt</span></li>
-                        <li><i class="icon"></i></li>
-                        <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">chi tiết<i class="icon"></i></a></li>
+                    <ul style="padding:0;">
+                        <li style="float:unset"><span class="me-3">@Model.BannerNews.PostAt</span></li>
+                        <li style="float:unset"><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@Model.BannerNews.Id">chi tiết<i class="icon"></i></a></li>
                     </ul>
                 </div><!--end tinhot-->
                 @{
                     int i = 1;
                 }
-                <div class="tinnoibat">
+                <div class="tinnoibat col-lg-4 col-md-6 col-12 border-start">
                     <h3><a href="javascript:;">Tin tức nổi bật<span></span></a></h3>
                     <div class="danhsachtin">
                         @foreach (var item in Model.isHotNew)
                         {
-                            <div class="tin1">
-                                <p class="stt">
+                            <div class="tin1 d-flex border-bottom p-1 ">
+                                <p class="stt" style="float:unset;">
                                     @i. @{
                                         i++;
                                     }
                                 </p>
-                                <div class="noidung">
-                                    <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
-                                    <ul>
-                                        <li><span>@item.PostAt</span></li>
-                                        <li><i class="icon"></i></li>
-                                        <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                <div class="noidung " style="padding:0 0 0 10px;">
+                                    <h4>
+                                        <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" style="
+    display: -webkit-box;
+  	-webkit-line-clamp: 3;
+  	-webkit-box-orient: vertical;
+  	overflow: hidden;
+">@item.Name</a>
+                                    </h4>
+                                    <ul style="padding:0;">
+                                        <li style="float:unset;"><span class="me-3">@item.PostAt</span></li>
+                                        <li style="float:unset;"><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
                                     </ul>
                                 </div><!--end noidung-->
-                                <div style="clear:both;"></div>
                             </div>
                             <!--end tin1-->
                         }
                     </div><!--end danhsachtin-->
                 </div><!--end tinnoibat-->
-                <div style="clear:both;"></div>
             </div><!--end noibat-->
 
-            <div class="tinmoi">
+            <div class="tinmoi row justify-content-between" style="float:unset; width:100%;">
                 <h3><a href="javascript:;">Tin tức mới nhất</a></h3>
-                <div class="danhsachtin">
+                <div class="danhsachtin col-lg-8 col-md-6 col-12">
                     @foreach (var item in Model.ListNewsPagi.Items)
                     {
-                        <div class="tin1">
-                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/user-content/@item.Image" width="770" height="360" alt="" /></a>
-                            <div class="noidung">
-                                <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
-                                <p>@item.ShortDescription</p>
-                                <ul>
-                                    <li><span>@item.PostAt</span></li>
-                                    <li><i class="icon"></i></li>
-                                    <li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                        <div class="tin1 d-flex align-items-center border-bottom p-1">
+                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox" style="width:280px;height:130px;float:unset; overflow:unset;">
+                                @if (String.IsNullOrEmpty(@item.Image))
+                                {
+                                    <img src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" class="border" style="width:280px; height:130px; object-fit:contain;" alt="" />
+                                }
+                                else
+                                {
+                                    <img src="/user-content/@item.Image" class="border" style="width:280px;height:130px; object-fit:fill;" alt="" />
+
+                                }
+                            </a>
+                            <div class="noidung ps-2">
+                                <h4>
+                                    <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" style="
+    display: -webkit-box;
+  	-webkit-line-clamp: 3;
+  	-webkit-box-orient: vertical;
+  	overflow: hidden;
+">@item.Name</a>
+                                </h4>
+                                <p style="
+    display: -webkit-box;
+  	-webkit-line-clamp: 2;
+  	-webkit-box-orient: vertical;
+  	overflow: hidden;
+">@item.ShortDescription</p>
+                                <ul class="ps-0">
+                                    <li style="float:unset"><span class="me-3">@item.PostAt</span></li>
+                                    <li style="float:unset"><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
                                 </ul>
                             </div><!--end noidung-->
-                            <div style="clear:both;"></div>
                         </div>
 
                         <!--end tin1-->
                     }
+                    @await Component.InvokeAsync("Pagi", Model.ListNewsPagi)
                 </div><!--end danh sachtin-->
-                @await Component.InvokeAsync("Pagi", Model.ListNewsPagi)
+                <div class="tinxemnhieu col-lg-4 col-md-6 col-12 pt-0 border-0">
+                    <h3 class="border-0"><a class="p-0">Tin được xem nhiều<span></span></a></h3>
+                    <div class="danhsachtin">
+                        @foreach (var item in Model.ViewestNews)
+                        {
+                            <div class="tin1 d-flex align-items-center border-bottom p-1">
+                                <a style="width:120px;height:70px; float:unset;overflow:unset;" asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox" style="float:unset">
+                                    @if (String.IsNullOrEmpty(@item.Image))
+                                    {
+                                        <img src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width:120px;height:70px;object-fit:contain;" alt="" />
+                                    }
+                                    else
+                                    {
+
+                                        <img src="/user-content/@item.Image" style="width:120px;height:70px; object-fit:fill;" alt="" />
+                                    }
+                                </a>
+                                <div class="noidung ps-1">
+                                    <h4>
+                                        <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" style="
+    display: -webkit-box;
+  	-webkit-line-clamp: 2;
+  	-webkit-box-orient: vertical;
+  	overflow: hidden;
+}">@item.Name</a>
+                                    </h4>
+                                    <ul class="p-0">
+                                        <li style="float:unset;"><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                    </ul>
+                                </div><!--end noidung-->
+                            </div>
+
+                            <!--end tin1-->
+                        }
+
+                    </div><!--end danh sachtin-->
+                </div><!--end tinxemnhieu-->
+
             </div><!--end tinmoi-->
 
-            <div class="tinxemnhieu">
-                <h3><a href="javascript:;">Tin được xem nhiều<span></span></a></h3>
-                <div class="danhsachtin">
-                    @foreach (var item in Model.ViewestNews)
-                    {
-                        <div class="tin1">
-                            <a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/newsImage/@item.Image" width="770" height="360" alt="" /></a>
-                            <div class="noidung">
-                                <h4><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
-                                <ul><li><a asp-action="DetailsNews" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li></ul>
-                            </div><!--end noidung-->
-                            <div style="clear:both;"></div>
-                        </div>
 
-                        <!--end tin1-->
-                    }
-
-                </div><!--end danh sachtin-->
-            </div><!--end tinxemnhieu-->
             <div style="clear:both;"></div>
         </div><!--end maincontent-->
-    </div><!--end tintuc-->
+    </div>
+
+    <!--end tintuc-->
+}
 
 
-</div><!--end content-->
+<script>
+
+    var currentUrl = window.location.href;
+    var listElement = document.querySelectorAll(".optionNationPark")
+    console.log(currentUrl);
+    if (currentUrl.includes("?")) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('type');
+        console.log(typeof id)
+        switch (id) {
+            case "1":
+                console.log("1")
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            case "2": ;
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            default:
+                listElement[0].classList.remove("btn-light");
+                listElement[0].classList.add("btn-primary");
+                listElement[0].classList.remove("bg-white");
+                for (var i = 1; i < listElement.length; i++) {
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+        }
+    } else {
+        listElement[0].classList.remove("btn-light");
+        listElement[0].classList.add("btn-primary");
+        listElement[0].classList.remove("bg-white");
+        for (var i = 1; i < listElement.length; i++) {
+            listElement[i].classList.add("btn-light");
+            listElement[i].classList.remove("btn-primary");
+            listElement[i].classList.add("bg-white");
+        }
+    }
+
+</script>

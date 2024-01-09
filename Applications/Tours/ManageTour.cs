@@ -1,4 +1,5 @@
-﻿using DongThucVatQuangTri.Applications.Banners.Dtos;
+﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
+using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using DongThucVatQuangTri.Applications.Tours.Dtos;
@@ -143,6 +144,90 @@ namespace DongThucVatQuangTri.Applications.Tours
             news.TotalView += 1;
             _context.tour.Update(news);
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<ApiResult<PageResult<TourViewModel>>> PublicTourPaging(GetTourPagingRequest request)
+        {
+            var query = from b in _context.tour
+                        select new { b };
+            var list = query.ToList();
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                query = query.Where(x => x.b.Name.Contains(request.Keyword));
+            }
+            if (request.status == 1 || request.status == 0)
+            {
+                query = query.Where(x => x.b.Status == request.status);
+            }
+            
+            var tempdata =await query.Select(request => new TourViewModel()
+                {
+                    Id = request.b.Id,
+                    Alias = request.b.Alias,
+                    Name = request.b.Name,
+                    Image = request.b.Image,
+                    ShortDescription = request.b.ShortDescription,
+                    Description = request.b.Description,
+                    SortOrder = request.b.SortOrder,
+                    Status = request.b.Status,
+                    //Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
+                    Source = request.b.Source,
+                    CreatedAt = request.b.CreatedAt,
+                    UpdatedAt = request.b.UpdatedAt
+                }).ToListAsync();
+            if(request.type!=0)
+            {
+                var listnewData = new List<TourViewModel>();
+                if (request.type == 2)
+                {
+                    foreach (var item in tempdata)
+                    {
+                        var vqgLoai = _context.tour.Where(x => x.Id == item.Id).ToList();
+                        if (vqgLoai.Count > 0)
+                        {
+                            foreach (var item2 in vqgLoai)
+                            {
+                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
+                                if (checkRoleUser == "NationParkMuongTe")
+                                {
+                                    listnewData.Add(item);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (request.type == 1)
+                {
+                    foreach (var item in tempdata)
+                    {
+                        var vqgLoai = _context.tour.Where(x => x.Id == item.Id).ToList();
+                        if (vqgLoai.Count > 0)
+                        {
+                            foreach (var item2 in vqgLoai)
+                            {
+                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
+                                if (checkRoleUser == "NationParkNamGiang")
+                                {
+                                    listnewData.Add(item);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                tempdata = listnewData;
+            }
+            int totalRow = tempdata.Count;
+            var data = tempdata.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var pageResult = new PageResult<TourViewModel>
+            {
+                TotalRecords = totalRow,
+                Items = data,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+            };
+            return new ApiSuccessResult<PageResult<TourViewModel>>(pageResult);
         }
 
         public async Task<int> updateTour(UpdateTourRequest request)

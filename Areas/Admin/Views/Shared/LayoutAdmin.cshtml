@@ -102,26 +102,25 @@
                                     </nav>
                                 </nav>
                             </div>
-
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Tin tức
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseCategory" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" asp-action="Index" asp-controller="News">Danh sách</a>
-                                        <a class="nav-link" asp-action="Create" asp-controller="News">Thêm mới</a>
-                                        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Admin"))
-                                        {
-                                            <a class="nav-link" asp-action="Index" asp-controller="NewsCat">Danh mục</a>
-                                        }
-                                    </nav>
-                                </nav>
-                            </div>
                             
                         }
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            Tin tức
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCategory" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" asp-action="Index" asp-controller="News">Danh sách</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="News">Thêm mới</a>
+                                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Admin"))
+                                    {
+                                        <a class="nav-link" asp-action="Index" asp-controller="NewsCat">Danh mục</a>
+                                    }
+                                </nav>
+                            </nav>
+                        </div>
                         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator") || User.FindFirst(ClaimTypes.Role).Value.Equals("NationParkMuongTe") || User.FindFirst(ClaimTypes.Role).Value.Equals("NationParkNamGiang"))
                         {
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTour" aria-expanded="false" aria-controls="collapseTour">

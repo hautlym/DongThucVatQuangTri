@@ -90,17 +90,20 @@ namespace DongThucVatQuangTri.Controllers
             };
             return View(model);
         }
-        public async Task<IActionResult> News( int PageIndex = 1, int PageSize = 5)
+        public async Task<IActionResult> News(int type = 0, int PageIndex = 1, int PageSize = 5)
         {
-            var ListNews =(await _manageNews.getAll()).Where(x=>x.Status==1).OrderByDescending(x => x.PostAt).ToList();
-            var HotNews = ListNews.Where(x => x.IsHot == 1).Take(4).ToList();
-            var ViewNews = ListNews.OrderByDescending(x=>x.TotalView).Take(4).ToList();
             var request = new GetNewsPagingRequest()
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
+                type = type,
             };
-            var pagi =await _manageNews.GetAlllPaging(request);
+            var listNew = await _manageNews.PublicNewsPaging(request);
+            var ListNews = listNew.ResultObj.Items.Where(x=>x.Status==1).OrderByDescending(x => x.PostAt).ToList();
+            var HotNews = ListNews.Where(x => x.IsHot == 1).Take(4).ToList();
+            var ViewNews = ListNews.OrderByDescending(x=>x.TotalView).Take(4).ToList();
+            
+            var pagi =await _manageNews.PublicNewsPaging(request);
             var NewsFirst = ListNews.OrderByDescending(x => x.PostAt).FirstOrDefault();
             var item = new NewsModels()
             {
@@ -112,14 +115,15 @@ namespace DongThucVatQuangTri.Controllers
             return View(item);
         }
         [HttpGet]
-        public async Task<IActionResult> Tour(int PageIndex = 1, int PageSize = 5)
+        public async Task<IActionResult> Tour(int type = 0, int PageIndex = 1, int PageSize = 12)
         {
             var request = new GetTourPagingRequest()
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
+                type = type,
             };
-            var pagi = await _manageTour.GetAlllPaging(request);
+            var pagi = await _manageTour.PublicTourPaging(request);
             pagi.ResultObj.Items = pagi.ResultObj.Items.OrderBy(x => x.CreatedAt).ToList();
             return View(pagi.ResultObj);
         }

@@ -5,7 +5,13 @@
     ViewData["Title"] = "Tour";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 <style>
+    #content {
+        background-color: #F3F3F9;
+    }
+
     .noidung p {
         font-family: 'LoraF' !important;
         display: -webkit-box !important;
@@ -16,37 +22,127 @@
 </style>
 <div id="content">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
-    <div class="tintuc">
-        <h2 style="font-size:2rem; text-align:center;">
-            Thông tin du lịch
-        </h2>
-        <div class="maincontent">
-            <div class="tinmoi">
-                <div class="danhsachtin row">
-                    @foreach (var item in Model.Items)
-                    {
-                        <div class="tin1 col-md-4">
-                            <a asp-action="DetailsTour" style="float:unset; width:100%" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/user-content/@item.Image" width="770" height="360" alt="" style="height:150px" /></a>
-                            <div class="noidung text-center" style="padding:0;">
-                                <h4><a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id">@item.Name</a></h4>
-                                <p>@item.ShortDescription</p>
-                                <ul>
-                                    <li><span>@item.CreatedAt</span></li>
-                                    <li><i class="icon"></i></li>
-                                    @* <li><a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li> *@
-                                </ul>
-                            </div><!--end noidung-->
-                            <div style="clear:both;"></div>
-                        </div>
+    <div class="d-flex justify-content-center mb-5">
+        <a asp-action="Tour" asp-controller="Home" asp-route-type="0" class="btn btn-primary mr-1 border optionNationPark" style="margin-right:10px;">
+            Tất cả
+        </a>
+        <a asp-action="Tour" asp-controller="Home" asp-route-type="1" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
+            Nam Giang
+        </a>
+        <a asp-action="Tour" asp-controller="Home" asp-route-type="2" class="btn btn-light border bg-white optionNationPark">
+            Mường Tè
+        </a>
+    </div>
+    @if (Model.TotalRecords == 0)
+    {
+        <div class="d-flex justify-content-center mb-5">
+            <h2>Không có tin tức nào</h2>
+        </div>
+    }
+    else
+    {
 
-                        <!--end tin1-->
-                    }
-                </div><!--end danh sachtin-->
-                @await Component.InvokeAsync("Pagi", Model)
-            </div><!--end tinmoi-->
-            <div style="clear:both;"></div>
-        </div><!--end maincontent-->
-    </div><!--end tintuc-->
+        <div class="tintuc" style="margin:0;">
+            <div class="maincontent">
+                <div class="tinmoi" style="width:100%">
+                    <div class="danhsachtin row">
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="tin1 col-lg-3 col-md-6 col-12 justify-content-center" style="
+    height: 380px;
+    margin: 0 0 25px 0;
+">
+                                <div class="bg-white rounded" style="box-shadow: 0 1px 2px rgba(0,0,0,0.1); overflow:hidden; height:100%;">
+                                    <a asp-action="DetailsTour" style=" width:100%; float:unset;" asp-controller="Home" asp-route-Id="@item.Id" class="imgBox"><img src="/user-content/@item.Image" alt="" style="width:100%;height: 300px; object-fit:cover;" /></a>
+                                    <div class="noidung text-center" style="padding:0px;">
+                                        <a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id" style="
+    display: -webkit-box;
+  	font-size: 16px;
+  	-webkit-line-clamp: 2;
+  	-webkit-box-orient: vertical;
+    margin:10px 5px 0 5px;
+    font-weight: bold;
+    color:black;
+  	overflow: hidden;
+}">@item.Name</a>
+                                        <ul style="padding:0px;">
+                                            <li style="float:unset;"><span>@item.CreatedAt</span></li>
+                                            @* <li><a asp-action="DetailsTour" asp-controller="Home" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li> *@
+                                        </ul>
+                                    </div><!--end noidung-->
+                                    @*  <div style="clear:both;"></div> *@
+                                </div>
+                            </div>
+                            <!--end tin1-->
+                        }
+                    </div><!--end danh sachtin-->
+                    @await Component.InvokeAsync("Pagi", Model)
+                </div><!--end tinmoi-->
+                <div style="clear:both;"></div>
+            </div><!--end maincontent-->
+        </div>
+
+        <!--end tintuc-->
+    }
 
 
 </div><!--end content-->
+<script>
+
+    var currentUrl = window.location.href;
+    var listElement = document.querySelectorAll(".optionNationPark")
+    console.log(currentUrl);
+    if (currentUrl.includes("?")) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('type');
+        console.log(typeof id)
+        switch (id) {
+            case "1":
+                console.log("1")
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            case "2": ;
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            default:
+                listElement[0].classList.remove("btn-light");
+                listElement[0].classList.add("btn-primary");
+                listElement[0].classList.remove("bg-white");
+                for (var i = 1; i < listElement.length; i++) {
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+        }
+    } else {
+        listElement[0].classList.remove("btn-light");
+        listElement[0].classList.add("btn-primary");
+        listElement[0].classList.remove("bg-white");
+        for (var i = 1; i < listElement.length; i++) {
+            listElement[i].classList.add("btn-light");
+            listElement[i].classList.remove("btn-primary");
+            listElement[i].classList.add("bg-white");
+        }
+    }
+
+</script>
