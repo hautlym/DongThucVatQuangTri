@@ -113,7 +113,7 @@ builder.Services.AddTransient<IManageMap, ManageMap>();
 builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+builder.WebHost.UseUrls("http://0.0.0.0:5028");
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
