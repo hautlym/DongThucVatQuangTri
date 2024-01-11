@@ -127,6 +127,14 @@ if (!app.Environment.IsDevelopment())
     //app.UseHsts();
 }
 app.UseAuthentication();
+
+app.UseStaticFiles();
+//app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthorization();
+app.UseSession();
 app.Use((context, next) =>
 {
     if (context.Request.IsHttps)
@@ -138,13 +146,6 @@ app.Use((context, next) =>
 
     return next();
 });
-app.UseStaticFiles();
-//app.UseHttpsRedirection();
-
-app.UseRouting();
-
-app.UseAuthorization();
-app.UseSession();
 //app.MapControllerRoute(
 //    name: "default",
 //    pattern: "{controller=Home}/{action=Index}/{id?}");
