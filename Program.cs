@@ -43,8 +43,6 @@ if (builder.Environment.IsDevelopment())
     mvcBuilder.AddRazorRuntimeCompilation();
 }
 builder.Services.AddHttpClient();
-
-
 builder.Services.AddDbContext<DongThucVatContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseDongThucVat")));
 builder.Services.AddIdentity<AppUser, AppRoles>()
         .AddEntityFrameworkStores<DongThucVatContext>()
@@ -129,7 +127,17 @@ if (!app.Environment.IsDevelopment())
     //app.UseHsts();
 }
 app.UseAuthentication();
+app.Use((context, next) =>
+{
+    if (context.Request.IsHttps)
+    {
+        // Nếu yêu cầu sử dụng HTTPS, chuyển hướng hoặc xử lý theo ý muốn của bạn
+        context.Response.Redirect($"http://{context.Request.Host}{context.Request.Path}");
+        return Task.CompletedTask;
+    }
 
+    return next();
+});
 app.UseStaticFiles();
 //app.UseHttpsRedirection();
 
