@@ -166,6 +166,9 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 query = query.Where(x => x.UserName.Contains(request.Keyword)
                  || x.PhoneNumber.Contains(request.Keyword) || x.FirstName.Contains(request.Keyword));
             }
+            if(!String.IsNullOrEmpty(request.Roles)) {
+                query = query.Where(x=>x.Roles.Contains(request.Roles));
+            }
             var totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(
                 user => new UserViewModels()

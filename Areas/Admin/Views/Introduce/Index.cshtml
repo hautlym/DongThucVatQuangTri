@@ -1,0 +1,94 @@
+﻿@using DongThucVatQuangTri.Applications.Introduces.Dtos;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model List<IntroduceViewModel>
+
+@{
+    ViewData["Title"] = "Giới thiệu";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#msgAlert').fadeOut("slow");
+        }, 2000);
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách @ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách  @ViewData["Title"] </li>
+    </ol>
+
+    <div class="card mb-12">
+        
+        <div class="card-body align-middle">
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
+            @if (ViewBag.SuscessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuscessMsg
+                </div>
+            }
+            @{
+                int i =  1;
+            }
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            STT
+                        </th>
+                        <th>
+                            Tiêu đề
+                        </th>
+                        <th>
+                            Người cập nhật
+                        </th>
+                        <th>
+                            Ngày cập nhật
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th class="align-middle" scope="row">
+                                @i
+                                @{
+                                    i++;
+                                }
+                            </th>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.title)
+                            </td>
+                            <td class="align-middle" style="width:20%;">
+                                @Html.DisplayFor(modelItem => item.UpdateBy)
+                            </td>
+                            <td class="align-middle" style="width:20%;">
+                                @Html.DisplayFor(modelItem => item.UpdateAt)
+                            </td>
+                            <td class="align-middle" style="width:5%;">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+

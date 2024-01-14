@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using DongThucVatQuangTri.Applications.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DongThucVatQuangTri.Applications.Roles;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -16,24 +17,38 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IManageRole _manageRole;
+        public UserController(IUserService userService, IManageRole manageRole)
         {
             _userService = userService;
+            _manageRole = manageRole;
         }
-        [Authorize(Policy = "AdministratorPolicy")]
-        public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
+        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
+        public async Task<IActionResult> Index(string keyword,string Roles, int PageIndex = 1, int PageSize = 10)
         {
             var request = new GetUserPagingRequest()
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
-                Keyword = keyword
+                Keyword = keyword,
+                Roles = Roles
             };
+            var role = await _manageRole.getAll();
+            ViewBag.Roles = role.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Value.ToString(),
+                Selected = x.Value == Roles
+            });
             var data = await _userService.GetUserPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {
                 ViewBag.SuscessMsg = TempData["result"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.ErrorMsg = TempData["error"];
             }
             return View(data.ResultObj);
         }
@@ -106,28 +121,42 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
         [HttpGet]
-        [Authorize(Policy = "AdministratorPolicy")]
-        public IActionResult Create()
+        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Roles = Permittion.Roles.Select(x => new SelectListItem()
+            var role =await _manageRole.getAll();
+            ViewBag.Roles = role.Select(x => new SelectListItem()
             {
-                Text = x.Value,
-                Value = x.Key.ToString(),
+                Text = x.Name,
+                Value = x.Value.ToString(),
             });
             return View();
         }
         [HttpPost]
-        [Authorize(Policy = "AdministratorPolicy")]
+        [Authorize(Policy = "AdministatorOrNationParkPolicy")]
         public async Task<IActionResult> Create(RegisterRequest request)
         {
+            var role = await _manageRole.getAll();
+            ViewBag.Roles = role.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Value.ToString(),
+            });
             if (!ModelState.IsValid)
                 return View();
+            if (User.FindFirstValue(ClaimTypes.Role) != "Administator")
+            {
+                request.Roles = User.FindFirstValue(ClaimTypes.Role);
+            } 
             var result = await _userService.Register(request);
             if (result.IsSuccessed)
             {
                 TempData["result"] = "Thêm tài khoản thành công";
                 return RedirectToAction("Index");
-
+            }
+            else
+            {
+                ViewBag.ErrorMsg  = result.Message;
             }
             return View(request);
         }
@@ -142,10 +171,16 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         
         public async Task<IActionResult> Edit(Guid id)
         {
-            ViewBag.Roles = Permittion.Roles.Select(x => new SelectListItem()
+            if(User.FindFirstValue(ClaimTypes.Role)!= "Administator" && User.FindFirstValue(ClaimTypes.NameIdentifier) != id.ToString())
             {
-                Text = x.Value,
-                Value = x.Key.ToString(),
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index");
+            }
+            var role = await _manageRole.getAll();
+            ViewBag.Roles = role.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Value.ToString(),
             });
             var result = await _userService.GetById(id);
             if (result.IsSuccessed)
@@ -169,6 +204,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserUpdateRequest request)
         {
+            var role = await _manageRole.getAll();
+            ViewBag.Roles = role.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Value.ToString(),
+            });
             if (!ModelState.IsValid)
                 return View(request);
 

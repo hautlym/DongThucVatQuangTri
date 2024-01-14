@@ -1,0 +1,50 @@
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.Introduces.Dtos.UpdateIntroduceRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote({
+                height: 300,
+            });
+        });
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Sửa tin</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Sửa tin </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-controller="Introduce"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách tin tức</a>
+    </div>
+    <div class="row">
+        <form asp-action="Edit" >
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row justify-content-center">
+                <div class="col-md-10 ">
+                    <input type="hidden" asp-for="id" class="form-control" />
+                    <div class="form-group">
+                        <label asp-for="content" class="control-label"> Nội dung:</label>
+                        <textarea id="summernote" asp-for="content"></textarea>
+                        <span asp-validation-for="content" class="text-danger" style="display:block;"></span>
+                    </div>
+
+                </div>
+                <input type="hidden" asp-for="UpdateBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-3 mt-2 align-text-center">
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

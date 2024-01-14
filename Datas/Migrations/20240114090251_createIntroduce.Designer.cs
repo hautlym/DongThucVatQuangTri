@@ -4,6 +4,7 @@ using DongThucVatQuangTri.Models.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DongThucVatQuangTri.Datas.Migrations
 {
     [DbContext(typeof(DongThucVatContext))]
-    partial class DongThucVatContextModelSnapshot : ModelSnapshot
+    [Migration("20240114090251_createIntroduce")]
+    partial class createIntroduce
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1323,10 +1325,6 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("typeNationPak")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

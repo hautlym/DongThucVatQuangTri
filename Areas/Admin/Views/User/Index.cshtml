@@ -15,35 +15,37 @@
     </script>
 }
 <div class="container-fluid px-4">
-    
+
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"> Trang chủ</a></li>
         <li class="breadcrumb-item active">Danh sách người dùng </li>
     </ol>
-        <h1 class="mt-4">Danh sách người dùng</h1>
+    <h1 class="mt-4">Danh sách người dùng</h1>
     <div class="card mb-12">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-6 col-xs-12 mt-1">
+                <div class="col-md-5 col-xs-12 mt-1">
                     <a asp-action="Create" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i> Thêm người dùng</a>
                 </div>
-                <div class="col-md-6 col-xs-12 mt-1">
+                <div class="col-md-7 col-xs-12 mt-1">
                     <div class="row">
-                        <div class="col-md-10">
-                            <form asp-action="Index" asp-controller="User" method="post">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
-                                    </div>
+                        <div class="col-md-12">
+                            <form asp-action="Index" asp-controller="User" method="post" class="row">
+                                <div class="col-md-4">
+                                    <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
                                 </div>
-
+                                <div class="col-md-4">
+                                    <select name="Roles" onchange="this.form.submit()" asp-items="@ViewBag.Roles" class="form-control mt-1">
+                                        <option value="">--Chọn nhóm quyền--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <a class="btn btn-secondary mt-1" href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
+                                </div>
                             </form>
-                        </div>
-                        <div class="col-md-2">
-                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
                         </div>
                     </div>
                 </div>
@@ -51,12 +53,19 @@
         </div>
         <div class="card-body align-middle">
 
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
             @if (ViewBag.SuscessMsg != null)
             {
                 <div id="msgAlert" class="alert alert-success" role="alert">
                     @ViewBag.SuscessMsg
                 </div>
             }
+
             @{
                 int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
@@ -134,7 +143,7 @@
                                 </button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal@{
-                                    @item.Id
+                                            @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         @using (Html.BeginForm("Delete", "User", FormMethod.Post))

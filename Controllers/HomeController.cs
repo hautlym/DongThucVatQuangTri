@@ -5,6 +5,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.D
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Enums;
+using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.Tours;
@@ -13,6 +14,7 @@ using DongThucVatQuangTri.Models;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
@@ -27,10 +29,11 @@ namespace DongThucVatQuangTri.Controllers
         private readonly IPublicManageSpecies _manageSpecies;
         private readonly IManageTour _manageTour;
         private readonly IManageSpeciesNationPark _manageSpeciesNationPark;
+        private readonly IManageIntroduce _manageIntroduce;
         private readonly DongThucVatContext _context;
         public HomeController(ILogger<HomeController> logger,IManageBanner manageBanner, IManageNews manageNews,
             IPublicManageSpecies manageSpecies, IManageTour manageTour, IManageSpeciesNationPark manageSpeciesNationPark,
-            DongThucVatContext context)
+            IManageIntroduce manageIntroduce,DongThucVatContext context)
         {
             _logger = logger;
             _manageBanner = manageBanner;
@@ -39,6 +42,7 @@ namespace DongThucVatQuangTri.Controllers
             _manageTour = manageTour;
             _manageSpeciesNationPark = manageSpeciesNationPark;
             _context = context;
+            _manageIntroduce = manageIntroduce;
         }
 
         public async Task<IActionResult> Index()
@@ -142,9 +146,39 @@ namespace DongThucVatQuangTri.Controllers
             return View(item);
         }
         [HttpGet]
-        public async Task<IActionResult> introduce(int Id)
+        public async Task<IActionResult> introduce(string typeNationPak="All")
         {
-            return View();
+            var data =await _manageIntroduce.getAll();
+            var intro = data.Where(x=>x.typeNationPak==typeNationPak).FirstOrDefault();
+            if (intro==null)
+            {
+                intro = data.FirstOrDefault();
+            }
+            return View(intro);
+        }
+        //[HttpGet("{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> getInforSpecies(int Id)
+        {
+            var result = await _manageSpeciesNationPark.getItemById(Id);
+            if (MucDoBaoTon.MuDoBaoTonIUCN.ContainsKey(result.MucDoBaoTonIucn ?? 100))
+            {
+                ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";
+            }
+            if (MucDoBaoTon.MuDoBaoTonSDVN.ContainsKey(result.MucDoBaoTonSdvn ?? 100))
+            {
+                ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+            }
+            ViewBag.MucDoBaoTonNDCP = !String.IsNullOrEmpty(result.MucDoBaoTonNdcp.ToString()) && result.MucDoBaoTonNdcp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)result.Loai][(int)result.MucDoBaoTonNdcp] : "";
+            ViewBag.MucDoBaoTonND64CP = !String.IsNullOrEmpty(result.MucDoBaoTonNd64cp.ToString()) && result.MucDoBaoTonNd64cp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)result.Loai][(int)result.MucDoBaoTonNd64cp] : "";
+            if (result == null)
+            {
+                return Json(new { success = false});
+            }
+            return Json(new { success = true, item = result , mucdobaoton=
+                new{MucDoBaoTonIucn = ViewBag.MucDoBaoTonIUCN ,MucDoBaoTonSdvn = ViewBag.MucDoBaoTonSDVN ,MucDoBaoTonNdcp = ViewBag.MucDoBaoTonNDCP ,
+                MucDoBaoTonNd64cp = ViewBag.MucDoBaoTonND64CP}
+            });
         }
         public IActionResult Privacy()
         {

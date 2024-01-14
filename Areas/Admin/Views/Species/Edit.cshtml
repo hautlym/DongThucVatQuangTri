@@ -12,6 +12,10 @@
             $('#msgAlert').fadeOut("slow");
         }, 2000);
     </script>
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
 }
 @{
     var idLoai = -1;
@@ -24,12 +28,7 @@
         idLoai = 0;
     }
 }
-@section Scripts{
-    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace('editor');
-    </script>
-}
+
 <div class="container-fluid px-4">
     <h1 class="mt-4">Sửa loài @ViewBag.Loai</h1>
     <ol class="breadcrumb mb-4">

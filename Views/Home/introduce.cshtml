@@ -1,8 +1,91 @@
-﻿
+﻿@using DongThucVatQuangTri.Applications.Introduces.Dtos;
+@model IntroduceViewModel
 @{
     ViewData["Title"] = "introduce";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>introduce</h1>
 
+<div id="content">
+    <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
+    <div class="d-flex justify-content-center mb-5">
+        <a asp-action="introduce" asp-controller="Home" asp-route-type="0" asp-route-typeNationPak="All" class="btn btn-primary mr-1 border optionNationPark" style="margin-right:10px;">
+            Giới thiệu chung
+        </a>
+        <a asp-action="introduce" asp-controller="Home" asp-route-type="1" asp-route-typeNationPak="NationParkNamGiang" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
+            Giới thiệu về Nam Giang
+        </a>
+        <a asp-action="introduce" asp-controller="Home" asp-route-type="2" asp-route-typeNationPak="NationParkMuongTe" class="btn btn-light border bg-white optionNationPark">
+            Giới thiệu về Mường Tè
+        </a>
+    </div>
+    <div class="tintuc" id="trangchitiet">
+        <div class="maincontent">
+         
+            <h1>@Model.title</h1>
+            <p class="time"><i class="icon"></i>@Model.UpdateAt bởi @Model.UpdateBy</p>
+            <div class="noidungchitiet">
+                @Html.Raw(Model.content);
+            </div><!--end noidungchitiet-->
+        </div><!--end maincontent-->
+    </div><!--end tintuc-->
+</div><!--end content-->
+<script>
+
+    var currentUrl = window.location.href;
+    var listElement = document.querySelectorAll(".optionNationPark")
+    console.log(currentUrl);
+    if (currentUrl.includes("?")) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('type');
+        console.log(typeof id)
+        switch (id) {
+            case "1":
+                console.log("1")
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            case "2": ;
+                listElement[id].classList.remove("btn-light");
+                listElement[id].classList.add("btn-primary");
+                listElement[id].classList.remove("bg-white");
+                for (var i = 0; i < listElement.length; i++) {
+                    if (i == id) {
+                        continue;
+                    }
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+                break;
+            default:
+                listElement[0].classList.remove("btn-light");
+                listElement[0].classList.add("btn-primary");
+                listElement[0].classList.remove("bg-white");
+                for (var i = 1; i < listElement.length; i++) {
+                    listElement[i].classList.add("btn-light");
+                    listElement[i].classList.remove("btn-primary");
+                    listElement[i].classList.add("bg-white");
+                };
+        }
+    } else {
+        listElement[0].classList.remove("btn-light");
+        listElement[0].classList.add("btn-primary");
+        listElement[0].classList.remove("bg-white");
+        for (var i = 1; i < listElement.length; i++) {
+            listElement[i].classList.add("btn-light");
+            listElement[i].classList.remove("btn-primary");
+            listElement[i].classList.add("bg-white");
+        }
+    }
+
+</script>

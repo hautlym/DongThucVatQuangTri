@@ -1,0 +1,40 @@
+﻿@model DongThucVatQuangTri.Applications.Roles.Dtos.UpdateRoleRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active"> @ViewData["Title"] </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index" asp-controller="Role" ><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách nhóm quyền</a>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" class="row">
+                @if (ViewBag.ErrorMsg != null)
+                {
+                    <div id="msgAlert" class="alert alert-danger" role="alert">
+                        @ViewBag.ErrorMsg
+                    </div>
+                }
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoleName" class="control-label">Tên quyền</label>
+                    <input asp-for="RoleName" class="form-control" />
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

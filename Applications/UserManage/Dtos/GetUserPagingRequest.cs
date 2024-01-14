@@ -10,5 +10,6 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
     public class GetUserPagingRequest : PagingRequestBase
     {
         public string? Keyword { get; set; }
+        public string? Roles { get; set;}
     }
 }

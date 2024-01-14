@@ -7,9 +7,11 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
+using DongThucVatQuangTri.Applications.Roles;
 using DongThucVatQuangTri.Applications.Tours;
 using DongThucVatQuangTri.Applications.UserManage;
 using DongThucVatQuangTri.Applications.Validation;
@@ -108,6 +110,8 @@ builder.Services.AddTransient<IManageFamily, ManageFamily>();
 builder.Services.AddTransient<IManageSpecies, ManageSpecies>();
 builder.Services.AddTransient<IManageTour, ManageTour>();
 builder.Services.AddTransient<IManageMap, ManageMap>();
+builder.Services.AddTransient<IManageRole, ManageRole>();
+builder.Services.AddTransient<IManageIntroduce, ManageIntroduce>();
 builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -135,17 +139,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseSession();
-app.Use((context, next) =>
-{
-    if (context.Request.IsHttps)
-    {
-        // Nếu yêu cầu sử dụng HTTPS, chuyển hướng hoặc xử lý theo ý muốn của bạn
-        context.Response.Redirect($"http://{context.Request.Host}{context.Request.Path}");
-        return Task.CompletedTask;
-    }
 
-    return next();
-});
 //app.MapControllerRoute(
 //    name: "default",
 //    pattern: "{controller=Home}/{action=Index}/{id?}");

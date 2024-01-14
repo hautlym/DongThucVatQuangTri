@@ -101,7 +101,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 TempData["result"] = "Thêm thành công";
                 return RedirectToAction("Index", new { loai = LoaiDtv });
-
             }
             return View(request);
         }
