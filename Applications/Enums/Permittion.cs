@@ -8,8 +8,8 @@ namespace DongThucVatQuangTri.Applications.Enums
         public static Dictionary<string, string> Roles = new Dictionary<string, string>
         {
             {"Menber" , "Phân quyền tài khoản" },
-            {"NationParkMuongTe" , "Vườn quốc gia Mường Tè" },
-            {"NationParkNamGiang" , "Vườn quốc gia Nam Giang" },
+            {"NationParkMuongTe" , "BQL RPH Mường Tè" },
+            {"NationParkNamGiang" , "BQL RPH Nam Giang" },
             {"Admin" , "Quản trị nội dung" },
             {"Administator" , "Quản trị website" },
         };

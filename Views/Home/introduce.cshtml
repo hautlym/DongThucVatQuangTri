@@ -13,10 +13,10 @@
             Giới thiệu chung
         </a>
         <a asp-action="introduce" asp-controller="Home" asp-route-type="1" asp-route-typeNationPak="NationParkNamGiang" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
-            Giới thiệu về Nam Giang
+            Giới thiệu về BQL RPH Nam Giang
         </a>
         <a asp-action="introduce" asp-controller="Home" asp-route-type="2" asp-route-typeNationPak="NationParkMuongTe" class="btn btn-light border bg-white optionNationPark">
-            Giới thiệu về Mường Tè
+            Giới thiệu về BQL RPH Mường Tè
         </a>
     </div>
     <div class="tintuc" id="trangchitiet">
@@ -24,7 +24,7 @@
          
             <h1>@Model.title</h1>
             <p class="time"><i class="icon"></i>@Model.UpdateAt bởi @Model.UpdateBy</p>
-            <div class="noidungchitiet">
+            <div class="noidungchitiet" style="font-family:unset;">
                 @Html.Raw(Model.content);
             </div><!--end noidungchitiet-->
         </div><!--end maincontent-->
