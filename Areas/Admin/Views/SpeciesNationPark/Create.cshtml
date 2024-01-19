@@ -9,7 +9,13 @@
 @section Scripts{
 
     <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
+    <script type="text/javascript" src="/dataMaps/newMap/js/dist/Leaflet.Coordinates-0.1.5.min.js"></script>
+    <script type="text/javascript" src="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.js"></script>
+    <link rel="stylesheet" href="/dataMaps/newMap/js/dist/Leaflet.Coordinates-0.1.5.css" />
+    <link rel="stylesheet" href="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.css" />
     <script>
         CKEDITOR.replace('editor');
     </script>
@@ -37,29 +43,276 @@
             });
         }
     </script>
-    <script>
-        // Creating map options
-        var mapOptions = {
-            center: [21.809870820489394,105.4755813202779],
-            zoom: 7
-        }
-        var map = new L.map('map', mapOptions);    // Creating a map object
-        var marker;
-        // Creating a Layer object
-        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-        map.addLayer(layer); // Adding layer to the map
-        map.on("click", function (e) {
-            console.log(marker)
-            if (marker) {
-                console.log(marker)
-                map.removeLayer(marker); // Xóa marker cũ nếu đã có
+    @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkMuongTe")
+    {
+        <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
+        
+        <script>
+            // Creating map options
+            var mapOptions = {
+                center: [22.481854, 102.616594],
+                zoom: 11,
+                attributionControl: false
             }
-            marker =  L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+            var map = new L.map('map', mapOptions);    // Creating a map object
+            var basemaps = {
 
-            $("input[name='KinhDo']").val(e.latlng.lng)
-            $("input[name='ViDo']").val(e.latlng.lat)
-        })
-    </script>
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            var popup = L.popup();
+            var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+
+            var marker;
+            // Creating a Layer object
+            var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+            map.addLayer(layer); // Adding layer to the map
+            map.on("click", function (e) {
+                console.log(marker)
+                if (marker) {
+                    console.log(marker)
+                    map.removeLayer(marker); // Xóa marker cũ nếu đã có
+                }
+                marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+                $("input[name='KinhDo']").val(e.latlng.lng)
+                $("input[name='ViDo']").val(e.latlng.lat)
+            })
+        </script>
+    }
+    else if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
+    {
+        <script src="/dataMaps/newMap/data/NamGiang_rrx.js"></script>
+        <script>
+            var mapOptions = {
+                center: [15.602519, 107.619380],
+                zoom: 11,
+                attributionControl: false
+            }
+            var map = new L.map('map', mapOptions);    // Creating a map object
+            var basemaps = {
+
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            var popup = L.popup();
+            var mtData = L.geoJson(namgiang_rrx).addTo(map); // Add geojson rrxa muong te
+           
+
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+
+
+            var marker;
+            // Creating a Layer object
+            var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+            map.addLayer(layer); // Adding layer to the map
+            map.on("click", function (e) {
+                console.log(marker)
+                if (marker) {
+                    console.log(marker)
+                    map.removeLayer(marker); // Xóa marker cũ nếu đã có
+                }
+                marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+                $("input[name='KinhDo']").val(e.latlng.lng)
+                $("input[name='ViDo']").val(e.latlng.lat)
+            })
+        </script>
+    }
+    else
+    {
+        <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
+        <script src="/dataMaps/newMap/data/NamGiang_rrx.js"></script>
+        <script>
+            // Creating map options
+            var mapOptions = {
+                center: [17.08199033811567, 107.048198306605],
+                zoom: 6,
+                attributionControl: false
+            }
+          
+            var map = new L.map('map', mapOptions);    // Creating a map object
+
+            var basemaps = {
+
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            var popup = L.popup();
+            var mtData = L.geoJson(namgiang_rrx).addTo(map); // Add geojson rrxa muong te
+            var mtData2 = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+
+
+            var marker;
+            // Creating a Layer object
+            var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+            map.addLayer(layer); // Adding layer to the map
+            map.on("click", function (e) {
+                console.log(marker)
+                if (marker) {
+                    console.log(marker)
+                    map.removeLayer(marker); // Xóa marker cũ nếu đã có
+                }
+                marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+                $("input[name='KinhDo']").val(e.latlng.lng)
+                $("input[name='ViDo']").val(e.latlng.lat)
+            })
+        </script>
+    }
+    
 }
 @{
     var idLoai = -1;

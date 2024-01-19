@@ -2,6 +2,32 @@
 @{
     ViewData["Title"] = "Địa chỉ";
 }
+@{
+    string vqg = ViewContext.HttpContext.Request.Query["vqg"];
+}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
+<script type="text/javascript" src="/dataMaps/newMap/js/dist/Leaflet.Coordinates-0.1.5.min.js"></script>
+<script type="text/javascript" src="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.js"></script>
+<link rel="stylesheet" href="/dataMaps/newMap/js/dist/Leaflet.Coordinates-0.1.5.css" />
+<link rel="stylesheet" href="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.css" />
+@if (vqg == "0")
+{
+    <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
+    <script defer src="/dataMaps/newMap/data/muongte_htr.js" onload="myInit()"></script>
+}
+else if (vqg == "1")
+{
+    <script src="/dataMaps/newMap/data/NamGiang_rrx.js"></script>
+    <script defer src="/dataMaps/newMap/data/namgiang_htr.js" onload="myInit()"></script>
+}
+else
+{
+    <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
+    <script defer src="/dataMaps/newMap/data/muongte_htr.js" onload="myInit()"></script>
+}
 @section CilentScript{
     <script>
 
@@ -21,7 +47,7 @@
                 },
                 image: {
                     tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
-                    
+
                 }
             });
 
@@ -42,19 +68,20 @@
         width: 60%;
     }
 
-    .info {
+    .info.leaflet-control {
         padding: 6px 8px;
-        font: 14px/16px Arial, Helvetica, sans-serif;
- /*        background: white;
-        background: rgba(255,255,255,0.8); */
-        /* box-shadow: 0 0 15px rgba(0,0,0,0.2); */
+        font: 14px/16px Arial, Helvetica, sans-serif !important;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 5px;
     }
 
-        .info h4 {
-            margin: 0 0 5px;
-            color: #777;
-        }
+    .info.leaflet-control h4 {
+        margin: 0 0 5px;
+            font: 14px/16px Arial, Helvetica, sans-serif !important;
+        color: #777;
+    }
 
     .legend {
         line-height: 18px;
@@ -71,13 +98,7 @@
             opacity: 0.7;
         }
 </style>
-<script>
-    function ChangeSrcMap(value) {
-        var iframe = document.getElementById("MapDtv");
-        // Gán giá trị mới cho thuộc tính src
-        iframe.src = value;
-    }
-</script>
+
 <style>
     .address {
         display: flex;
@@ -96,13 +117,13 @@
         width: 100%;
     }
 </style>
-
+@*
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="/dataMaps/data/muongte_rrx_wgs84.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
 <script type="text/javascript" src="/dataMaps/js/dist/Leaflet.Coordinates-0.1.5.min.js"></script>
-<link rel="stylesheet" href="/dataMaps/js/dist/Leaflet.Coordinates-0.1.5.css" />
+<link rel="stylesheet" href="/dataMaps/js/dist/Leaflet.Coordinates-0.1.5.css" /> *@
 <div class="address-banner">
     <h2 style="font-size: 2rem;">Bản đồ</h2>
 </div>
@@ -174,231 +195,1479 @@
 
     </div>
     <div id="map" class="col-lg-8 col-md-12 col-12"></div>
-
-    <script>
-
-        /*===================================================
-                        MAPS  LAYER
-        ===================================================*/
-        var mapOptions = {
-            center: [22.481854, 102.616594],
-            zoom: 11,
-            attributionControl: false
-        }
-        var map = new L.map('map', mapOptions); // Creating a map object
-        var basemaps = {
-
-            GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-
-        };
-
-        L.control.layers(basemaps).addTo(map);
-        basemaps.GoogleHybrid.addTo(map);
-        var popup = L.popup();
-        /*===================================================
-                        Attribution options
-        ===================================================*/
-        var attrOptions = {
-            prefix: 'Creater: Cường nv'
-        };
-        var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
-        var attr = L.control.attribution(attrOptions);
-        var scale = L.control.scale(); // Creating scale control
-        //L.geoJson(muongte_rgxa).addTo(map)
-        scale.addTo(map); // Adding scale control to the map
-        attr.addTo(map);  // Adding attribution to the map
-        // L.Control.geocoder().addTo(map); // Add search to maps
-        // Add coornidates
-        L.control.coordinates({
-            position: "bottomright", //optional default "bootomright"
-            decimals: 2, //optional default 4
-            decimalSeperator: ".", //optional default "."
-            labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
-            labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
-            enableUserInput: true, //optional default true
-            useDMS: false, //optional default false
-            useLatLngOrder: true, //ordering of labels, default false-> lng-lat
-            markerType: L.marker, //optional default L.marker
-            markerProps: {}, //optional default {},
-            labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
-            labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
-            //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
-        }).addTo(map);
-        /*===================================================
-                        Chú thích
-        ===================================================*/
-        var legend = L.control({ position: "bottomleft" });
-        legend.onAdd = function (map1) {
-            var div = L.DomUtil.create("div", "legend");
-            div.innerHTML += "<h4>Chú thích</h4>";
-            div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
-            div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/Elephant.png" alt=""><span> Động vật </span><br>';
-            return div;
-        };
-        legend.addTo(map);
-        /*===================================================
-                        Printer
-        ===================================================*/
-        L.easyPrint({
-            title: 'Máy in',
-            position: 'bottomright',
-            filename: 'IFEE-ĐenVa',
-            exportOnly: true,
-            sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
-        }).addTo(map);
-        /*===================================================
-                        maker point
-        ===================================================*/
-        // Icon ảnh
-        var normal = L.icon({
-            iconUrl: "/dataMaps/pic/treeicon.png",
-            iconSize: [30, 30], // size of the icon
-            iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
-
-
-        var noble = L.icon({
-            iconUrl: "/dataMaps/pic/Elephant.png",
-            iconSize: [30, 30], // size of the icon
-            iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
-
-
-        /*===================================================
-                        listpoint dtv
-        ===================================================*/
-        var planesAnimal = [
-        @foreach (var item in Model.SpeciesAnimal)
-        {
-            var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
-            @Html.Raw(text)
-        }
-                                                                                                                ];
-        var planesPlant = [
-        @foreach (var item in Model.SpeciesPlant)
-        {
-            var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
-            @Html.Raw(text)
-        }
-                                                                                                                        ];
-
-        for (var i = 0; i < planesAnimal.length; i++) {
-            marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
-                .bindPopup(planesAnimal[i][0])
-                .addTo(map);
-            marker.getElement().dataset.idLoai = planesAnimal[i][3];
-            marker.id = planesAnimal[i][0];
-            marker.on('click', markerOnClick);
-        }
-
-        for (var i = 0; i < planesPlant.length; i++) {
-            marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
-                .bindPopup(planesPlant[i][0])
-                .addTo(map);
-            marker.getElement().dataset.idLoai = planesPlant[i][3];
-            marker.id = planesPlant[i][0];
-            marker.on('click', markerOnClick);
-        }
-
-        /*===================================================
-                        AJAX get data dtv from maker
-        ===================================================*/
-        function markerOnClick(e) {
-            // alert(this.id);
-            var clickedMarkerId = e.target.getElement().dataset.idLoai;
-            $.ajax({
-                url: '/Home/getInforSpecies',
-                type: 'GET',
-                data: { Id: clickedMarkerId },
-                success: function (data) {
-                    console.log(data)
-                    var imgitem = "";
-                    if (data.success) {
-                        img = data.item.fileDinhKem;
-                        if (img !== null || img !== undefined || img !== "") {
-                            var listImg = img.split(",")
-                            for (var i = 0; i < listImg.length; i++) {
-                                imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
-                            }
-                        }
-                        row = `<tr>
-                                   <th>Tên loài</th>
-                                           <td>${data.item.name == null ? "Không" : data.item.name}</td>
-                                </tr>
-                                <tr>
-                                   <th>Tên latinh</th>
-                                            <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
-                                </tr>
-                                <tr>
-                                   <th>Tên khác</th>
-                                            <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
-                                </tr>
-                                <tr>
-                                   <th>Phân bố</th>
-                                            <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
-                                </tr>
-                                <tr>
-                                   <th>Mức độ bảo tồn IUCN</th>
-                                   <td>
-                                            ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
-                                   </td>
-                                </tr>
-                                <tr>
-                                   <th>Mức độ bảo tồn SDVN</th>
-                                   <td>
-                                            ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
-                                   </td>
-                                </tr>
-                                <tr>
-                                   <th>Mức độ bảo tồn NDCP</th>
-                                   <td>
-                                            ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
-                                   </td>
-                                </tr>
-                                <tr>
-                                   <th> Mức độ bảo tồn ND64CP</th>
-                                   <td>
-                                             ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
-                                   </td>
-                                </tr>
-                                <tr>
-                                           <th>Ảnh</th>
-                                                        <td >
-                                                        <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
-                                                                  ${imgitem}
-                                                        </div>
-
-                                   </td>
-                                </tr>`
-                        $('#speciesTable tbody').html(row);
-                    }
-                    //
+    @if (vqg == "0")
+    {
+        <script>
+            var stylelayer = {
+                defecto: {
+                    color: "red",
+                    opacity: 1,
+                    fillcolor: "red",
+                    fillOpacity: 0.1,
+                    weight: 0.5
                 },
-                error: function (error) {
-                    console.log(error);
+                reset: {
+                    color: "red",
+                    opacity: 0.4,
+                    weight: 1
+                },
+                highlight: {
+                    weight: 5,
+                    color: '#0D8BE7',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                },
+                selected: {
+                    color: "blue",
+                    opacity: 0.3,
+                    weight: 0.5
                 }
+            }
+            /*===================================================
+                            MAPS  LAYER
+            ===================================================*/
+            var mapOptions = {
+                center: [22.481854, 102.616594],
+                zoom: 11,
+                attributionControl: false
+            }
+            var map = new L.map('map', mapOptions); // Creating a map object
+            var basemaps = {
 
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            //L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            //var popup = L.popup();
+            var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+
+
+
+            
+            //var parks = L.geoJson(muongtedatarrx);
+            function getColor(d) {
+                return d == 3 ? '#40a035' :
+                    d == 2 ? '#E2BF30' :
+                        d == 1 ? '#A41414' :
+                            '#FFEDA0';
+            }
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.pc),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+         
+          @*   function myInit() {
+                var kkr = L.geoJson(muongtehtr, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                });
+                var groupoverlays = {
+                    "HTR-RG": {
+                        "Ranh giới": mtData,
+                        "Hiện trạng rừng": kkr,
+                        //"Park" : parks,
+                    },
+                };
+                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+                L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            } *@
+            /*show info layers*/
+            var info = L.control({
+                position: 'bottomleft'
             });
-        }
-    </script>
+           
+
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    //click: zoomToFeature
+                    //dblclick : selectFeature
+                });
+            }
+
+            var popupLayer;
+            function highlightFeature(e) {
+                var layer = e.target;
+                //layer.setStyle(stylelayer.highlight);
+                info.update(layer.feature.properties);
+            }
+            function resetHighlight(e) {
+                // var layer = e.target;
+                // var feature = e.target.feature;
+                // if (checkExistsLayers(feature)) {
+                //    setStyleLayer(layer, stylelayer.highlight)
+                // } else {
+                //    setStyleLayer(layer, stylelayer.defecto)
+                // }
+            }
+
+            var featuresSelected = []
+            function zoomToFeature(e) {
+                var layer = e.target;
+                var feature = e.target.feature;
+
+                // if (checkExistsLayers(feature)) {
+                //    removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+                //    removeBounds(layer)
+
+                // } else {
+                //    addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+                //    addBounds(layer)
+                // }
+                map.fitBounds(arrayBounds);
+                detailsselected.update(featuresSelected)
+            }
+
+            // function selectTypeaheadFeature(layer) {
+            //    var layer = layer;
+            //    var feature = layer.feature;
+            //    if (checkExistsLayers(feature)) {
+            //       removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+            //       removeBounds(layer)
+            //    } else {
+            //       addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+            //       addBounds(layer)
+            //    }
+            //    map.fitBounds(arrayBounds.length != 0 ? arrayBounds : initbounds)
+            //    detailsselected.update(featuresSelected)
+            // }
+
+            function checkExistsLayers(feature) {
+                var result = false
+                for (var i = 0; i < featuresSelected.length; i++) {
+                    if (featuresSelected[i].zipcode == feature.properties.zipcode) {
+                        result = true;
+                        break;
+                    }
+                };
+                return result
+            }
+
+            function addBounds(layer) {
+                arrayBounds.push(layer.getBounds())
+            }
+
+            function removeBounds(layer) {
+                arrayBounds = arrayBounds.filter(bounds => bounds != layer.getBounds())
+            }
+
+            function setStyleLayer(layer, styleSelected) {
+                layer.setStyle(styleSelected)
+            }
+
+            function removerlayers(feature, callback) {
+                featuresSelected = featuresSelected.filter(obj => obj.zipcode != feature.properties.zipcode)
+                callback(arguments[2], arguments[3])
+            }
+
+            function addLayers(feature, callback) {
+                featuresSelected.push({
+                    zipcode: feature.properties.zipcode,
+                    feature: feature
+                })
+                callback(arguments[2], arguments[3])
+            }
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+            /*===================================================
+                            Chú thích
+            ===================================================*/
+            var legend = L.control({ position: "bottomleft" });
+            legend.onAdd = function (map1) {
+                var div = L.DomUtil.create("div", "legend");
+                div.innerHTML += "<h4>Chú thích</h4>";
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+                return div;
+            };
+            legend.addTo(map);
+            /*===================================================
+                            Printer
+            ===================================================*/
+            L.easyPrint({
+                title: 'Máy in',
+                position: 'bottomright',
+                filename: 'IFEE-ĐenVa',
+                exportOnly: true,
+                sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
+            }).addTo(map);
+            /*===================================================
+                            maker point
+            ===================================================*/
+            // Icon ảnh
+            var normal = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/treeicon.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            var noble = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/Elephant.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            /*===================================================
+                            listpoint dtv
+            ===================================================*/
+            var planesAnimal = [
+            @foreach (var item in Model.SpeciesAnimal)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                        ];
+            var planesPlant = [
+            @foreach (var item in Model.SpeciesPlant)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                                ];
+
+            for (var i = 0; i < planesAnimal.length; i++) {
+                marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
+                    .bindPopup(planesAnimal[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesAnimal[i][3];
+                marker.id = planesAnimal[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            for (var i = 0; i < planesPlant.length; i++) {
+                marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
+                    .bindPopup(planesPlant[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesPlant[i][3];
+                marker.id = planesPlant[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            /*===================================================
+                            AJAX get data dtv from maker
+            ===================================================*/
+            function markerOnClick(e) {
+                var clickedMarkerId = e.target.getElement().dataset.idLoai;
+                $.ajax({
+                    url: '/Home/getInforSpecies',
+                    type: 'GET',
+                    data: { Id: clickedMarkerId },
+                    success: function (data) {
+                        console.log(data)
+                        var imgitem = "";
+                        if (data.success) {
+                            img = data.item.fileDinhKem;
+                            if (img !== null || img !== undefined || img !== "") {
+                                var listImg = img.split(",")
+                                for (var i = 0; i < listImg.length; i++) {
+                                    imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
+                                }
+                            }
+                            row = `<tr>
+                                                           <th>Tên loài</th>
+                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên latinh</th>
+                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên khác</th>
+                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Phân bố</th>
+                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn IUCN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn SDVN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn NDCP</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th> Mức độ bảo tồn ND64CP</th>
+                                                           <td>
+                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                                   <th>Ảnh</th>
+                                                                                <td >
+                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                          ${imgitem}
+                                                                                </div>
+
+                                                           </td>
+                                                        </tr>`
+                            $('#speciesTable tbody').html(row);
+                        }
+                        //
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+
+                });
+            }
+            function myInit() {
+                var kkr = L.geoJson(muongtehtr, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                });
+                var groupoverlays = {
+                    "HTR-RG": {
+                        "Ranh giới": mtData,
+                        "Hiện trạng rừng": kkr,
+                        //"Park" : parks,
+                    },
+                };
+                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+                L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            }
+            /*show info layers*/
+            var info = L.control({
+                position: 'bottomleft'
+            });
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            info.update = function (properties) {
+                this._div.innerHTML =
+
+                    '<h4>Thông tin chi tiết</h4>' + (properties ?
+                        `
+                                 Xã:${properties.x}<br>
+                                 Lô:${properties.l}<br>
+                                 Khoảnh:${properties.K}<br>
+                                 Tiểu khu:${properties.tk}<br>
+                                 Phân Cấp:${properties.pcs}<br>
+                                       ` : 'Hover over a state');;
+            };
+
+            info.addTo(map);
+        </script>
+    }
+    else if (vqg == "1")
+    {
+        <script>
+            
+            var stylelayer = {
+                defecto: {
+                    color: "red",
+                    opacity: 1,
+                    fillcolor: "red",
+                    fillOpacity: 0.1,
+                    weight: 0.5
+                },
+                reset: {
+                    color: "red",
+                    opacity: 0.4,
+                    weight: 1
+                },
+                highlight: {
+                    weight: 5,
+                    color: '#0D8BE7',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                },
+                selected: {
+                    color: "blue",
+                    opacity: 0.3,
+                    weight: 0.5
+                }
+            }
+            /*===================================================
+                            MAPS  LAYER
+            ===================================================*/
+            var mapOptions = {
+                center: [15.602519, 107.619380],
+                zoom: 11,
+                attributionControl: false
+            }
+            var map = new L.map('map', mapOptions); // Creating a map object
+            var basemaps = {
+
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            //L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            //var popup = L.popup();
+            var mtData = L.geoJson(namgiang_rrx).addTo(map); // Add geojson rrxa muong te
+
+
+
+            
+            //var parks = L.geoJson(muongtedatarrx);
+            function getColor(d) {
+                return d == 3 ? '#40a035' :
+                    d == 2 ? '#E2BF30' :
+                        d == 1 ? '#A41414' :
+                            '#FFEDA0';
+            }
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.pc),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+            
+
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    //click: zoomToFeature
+                    //dblclick : selectFeature
+                });
+            }
+
+            var popupLayer;
+            function highlightFeature(e) {
+                var layer = e.target;
+                // layer.setStyle(stylelayer.highlight);
+                info.update(layer.feature.properties);
+            }
+            function resetHighlight(e) {
+                // var layer = e.target;
+                // var feature = e.target.feature;
+                // if (checkExistsLayers(feature)) {
+                //    setStyleLayer(layer, stylelayer.highlight)
+                // } else {
+                //    setStyleLayer(layer, stylelayer.defecto)
+                // }
+            }
+
+            var featuresSelected = []
+            function zoomToFeature(e) {
+                var layer = e.target;
+                var feature = e.target.feature;
+
+                if (checkExistsLayers(feature)) {
+                    removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+                    removeBounds(layer)
+
+                } else {
+                    addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+                    addBounds(layer)
+                }
+                map.fitBounds(arrayBounds);
+                detailsselected.update(featuresSelected)
+            }
+
+            function selectTypeaheadFeature(layer) {
+                var layer = layer;
+                var feature = layer.feature;
+                if (checkExistsLayers(feature)) {
+                    removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+                    removeBounds(layer)
+                } else {
+                    addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+                    addBounds(layer)
+                }
+                map.fitBounds(arrayBounds.length != 0 ? arrayBounds : initbounds)
+                detailsselected.update(featuresSelected)
+            }
+
+            function checkExistsLayers(feature) {
+                var result = false
+                for (var i = 0; i < featuresSelected.length; i++) {
+                    if (featuresSelected[i].zipcode == feature.properties.zipcode) {
+                        result = true;
+                        break;
+                    }
+                };
+                return result
+            }
+
+            function addBounds(layer) {
+                arrayBounds.push(layer.getBounds())
+            }
+
+            function removeBounds(layer) {
+                arrayBounds = arrayBounds.filter(bounds => bounds != layer.getBounds())
+            }
+
+            function setStyleLayer(layer, styleSelected) {
+                layer.setStyle(styleSelected)
+            }
+
+            function removerlayers(feature, callback) {
+                featuresSelected = featuresSelected.filter(obj => obj.zipcode != feature.properties.zipcode)
+                callback(arguments[2], arguments[3])
+            }
+
+            function addLayers(feature, callback) {
+                featuresSelected.push({
+                    zipcode: feature.properties.zipcode,
+                    feature: feature
+                })
+                callback(arguments[2], arguments[3])
+            }
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+            /*===================================================
+                            Chú thích
+            ===================================================*/
+            var legend = L.control({ position: "bottomleft" });
+            legend.onAdd = function (map1) {
+                var div = L.DomUtil.create("div", "legend");
+                div.innerHTML += "<h4>Chú thích</h4>";
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+                return div;
+            };
+            legend.addTo(map);
+            /*===================================================
+                            Printer
+            ===================================================*/
+            L.easyPrint({
+                title: 'Máy in',
+                position: 'bottomright',
+                filename: 'IFEE-ĐenVa',
+                exportOnly: true,
+                sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
+            }).addTo(map);
+            /*===================================================
+                            maker point
+            ===================================================*/
+            // Icon ảnh
+            var normal = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/treeicon.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            var noble = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/Elephant.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            /*===================================================
+                            listpoint dtv
+            ===================================================*/
+            var planesAnimal = [
+            @foreach (var item in Model.SpeciesAnimal)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                        ];
+            var planesPlant = [
+            @foreach (var item in Model.SpeciesPlant)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                                ];
+
+            for (var i = 0; i < planesAnimal.length; i++) {
+                marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
+                    .bindPopup(planesAnimal[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesAnimal[i][3];
+                marker.id = planesAnimal[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            for (var i = 0; i < planesPlant.length; i++) {
+                marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
+                    .bindPopup(planesPlant[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesPlant[i][3];
+                marker.id = planesPlant[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            /*===================================================
+                            AJAX get data dtv from maker
+            ===================================================*/
+            function markerOnClick(e) {
+                var clickedMarkerId = e.target.getElement().dataset.idLoai;
+                $.ajax({
+                    url: '/Home/getInforSpecies',
+                    type: 'GET',
+                    data: { Id: clickedMarkerId },
+                    success: function (data) {
+                        console.log(data)
+                        var imgitem = "";
+                        if (data.success) {
+                            img = data.item.fileDinhKem;
+                            if (img !== null || img !== undefined || img !== "") {
+                                var listImg = img.split(",")
+                                for (var i = 0; i < listImg.length; i++) {
+                                    imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
+                                }
+                            }
+                            row = `<tr>
+                                                           <th>Tên loài</th>
+                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên latinh</th>
+                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên khác</th>
+                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Phân bố</th>
+                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn IUCN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn SDVN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn NDCP</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th> Mức độ bảo tồn ND64CP</th>
+                                                           <td>
+                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                                   <th>Ảnh</th>
+                                                                                <td >
+                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                          ${imgitem}
+                                                                                </div>
+
+                                                           </td>
+                                                        </tr>`
+                            $('#speciesTable tbody').html(row);
+                        }
+                        //
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+
+                });
+            }
+
+            function myInit() {
+                var kkr = L.geoJson(namgianghtr, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                });
+                var groupoverlays = {
+                    "KKR-RG": {
+                        "Ranh giới": mtData,
+                        "Lô rừng": kkr,
+                        //"Park" : parks,
+                    },
+                };
+         
+                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+                L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            }
+            /*show info layers*/
+            var info = L.control({
+                position: 'bottomleft'
+            });
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            info.update = function (properties) {
+                this._div.innerHTML =
+                    '<h4>Thông tin chi tiết</h4>' + (properties ?
+                        `
+                                 Xã:${properties.x}<br>
+                                 Lô:${properties.l}<br>
+                                 Khoảnh:${properties.K}<br>
+                                 Tiểu khu:${properties.tk}<br>
+                                 Phân Cấp:${properties.pcs}<br>
+                                       ` : 'Hover over a state');;
+            };
+
+            info.addTo(map);
+        </script>
+    }
+    else
+    {
+        <script>
+            var stylelayer = {
+                defecto: {
+                    color: "red",
+                    opacity: 1,
+                    fillcolor: "red",
+                    fillOpacity: 0.1,
+                    weight: 0.5
+                },
+                reset: {
+                    color: "red",
+                    opacity: 0.4,
+                    weight: 1
+                },
+                highlight: {
+                    weight: 5,
+                    color: '#0D8BE7',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                },
+                selected: {
+                    color: "blue",
+                    opacity: 0.3,
+                    weight: 0.5
+                }
+            }
+            /*===================================================
+                            MAPS  LAYER
+            ===================================================*/
+            var mapOptions = {
+                center: [22.481854, 102.616594],
+                zoom: 11,
+                attributionControl: false
+            }
+            var map = new L.map('map', mapOptions); // Creating a map object
+            var basemaps = {
+
+                GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }),
+                OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+            };
+
+            //L.control.layers(basemaps).addTo(map);
+            basemaps.GoogleHybrid.addTo(map);
+            //var popup = L.popup();
+            var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+
+           
+
+           
+            //var parks = L.geoJson(muongtedatarrx);
+            function getColor(d) {
+                return d == 3 ? '#40a035' :
+                    d == 2 ? '#E2BF30' :
+                        d == 1 ? '#A41414' :
+                            '#FFEDA0';
+            }
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.pc),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    //click: zoomToFeature
+                    //dblclick : selectFeature
+                });
+            }
+
+            var popupLayer;
+            function highlightFeature(e) {
+                var layer = e.target;
+                //layer.setStyle(stylelayer.highlight);
+                info.update(layer.feature.properties);
+            }
+            function resetHighlight(e) {
+                // var layer = e.target;
+                // var feature = e.target.feature;
+                // if (checkExistsLayers(feature)) {
+                //    setStyleLayer(layer, stylelayer.highlight)
+                // } else {
+                //    setStyleLayer(layer, stylelayer.defecto)
+                // }
+            }
+
+            var featuresSelected = []
+            function zoomToFeature(e) {
+                var layer = e.target;
+                var feature = e.target.feature;
+
+                // if (checkExistsLayers(feature)) {
+                //    removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+                //    removeBounds(layer)
+
+                // } else {
+                //    addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+                //    addBounds(layer)
+                // }
+                map.fitBounds(arrayBounds);
+                detailsselected.update(featuresSelected)
+            }
+
+            // function selectTypeaheadFeature(layer) {
+            //    var layer = layer;
+            //    var feature = layer.feature;
+            //    if (checkExistsLayers(feature)) {
+            //       removerlayers(feature, setStyleLayer, layer, stylelayer.defecto)
+            //       removeBounds(layer)
+            //    } else {
+            //       addLayers(feature, setStyleLayer, layer, stylelayer.highlight)
+            //       addBounds(layer)
+            //    }
+            //    map.fitBounds(arrayBounds.length != 0 ? arrayBounds : initbounds)
+            //    detailsselected.update(featuresSelected)
+            // }
+
+            function checkExistsLayers(feature) {
+                var result = false
+                for (var i = 0; i < featuresSelected.length; i++) {
+                    if (featuresSelected[i].zipcode == feature.properties.zipcode) {
+                        result = true;
+                        break;
+                    }
+                };
+                return result
+            }
+
+            function addBounds(layer) {
+                arrayBounds.push(layer.getBounds())
+            }
+
+            function removeBounds(layer) {
+                arrayBounds = arrayBounds.filter(bounds => bounds != layer.getBounds())
+            }
+
+            function setStyleLayer(layer, styleSelected) {
+                layer.setStyle(styleSelected)
+            }
+
+            function removerlayers(feature, callback) {
+                featuresSelected = featuresSelected.filter(obj => obj.zipcode != feature.properties.zipcode)
+                callback(arguments[2], arguments[3])
+            }
+
+            function addLayers(feature, callback) {
+                featuresSelected.push({
+                    zipcode: feature.properties.zipcode,
+                    feature: feature
+                })
+                callback(arguments[2], arguments[3])
+            }
+            /*===================================================
+                            Attribution options
+            ===================================================*/
+            var attrOptions = {
+                prefix: 'Creater: Cường nv'
+            };
+
+            var attr = L.control.attribution(attrOptions);
+            var scale = L.control.scale(); // Creating scale control
+            //L.geoJson(muongte_rgxa).addTo(map)
+            scale.addTo(map); // Adding scale control to the map
+            attr.addTo(map);  // Adding attribution to the map
+            // L.Control.geocoder().addTo(map); // Add search to maps
+            // Add coornidates
+            L.control.coordinates({
+                position: "bottomright", //optional default "bootomright"
+                decimals: 2, //optional default 4
+                decimalSeperator: ".", //optional default "."
+                labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+                labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+                enableUserInput: true, //optional default true
+                useDMS: false, //optional default false
+                useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+                markerType: L.marker, //optional default L.marker
+                markerProps: {}, //optional default {},
+                labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+                labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+                //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+            }).addTo(map);
+
+
+
+            /*===================================================
+                            Chú thích
+            ===================================================*/
+            var legend = L.control({ position: "bottomleft" });
+            legend.onAdd = function (map1) {
+                var div = L.DomUtil.create("div", "legend");
+                div.innerHTML += "<h4>Chú thích</h4>";
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+                return div;
+            };
+            legend.addTo(map);
+            /*===================================================
+                            Printer
+            ===================================================*/
+            L.easyPrint({
+                title: 'Máy in',
+                position: 'bottomright',
+                filename: 'IFEE-ĐenVa',
+                exportOnly: true,
+                sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
+            }).addTo(map);
+            /*===================================================
+                            maker point
+            ===================================================*/
+            // Icon ảnh
+            var normal = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/treeicon.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            var noble = L.icon({
+                iconUrl: "/dataMaps/newMap/pic/Elephant.png",
+                iconSize: [30, 30], // size of the icon
+                iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            /*===================================================
+                            listpoint dtv
+            ===================================================*/
+            var planesAnimal = [
+            @foreach (var item in Model.SpeciesAnimal)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                        ];
+            var planesPlant = [
+            @foreach (var item in Model.SpeciesPlant)
+            {
+                var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
+                @Html.Raw(text)
+            }
+                                                                                                                                                ];
+
+            for (var i = 0; i < planesAnimal.length; i++) {
+                marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
+                    .bindPopup(planesAnimal[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesAnimal[i][3];
+                marker.id = planesAnimal[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            for (var i = 0; i < planesPlant.length; i++) {
+                marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
+                    .bindPopup(planesPlant[i][0])
+                    .addTo(map);
+                marker.getElement().dataset.idLoai = planesPlant[i][3];
+                marker.id = planesPlant[i][0];
+                marker.on('click', markerOnClick);
+            }
+
+            /*===================================================
+                            AJAX get data dtv from maker
+            ===================================================*/
+            function markerOnClick(e) {
+                var clickedMarkerId = e.target.getElement().dataset.idLoai;
+                $.ajax({
+                    url: '/Home/getInforSpecies',
+                    type: 'GET',
+                    data: { Id: clickedMarkerId },
+                    success: function (data) {
+                        console.log(data)
+                        var imgitem = "";
+                        if (data.success) {
+                            img = data.item.fileDinhKem;
+                            if (img !== null || img !== undefined || img !== "") {
+                                var listImg = img.split(",")
+                                for (var i = 0; i < listImg.length; i++) {
+                                    imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
+                                }
+                            }
+                            row = `<tr>
+                                                           <th>Tên loài</th>
+                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên latinh</th>
+                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Tên khác</th>
+                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Phân bố</th>
+                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn IUCN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn SDVN</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th>Mức độ bảo tồn NDCP</th>
+                                                           <td>
+                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                           <th> Mức độ bảo tồn ND64CP</th>
+                                                           <td>
+                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                           </td>
+                                                        </tr>
+                                                        <tr>
+                                                                   <th>Ảnh</th>
+                                                                                <td >
+                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                          ${imgitem}
+                                                                                </div>
+
+                                                           </td>
+                                                        </tr>`
+                            $('#speciesTable tbody').html(row);
+                        }
+                        //
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+
+                });
+            }
+            function myInit() {
+                var kkr = L.geoJson(muongtehtr, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                });
+                var groupoverlays = {
+                    "HTR-RG": {
+                        "Ranh giới": mtData,
+                        "Hiện trạng rừng": kkr,
+                        //"Park" : parks,
+                    },
+                };
+                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+                L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            }
+           
+            /*show info layers*/
+            var info = L.control({
+                position: 'bottomleft'
+            });
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            info.update = function (properties) {
+                this._div.innerHTML =
+
+                    '<h4>Thông tin chi tiết</h4>' + (properties ?
+                        `
+                                 Xã:${properties.x}<br>
+                                 Lô:${properties.l}<br>
+                                 Khoảnh:${properties.K}<br>
+                                 Tiểu khu:${properties.tk}<br>
+                                 Phân Cấp:${properties.pcs}<br>
+                                       ` : 'Hover over a state');;
+            };
+
+            info.addTo(map);
+        </script>
+    }
+    @* <script>
+
+    /*===================================================
+    MAPS  LAYER
+    ===================================================*/
+    var mapOptions = {
+    center: [22.481854, 102.616594],
+    zoom: 11,
+    attributionControl: false
+    }
+    var map = new L.map('map', mapOptions); // Creating a map object
+    var basemaps = {
+
+    GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+    };
+
+    L.control.layers(basemaps).addTo(map);
+    basemaps.GoogleHybrid.addTo(map);
+    var popup = L.popup();
+    /*===================================================
+    Attribution options
+    ===================================================*/
+    var attrOptions = {
+    prefix: 'Creater: Cường nv'
+    };
+    var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
+    var attr = L.control.attribution(attrOptions);
+    var scale = L.control.scale(); // Creating scale control
+    //L.geoJson(muongte_rgxa).addTo(map)
+    scale.addTo(map); // Adding scale control to the map
+    attr.addTo(map);  // Adding attribution to the map
+    // L.Control.geocoder().addTo(map); // Add search to maps
+    // Add coornidates
+    L.control.coordinates({
+    position: "bottomright", //optional default "bootomright"
+    decimals: 2, //optional default 4
+    decimalSeperator: ".", //optional default "."
+    labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
+    labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
+    enableUserInput: true, //optional default true
+    useDMS: false, //optional default false
+    useLatLngOrder: true, //ordering of labels, default false-> lng-lat
+    markerType: L.marker, //optional default L.marker
+    markerProps: {}, //optional default {},
+    labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
+    labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
+    //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
+    }).addTo(map);
+    /*===================================================
+    Chú thích
+    ===================================================*/
+    var legend = L.control({ position: "bottomleft" });
+    legend.onAdd = function (map1) {
+    var div = L.DomUtil.create("div", "legend");
+    div.innerHTML += "<h4>Chú thích</h4>";
+    div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
+    div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+    return div;
+    };
+    legend.addTo(map);
+    /*===================================================
+    Printer
+    ===================================================*/
+    L.easyPrint({
+    title: 'Máy in',
+    position: 'bottomright',
+    filename: 'IFEE-ĐenVa',
+    exportOnly: true,
+    sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
+    }).addTo(map);
+    /*===================================================
+    maker point
+    ===================================================*/
+    // Icon ảnh
+    var normal = L.icon({
+    iconUrl: "/dataMaps/pic/treeicon.png",
+    iconSize: [30, 30], // size of the icon
+    iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    var noble = L.icon({
+    iconUrl: "/dataMaps/pic/Elephant.png",
+    iconSize: [30, 30], // size of the icon
+    iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
+    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    /*===================================================
+    listpoint dtv
+    ===================================================*/
+    var planesAnimal = [
+    @foreach (var item in Model.SpeciesAnimal)
+    {
+    var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
+    @Html.Raw(text)
+    }
+    ];
+    var planesPlant = [
+    @foreach (var item in Model.SpeciesPlant)
+    {
+    var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
+    @Html.Raw(text)
+    }
+    ];
+
+    for (var i = 0; i < planesAnimal.length; i++) {
+    marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
+    .bindPopup(planesAnimal[i][0])
+    .addTo(map);
+    marker.getElement().dataset.idLoai = planesAnimal[i][3];
+    marker.id = planesAnimal[i][0];
+    marker.on('click', markerOnClick);
+    }
+
+    for (var i = 0; i < planesPlant.length; i++) {
+    marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
+    .bindPopup(planesPlant[i][0])
+    .addTo(map);
+    marker.getElement().dataset.idLoai = planesPlant[i][3];
+    marker.id = planesPlant[i][0];
+    marker.on('click', markerOnClick);
+    }
+
+    /*===================================================
+    AJAX get data dtv from maker
+    ===================================================*/
+    function markerOnClick(e) {
+    // alert(this.id);
+    var clickedMarkerId = e.target.getElement().dataset.idLoai;
+    $.ajax({
+    url: '/Home/getInforSpecies',
+    type: 'GET',
+    data: { Id: clickedMarkerId },
+    success: function (data) {
+    console.log(data)
+    var imgitem = "";
+    if (data.success) {
+    img = data.item.fileDinhKem;
+    if (img !== null || img !== undefined || img !== "") {
+    var listImg = img.split(",")
+    for (var i = 0; i < listImg.length; i++) {
+    imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
+    }
+    }
+    row = `<tr>
+    <th>Tên loài</th>
+    <td>${data.item.name == null ? "Không" : data.item.name}</td>
+    </tr>
+    <tr>
+    <th>Tên latinh</th>
+    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+    </tr>
+    <tr>
+    <th>Tên khác</th>
+    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+    </tr>
+    <tr>
+    <th>Phân bố</th>
+    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+    </tr>
+    <tr>
+    <th>Mức độ bảo tồn IUCN</th>
+    <td>
+    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+    </td>
+    </tr>
+    <tr>
+    <th>Mức độ bảo tồn SDVN</th>
+    <td>
+    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+    </td>
+    </tr>
+    <tr>
+    <th>Mức độ bảo tồn NDCP</th>
+    <td>
+    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+    </td>
+    </tr>
+    <tr>
+    <th> Mức độ bảo tồn ND64CP</th>
+    <td>
+    ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+    </td>
+    </tr>
+    <tr>
+    <th>Ảnh</th>
+    <td >
+    <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+    ${imgitem}
+    </div>
+
+    </td>
+    </tr>`
+    $('#speciesTable tbody').html(row);
+    }
+    //
+    },
+    error: function (error) {
+    console.log(error);
+    }
+
+    });
+    }
+    </script> *@
     <script>
 
         var currentUrl = window.location.href;
