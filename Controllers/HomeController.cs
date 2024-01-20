@@ -94,7 +94,7 @@ namespace DongThucVatQuangTri.Controllers
             };
             return View(model);
         }
-        public async Task<IActionResult> News(int type = 0, int PageIndex = 1, int PageSize = 5)
+        public async Task<IActionResult> News(int type = 0, int PageIndex = 1, int PageSize = 3)
         {
             var request = new GetNewsPagingRequest()
             {
@@ -119,7 +119,7 @@ namespace DongThucVatQuangTri.Controllers
             return View(item);
         }
         [HttpGet]
-        public async Task<IActionResult> Tour(int type = 0, int PageIndex = 1, int PageSize = 12)
+        public async Task<IActionResult> Tour(int type = 0, int PageIndex = 1, int PageSize = 2)
         {
             var request = new GetTourPagingRequest()
             {
