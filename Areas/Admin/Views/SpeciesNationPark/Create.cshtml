@@ -312,7 +312,24 @@
             })
         </script>
     }
-    
+    <script>
+        zoomMap();
+        function zoomMap() {
+            var select = document.querySelector(".typeNationPark")
+            var value = select.value;
+            if (value == "NationParkNamGiang") {
+               
+                map.flyTo([15.602519, 107.619380], 9, {
+                    duration: 2 // Thời gian di chuyển (s)
+                });
+            } else {
+                
+                map.flyTo([22.481854, 102.616594], 9, {
+                    duration: 2 // Thời gian di chuyển (s)
+                });
+            }
+        }
+    </script>
 }
 @{
     var idLoai = -1;
@@ -384,7 +401,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
-                    <select asp-for="typeNationPark" class="form-control" id="dropdown" name="TypeNationPark">
+                    <select onchange="zoomMap()" asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
                         @{
                             var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
                         }

@@ -135,7 +135,7 @@
                             <h3><span>Thông tin tại BQL rừng phòng hộ Nam Giang <span></span></span></h3>
                         </button>
                     </h2>
-                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse " aria-labelledby="panelsStayOpen-headingOne" >
+                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse " aria-labelledby="panelsStayOpen-headingOne">
                         <div class="accordion-body row">
                             <div class="col-md-12">
                                 <div class="row text-center">
@@ -258,72 +258,74 @@
                                 </div>
 
                             </div>
-                            
+
 
                         </div><!--end maincontent-->
 
                     </div>
                 </div>
             </div>
-           
+
             <h3><span style="font-family: 'LoraF';">Loài tương tự <span></span></span></h3>
-    </div><!--end tintuc-->
-    @{
-        int i = 1;
-    }
-    <div class="doitac duantieubieu" style="background-color:white">
-        <div class="tintuc">
-            <div class="maincontent">
-                <div class="noibat">
-                    <div class="tinnoibat" style="width:100%">
-                        <div class="danhsachtin">
-                            <div class="row">
-                                @foreach (var item in Model.lisViewModels)
-                                {
-                                    <div class="tin1 col-sm-6">
-                                        <p class="stt">
-                                            @i @{
-                                                i++;
-                                            }.
-                                        </p>
-                                        <div class="noidung">
-                                            <ul>
-                                                    @{
-                                                        var img = "";
-                                                    }
+        </div><!--end tintuc-->
+        @{
+            int i = 1;
+        }
+        <div class="doitac duantieubieu" style="background-color:white">
+            <div class="tintuc">
+                <div class="maincontent">
+                    <div class="noibat">
+                        <div class="tinnoibat" style="width:100%">
+                            <div class="danhsachtin">
+                                <div class="row">
+                                    @foreach (var item in Model.lisViewModels)
+                                    {
+                                        <div class="tin1 col-sm-6">
+                                            <p class="stt">
+                                                @i @{
+                                                    i++;
+                                                }.
+                                            </p>
+                                            <div class="noidung">
+                                                @{
+                                                    var img = "";
+                                                }
                                                 @if (!String.IsNullOrEmpty(@item.FileDinhKem))
                                                 {
-                                                        var ListImg = item.FileDinhKem.Split(',').Where(x => !String.IsNullOrEmpty(x)).ToList();
-                                                        img = ListImg.FirstOrDefault();
-                                                    }
-                                                    else
-                                                    {
-                                                        img = null;
-                                                    }
-                                                    @if (!String.IsNullOrEmpty(img))
-                                                    {
-                                                        <img src="/user-content/@img" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                                    var ListImg = item.FileDinhKem.Split(',').Where(x => !String.IsNullOrEmpty(x)).ToList();
+                                                    img = ListImg.FirstOrDefault();
                                                 }
                                                 else
                                                 {
-                                                        <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                                    img = null;
                                                 }
-                                                <h4 style="float:left;"><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
-                                                <ul style="list-style:none; margin:0">
-                                                    <li style="margin:0"><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
-                                                </ul>
-                                        </div><!--end noidung-->
-                                        <div style="clear:both;"></div>
-                                    </div>
+                                                @if (!String.IsNullOrEmpty(img))
+                                                {
+                                                    <img src="/user-content/@img" width="150" height="150" alt="" style="float: left;margin-right: 10px;">
+                                                }
+                                                else
+                                                {
+                                                    <img width="150" height="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail" style="float: left;margin-right: 10px;">
+                                                }
+                                                <div>
+                                                    <h4 style="float:unset;"><a asp-action="Details" asp-route-Id="@item.Id">@item.Name</a></h4>
+                                                    <ul style="list-style:none; margin:0">
+                                                        <li style="margin:0"><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
+                                                    </ul>
+                                                </div>
 
-                                    <!--end tin1-->
-                                }
+                                            </div><!--end noidung-->
+                                            <div style="clear:both;"></div>
+                                        </div>
+
+                                        <!--end tin1-->
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div><!--end duantieubieu-->
-</div><!--end content-->
+        </div><!--end duantieubieu-->
+    </div><!--end content-->
