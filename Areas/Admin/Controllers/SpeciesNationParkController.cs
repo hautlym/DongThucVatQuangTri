@@ -58,10 +58,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
 
             var data = await _manageSpecies.GetAlllPaging(request);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var role = User.FindFirstValue(ClaimTypes.Role);
             if (!User.FindFirstValue(ClaimTypes.Role).Contains("Administator"))
             {
-                data.ResultObj.Items = data.ResultObj.Items.Where(x => x.CreatedBy == userId.ToString()).ToList();
+                data.ResultObj.Items = data.ResultObj.Items.Where(x => x.TypeNationPark == role).ToList();
             }
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
@@ -119,6 +119,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 ModelState.AddModelError("", "Vui lòng chọn loài");
                 return View();
             }
+            
             var result = await _manageSpecies.createItem(request);
             if (result > 0)
             {
@@ -169,6 +170,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     KinhDo = result.KinhDo,
                     ViDo = result.ViDo,
                     TenKhac = result.TenKhac,
+                    TypeNationPark = result.TypeNationPark,
                     Id = (int)result.Id,
                 };
                 return View(updateRequest);

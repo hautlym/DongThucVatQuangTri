@@ -27,5 +27,6 @@
        public string? NameCreate { get; set; }
         public string? KinhDo { get; set; }
         public string? ViDo { get; set; }
+        public string? TypeNationPark { get; set; }
     }
 }

@@ -10,5 +10,6 @@
         public DateTime? UpdatedAt { get; set; }
         public string? CreateBy { get; set; }
         public string? UpdateBy { get; set; }
+        public string? NameCreate { get; set;}
     }
 }

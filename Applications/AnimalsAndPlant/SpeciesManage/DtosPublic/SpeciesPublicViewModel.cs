@@ -24,5 +24,6 @@
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
         public string? NameCreate { get; set; }
+        public string? typeNationPark { get; set; }
     }
 }

@@ -136,8 +136,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                         {
                             foreach (var item2 in vqgLoai)
                             {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.CreatedBy).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkMuongTe")
+                                if (item2.TypeNationPark == "NationParkMuongTe")
                                 {
                                     listnewData.Add(item);
                                     break;
@@ -155,8 +154,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                         {
                             foreach (var item2 in vqgLoai)
                             {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.CreatedBy).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkNamGiang")
+                                if (item2.TypeNationPark == "NationParkNamGiang")
                                 {
                                     listnewData.Add(item);
                                     break;
@@ -262,12 +260,11 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             {
                 foreach (var item2 in listVQG)
                 {
-                    var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.CreatedBy).Select(x => x.Roles).FirstOrDefault();
-                    if (checkRoleUser == "NationParkNamGiang")
+                    if (item2.TypeNationPark == "NationParkNamGiang")
                     {
                         lopVm.VQgNamGiang = item2;
                     }
-                    if (checkRoleUser == "NationParkMuongTe")
+                    if (item2.TypeNationPark == "NationParkMuongTe")
                     {
                         lopVm.VQGMuongTe = item2;
                     }

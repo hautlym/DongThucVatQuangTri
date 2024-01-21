@@ -18,5 +18,6 @@
         public string? NguonTaiLieu { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
+        public string? TypeNationPark { get; set; }
     }
 }

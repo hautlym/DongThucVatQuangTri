@@ -297,7 +297,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 tempdata = listnewData;
             }
             int totalRow = tempdata.Count;
-            var data = tempdata.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var data = tempdata.OrderByDescending(x => x.PostAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             var pageResult = new PageResult<NewsViewModels>
             {
                 TotalRecords = totalRow,

@@ -4,6 +4,7 @@ using DongThucVatQuangTri.Models.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DongThucVatQuangTri.Datas.Migrations
 {
     [DbContext(typeof(DongThucVatContext))]
-    partial class DongThucVatContextModelSnapshot : ModelSnapshot
+    [Migration("20240121094758_editNationPark")]
+    partial class editNationPark
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -744,8 +746,8 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("ten_khac");
 
-                    //b.Property<string>("TypeNationPark")
-                    //    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("TypeNationPark")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime")

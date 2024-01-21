@@ -107,9 +107,9 @@
 @media screen and (max-width: 715px) {
 #header .header2 .logo{ position:relative; z-index:1;}
 #header .header2 .nav{ position:absolute; top:0; right:0; height:0; text-align:center; width:80px;}
-#header .header2 .nav .navBtn{ padding:20px 30px 16px; display:block; float:right;}
+#header .header2 .nav .navBtn{ position:relative;padding:20px 30px 16px; display:block; float:right;}
 #header .header2 .nav .navBtn span{ background-color:#ccc; display:block; height:3px; border-radius:3px; margin:0 auto 5px; width:30px;}
-#header .header2 .nav ul{ padding:0; background-color:#fff; width:300px; position:relative; right:30px; float:right; box-shadow:2px 5px 5px rgba(0,0,0,0.1); display:none; border-top:solid 5px #e5e5e5;}
+#header .header2 .nav ul{ padding:0; background-color:#fff; width:300px; position:relative; right:30px; float:right; box-shadow:2px 5px 5px rgba(0,0,0,0.1); display:none; border-top:solid 5px #e5e5e5;position:absolute;top:60px; right:0;}
 #header .header2 .nav ul li{ display:block; padding:0;}
 #header .header2 .nav ul li a{ border:none; height:50px; line-height:50px; font-size:14px; border-top:solid 1px #f4f4f4; margin:0 10px; transition:none;}
 #header .header2 .nav ul li a#homeBtn{ width:auto; background:none;}

@@ -62,7 +62,7 @@ namespace DongThucVatQuangTri.Applications.Maps
                 Description = request.Description,
                 UpdateBy = _context.appUsers.Where(x => x.Id.ToString() == request.UpdateBy).Select(x => x.FirstName).FirstOrDefault(),
                 CreatedAt = request.CreatedAt,
-                CreateBy = _context.appUsers.Where(x => x.Id.ToString() == request.CreateBy).Select(x => x.FirstName).FirstOrDefault(),
+                CreateBy = request.CreateBy,
                 linkMap = request.linkMap,
                 UpdatedAt = request.UpdatedAt,
             }).ToListAsync();
@@ -87,8 +87,9 @@ namespace DongThucVatQuangTri.Applications.Maps
                     Description = request.b.Description,
                     UpdateBy = _context.appUsers.Where(x => x.Id.ToString() == request.b.UpdateBy).Select(x => x.FirstName).FirstOrDefault(),
                     CreatedAt = request.b.CreatedAt,
-                    CreateBy = _context.appUsers.Where(x => x.Id.ToString() == request.b.CreateBy).Select(x => x.FirstName).FirstOrDefault(),
+                    NameCreate = _context.appUsers.Where(x => x.Id.ToString() == request.b.CreateBy).Select(x => x.FirstName).FirstOrDefault(),
                     linkMap = request.b.linkMap,
+                    CreateBy = request.b.CreateBy,
                     UpdatedAt = request.b.UpdatedAt,
                 }).ToListAsync();
             var pageResult = new PageResult<MapViewModel>
@@ -118,8 +119,9 @@ namespace DongThucVatQuangTri.Applications.Maps
                 Description = request.b.Description,
                 UpdateBy = _context.appUsers.Where(x => x.Id.ToString() == request.b.UpdateBy).Select(x => x.FirstName).FirstOrDefault(),
                 CreatedAt = request.b.CreatedAt,
-                CreateBy = _context.appUsers.Where(x => x.Id.ToString() == request.b.CreateBy).Select(x => x.FirstName).FirstOrDefault(),
+                NameCreate = _context.appUsers.Where(x => x.Id.ToString() == request.b.CreateBy).Select(x => x.FirstName).FirstOrDefault(),
                 linkMap = request.b.linkMap,
+                CreateBy = request.b.CreateBy,
                 UpdatedAt = request.b.UpdatedAt,
             }).FirstOrDefaultAsync();
             return NewsVm;

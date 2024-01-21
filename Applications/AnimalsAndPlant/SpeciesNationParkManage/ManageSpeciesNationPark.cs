@@ -48,6 +48,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                     TenKhac = request.TenKhac,
                     KinhDo= request.KinhDo,
                     ViDo = request.ViDo,
+                    TypeNationPark = request.typeNationPark
                 };
                 _context.DtvLoai_VQGs.Add(item);
                 await _context.SaveChangesAsync();
@@ -121,6 +122,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 TenKhac = x.lv.TenKhac,
                 KinhDo = x.lv.KinhDo,
                 ViDo = x.lv.ViDo,
+                TypeNationPark =x.lv.TypeNationPark,
                 NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             }).ToListAsync();
             //var data = await _context.DtvLoai_VQGs.Select(item => new SpeciesNationParkViewModel()
@@ -191,6 +193,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                     TenKhac = x.lv.TenKhac,
                     KinhDo = x.lv.KinhDo,
                     ViDo=x.lv.ViDo,
+                    TypeNationPark = x.lv.TypeNationPark,
                     NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<SpeciesNationParkViewModel>
@@ -239,6 +242,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 TenKhac = item.lv.TenKhac,
                 KinhDo = item.lv.KinhDo,
                 ViDo=item.lv.ViDo,
+                TypeNationPark = item.lv.TypeNationPark,
                 NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(item.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
@@ -281,6 +285,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 result.TenKhac = request.TenKhac;
                 result.KinhDo = request.KinhDo;
                 result.ViDo= request.ViDo;
+                result.TypeNationPark = request.TypeNationPark;
                 _context.DtvLoai_VQGs.Update(result);
                 return await _context.SaveChangesAsync();
             }
