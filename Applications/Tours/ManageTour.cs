@@ -222,7 +222,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 tempdata = listnewData;
             }
             int totalRow = tempdata.Count;
-            var data = tempdata.OrderByDescending(x=>x.CreatedAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var data = tempdata.OrderBy(x=>x.CreatedAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             var pageResult = new PageResult<TourViewModel>
             {
                 TotalRecords = totalRow,
