@@ -13,10 +13,9 @@
     @foreach (var item in Model.bannerViews)
     {
         <div class="slide1">
-            <img src="/banner/@item.Src" width="1920" height="773" alt="" />
+            <img src="/banner/@item.Src" width="1920" height="773" alt="" style="max-height:600px;object-fit:cover"/>
             <h5>@item.Name</h5>
         </div>
-
         <!--end slide1-->
     }
 </div><!--end slide-->
