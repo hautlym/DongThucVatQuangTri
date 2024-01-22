@@ -119,12 +119,7 @@ builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 builder.Services.AddTransient<IStorageServiceEdit, FileStorageServiceEdit>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.WebHost.UseKestrel(options =>
-{
-    // Cấu hình thời gian chờ cho Kestrel
-    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(10); // Ví dụ: 10 phút
-    options.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(5); // Ví dụ: 5 phút
-}); ;
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
