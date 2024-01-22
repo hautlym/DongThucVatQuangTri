@@ -215,7 +215,8 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 KeySeo = request.b.KeySeo,
                 Language = request.b.Language,
                 IdRelated = request.b.IdRelated,
-                typeNationPark = request.b.TypeNationPark
+                typeNationPark = request.b.TypeNationPark,
+                NameCreate= _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
             }).FirstOrDefaultAsync();
             return NewsVm;
         }

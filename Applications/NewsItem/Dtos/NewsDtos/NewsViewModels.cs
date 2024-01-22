@@ -27,5 +27,6 @@
         public string Language { get; set; }
         public int? IdRelated { get; set; }
         public string? typeNationPark { get; set; }
+        public string? NameCreate { get; set; }
     }
 }

@@ -143,8 +143,9 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Description = request.b.Description,
                 SortOrder = request.b.SortOrder,
                 Status = request.b.Status,
-                Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
+                NameCreate = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
                 Source = request.b.Source,
+                Author = request.b.Author,
                 CreatedAt = request.b.CreatedAt,
                 UpdatedAt = request.b.UpdatedAt,
                 typeNationPark = request.b.TypeNationPark
@@ -221,7 +222,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 tempdata = listnewData;
             }
             int totalRow = tempdata.Count;
-            var data = tempdata.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var data = tempdata.OrderByDescending(x=>x.CreatedAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             var pageResult = new PageResult<TourViewModel>
             {
                 TotalRecords = totalRow,
