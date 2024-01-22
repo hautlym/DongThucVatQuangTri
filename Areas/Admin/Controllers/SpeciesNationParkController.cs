@@ -46,8 +46,9 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 PageIndex = PageIndex,
                 PageSize = PageSize,
                 keyword = keyword,
-                loai = loai
-            };
+                loai = loai,
+                typeNationPark = User.FindFirstValue(ClaimTypes.Role)
+        };
             if (loai == 1)
             {
                 ViewBag.Loai = "Động Vật";
@@ -58,11 +59,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
 
             var data = await _manageSpecies.GetAlllPaging(request);
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            if (!User.FindFirstValue(ClaimTypes.Role).Contains("Administator"))
-            {
-                data.ResultObj.Items = data.ResultObj.Items.Where(x => x.TypeNationPark == role).ToList();
-            }
+         
+          
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {

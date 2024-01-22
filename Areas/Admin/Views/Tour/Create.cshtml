@@ -76,6 +76,28 @@
                             <option value="0">Tắt</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
+                        <select  asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                            @{
+                                var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+                            }
+                            @if (typeNationPark == "NationParkNamGiang")
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                            }
+                            else if (typeNationPark == "NationParkMuongTe")
+                            {
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
+                            else
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
+
+                        </select>
+                    </div>
                     <input type="hidden" asp-for="Author" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
                     <div class="form-group">
                         <label asp-for="Description" class="control-label"> Nội dung:</label>

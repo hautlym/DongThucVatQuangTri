@@ -1,24 +1,33 @@
 ﻿using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
 using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using DongThucVatQuangTri.Applications.Tours.Dtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 namespace DongThucVatQuangTri.Applications.Tours
 {
     public class ManageTour : IManageTour
     {
         private readonly DongThucVatContext _context;
-        private readonly IManageFile _manageFile;
-        public ManageTour(DongThucVatContext context, IManageFile manageFile)
+        private readonly IStorageServiceEdit _manageFile;
+        public ManageTour(DongThucVatContext context, IStorageServiceEdit manageFile)
         {
             _context = context;
             _manageFile = manageFile;
 
+        }
+        public async Task<string> SaveFile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _manageFile.SaveFileAsync(file.OpenReadStream(), "tours", fileName);
+            return fileName;
         }
         public async Task<int> ChangeStatus(ChangeStatusRequest request)
         {
@@ -36,7 +45,7 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 Alias = request.Alias,
                 Name = request.Name,
-                Image = request.Image != null ? await _manageFile.SaveFile(request.Image) : "",
+                Image = request.Image != null ? await this.SaveFile(request.Image) : "",
                 ShortDescription = request.ShortDescription,
                 Description = request.Description,
                 SortOrder = request.SortOrder,
@@ -44,6 +53,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Author = request.Author,
                 Source = request.Source,
                 CreatedAt = DateTime.Now,
+                TypeNationPark = request.typeNationPark
             };
             _context.tour.Add(item);
             await _context.SaveChangesAsync();
@@ -57,7 +67,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 return -1;
             if (!String.IsNullOrEmpty(news.Image))
             {
-                _manageFile.DeleteFile(news.Image);
+                await _manageFile.DeleteFileAsync("tours", news.Image);
             }
             _context.tour.Remove(news);
             return await _context.SaveChangesAsync();
@@ -81,6 +91,10 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
+            if (!string.IsNullOrEmpty(request.typeNationPark))
+            {
+                query = query.Where(x => x.b.TypeNationPark == request.typeNationPark);
+            }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
                 .Select(request => new TourViewModel()
@@ -96,7 +110,8 @@ namespace DongThucVatQuangTri.Applications.Tours
                     Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
                     Source = request.b.Source,
                     CreatedAt = request.b.CreatedAt,
-                    UpdatedAt = request.b.UpdatedAt
+                    UpdatedAt = request.b.UpdatedAt,
+                    typeNationPark = request.b.TypeNationPark
                 }).ToListAsync();
             var pageResult = new PageResult<TourViewModel>
             {
@@ -131,7 +146,8 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
                 Source = request.b.Source,
                 CreatedAt = request.b.CreatedAt,
-                UpdatedAt = request.b.UpdatedAt
+                UpdatedAt = request.b.UpdatedAt,
+                typeNationPark = request.b.TypeNationPark
             }).FirstOrDefaultAsync();
             return NewsVm;
         }
@@ -159,41 +175,35 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
-            
-            var tempdata =await query.Select(request => new TourViewModel()
-                {
-                    Id = request.b.Id,
-                    Alias = request.b.Alias,
-                    Name = request.b.Name,
-                    Image = request.b.Image,
-                    ShortDescription = request.b.ShortDescription,
-                    Description = request.b.Description,
-                    SortOrder = request.b.SortOrder,
-                    Status = request.b.Status,
-                    //Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
-                    Source = request.b.Source,
-                    CreatedAt = request.b.CreatedAt,
-                    UpdatedAt = request.b.UpdatedAt
-                }).ToListAsync();
-            if(request.type!=0)
+
+            var tempdata = await query.Select(request => new TourViewModel()
+            {
+                Id = request.b.Id,
+                Alias = request.b.Alias,
+                Name = request.b.Name,
+                Image = request.b.Image,
+                ShortDescription = request.b.ShortDescription,
+                Description = request.b.Description,
+                SortOrder = request.b.SortOrder,
+                Status = request.b.Status,
+                //Author = _context.appUsers.Where(x => x.Id.ToString() == request.b.Author).Select(x => x.FirstName).FirstOrDefault(),
+                Source = request.b.Source,
+                CreatedAt = request.b.CreatedAt,
+                UpdatedAt = request.b.UpdatedAt,
+                typeNationPark = request.b.TypeNationPark
+                
+            }).ToListAsync();
+            if (request.type != 0)
             {
                 var listnewData = new List<TourViewModel>();
                 if (request.type == 2)
                 {
                     foreach (var item in tempdata)
                     {
-                        var vqgLoai = _context.tour.Where(x => x.Id == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
+                        if (item.typeNationPark == "NationParkMuongTe")
                         {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkMuongTe")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
+                            listnewData.Add(item);
+                            break;
                         }
                     }
                 }
@@ -201,18 +211,10 @@ namespace DongThucVatQuangTri.Applications.Tours
                 {
                     foreach (var item in tempdata)
                     {
-                        var vqgLoai = _context.tour.Where(x => x.Id == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
+                        if (item.typeNationPark == "NationParkNamGiang")
                         {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkNamGiang")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
+                            listnewData.Add(item);
+                            break;
                         }
                     }
                 }
@@ -240,7 +242,7 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 if (!String.IsNullOrEmpty(news.Image))
                 {
-                    _manageFile.DeleteFile(news.Image);
+                    await _manageFile.DeleteFileAsync("tours", news.Image);
                 }
                 news.Image = "";
             }
@@ -248,9 +250,9 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 if (!String.IsNullOrEmpty(news.Image))
                 {
-                    _manageFile.DeleteFile(news.Image);
+                    await _manageFile.DeleteFileAsync("tours", news.Image);
                 }
-                news.Image = await _manageFile.SaveFile(request.Image);
+                news.Image = await this.SaveFile(request.Image);
             }
             news.Name = request.Name;
             news.Alias = request.Alias;
@@ -262,6 +264,7 @@ namespace DongThucVatQuangTri.Applications.Tours
             news.Source = request.Source;
             news.Status = request.Status;
             news.UpdatedAt = DateTime.Now;
+            news.TypeNationPark = request.typeNationPark;
             _context.tour.Update(news);
             return await _context.SaveChangesAsync();
         }

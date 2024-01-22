@@ -2,11 +2,13 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
 
 namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
@@ -14,12 +16,20 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
     public class ManageBanner : IManageBanner
     {
         private readonly DongThucVatContext _context;
-        private readonly IManageFile _manageFile;
-        public ManageBanner(DongThucVatContext context, IManageFile manageFile)
+        private readonly IStorageServiceEdit _manageFile;
+        public ManageBanner(DongThucVatContext context, IStorageServiceEdit manageFile)
         {
             _context = context;
             _manageFile = manageFile;
 
+        }
+        public async Task<string> SaveFile(IFormFile file)
+        {
+
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _manageFile.SaveFileAsync(file.OpenReadStream(), "banner", fileName);
+            return fileName;
         }
         public async Task<long> CreateBanner(CreateBannerRequest request)
         {
@@ -28,8 +38,8 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
 
                 BannerCatId = request.BannerCatId,
                 Name = request.Name,
-                Src = request.Src != null ? await _manageFile.SaveFile(request.Src) : "",
-                SrcMobile = request.SrcMobile != null ? await _manageFile.SaveFile(request.SrcMobile) : "",
+                Src = request.Src != null ? await this.SaveFile(request.Src) : "",
+                SrcMobile = request.SrcMobile != null ? await this.SaveFile(request.SrcMobile) : "",
                 Link = request.Link,
                 Width = request.Width,
                 Height = request.Height,
@@ -54,11 +64,11 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
                 return -1;
             if (!String.IsNullOrEmpty(banner.Src))
             {
-                _manageFile.DeleteFile(banner.Src);
+               await _manageFile.DeleteFileAsync("banner",banner.Src);
             }
             if (!String.IsNullOrEmpty(banner.Src))
             {
-                _manageFile.DeleteFile(banner.SrcMobile);
+                await _manageFile.DeleteFileAsync("banner", banner.SrcMobile);
             }
             _context.Banner.Remove(banner);
             return await _context.SaveChangesAsync();
@@ -157,7 +167,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             {
                 if (!String.IsNullOrEmpty(banner.Src))
                 {
-                    _manageFile.DeleteFile(banner.Src);
+                   await _manageFile.DeleteFileAsync("banner",banner.Src);
                 }
                 banner.Src = "";
             }
@@ -165,15 +175,15 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             {
                 if (!String.IsNullOrEmpty(banner.Src))
                 {
-                    _manageFile.DeleteFile(banner.Src);
+                  await  _manageFile.DeleteFileAsync("banner",banner.Src);
                 }
-                banner.Src = await _manageFile.SaveFile(request.Src);
+                banner.Src = await this.SaveFile(request.Src);
             }
             if (request.isDeleteMobile == true)
             {
                 if (!String.IsNullOrEmpty(banner.SrcMobile))
                 {
-                    _manageFile.DeleteFile(banner.SrcMobile);
+                  await  _manageFile.DeleteFileAsync("banner", banner.SrcMobile);
                 }
                 banner.SrcMobile = "";
             }
@@ -181,9 +191,9 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             {
                 if (!String.IsNullOrEmpty(banner.SrcMobile))
                 {
-                    _manageFile.DeleteFile(banner.SrcMobile);
+                   await _manageFile.DeleteFileAsync("banner", banner.SrcMobile);
                 }
-                banner.SrcMobile = await _manageFile.SaveFile(request.SrcMobile);
+                banner.SrcMobile = await this.SaveFile(request.SrcMobile);
             }
             banner.Link = request.Link;
             banner.Width = request.Width;

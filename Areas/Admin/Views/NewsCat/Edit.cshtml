@@ -25,7 +25,7 @@
             <div class="col-md-3">
                 @if (!String.IsNullOrEmpty(Model.linkUrl))
                 {
-                    <img style="height: 300px;width:300px" src="/user-content/@Model.linkUrl" alt="..." class="img-thumbnail">
+                    <img style="height: 300px;width:300px" src="/news/@Model.linkUrl" alt="..." class="img-thumbnail">
                     <div class="form-check  ">
                         <input asp-for="isDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
                         <label class="form-check-label" for="defaultCheck1">

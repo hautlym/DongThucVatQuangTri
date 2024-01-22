@@ -8,6 +8,54 @@
     ViewData["Title"] = "Thông tin loài";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section CilentScript{
+    <script>
+
+        function zoomImg() {
+            event.preventDefault();
+            console.log("hello")
+
+            $('.popup-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                tLoading: 'Loading image #%curr%...',
+                mainClass: 'mfp-img-mobile',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+                },
+                image: {
+                    tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+
+                }
+            });
+
+        }
+        function zoomImg1() {
+            event.preventDefault();
+            console.log("hello")
+
+            $('.popup-gallery1').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                tLoading: 'Loading image #%curr%...',
+                mainClass: 'mfp-img-mobile',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+                },
+                image: {
+                    tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+
+                }
+            });
+
+        }
+
+    </script>
+ }
 <style>
     ul, li {
         margin: 0;
@@ -142,37 +190,43 @@
                                     @if (Model.speciesViewModels.VQgNamGiang != null)
                                     {
                                         <h3>Hình ảnh</h3>
-                                        List<string> ListUrl = new List<string>();
-                                        @if (Model != null)
-                                        {
-                                            if (!String.IsNullOrEmpty(Model.speciesViewModels.VQgNamGiang.FileDinhKem))
-                                            {
-                                                ListUrl = (Model.speciesViewModels.VQgNamGiang.FileDinhKem.Split(",")).ToList();
-                                            }
-                                            else
-                                            {
-                                                ListUrl = null;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ListUrl = null;
-                                        }
-
-                                        @if (ListUrl != null)
-                                        {
-                                            @foreach (var Url in ListUrl)
-                                            {
-                                                @if (!String.IsNullOrEmpty(Url.Trim()))
+                                        <div class="popup-gallery">
+                                            @{
+                                                List<string> ListUrl = new List<string>();
+                                                @if (Model != null)
                                                 {
-                                                    <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                    if (!String.IsNullOrEmpty(Model.speciesViewModels.VQgNamGiang.FileDinhKem))
+                                                    {
+                                                        ListUrl = (Model.speciesViewModels.VQgNamGiang.FileDinhKem.Split(",")).ToList();
+                                                    }
+                                                    else
+                                                    {
+                                                        ListUrl = null;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ListUrl = null;
+                                                }
+
+                                                @if (ListUrl != null)
+                                                {
+                                                    @foreach (var Url in ListUrl)
+                                                    {
+                                                        @if (!String.IsNullOrEmpty(Url.Trim()))
+                                                        {
+                                                            <a href="/user-content/@Url" onclick="zoomImg() ">
+                                                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                            </a>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." style="width: 150px; height: 150px;" class="img-thumbnail">
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." style="width: 150px; height: 150px;" class="img-thumbnail">
-                                        }
+                                        </div>
                                         <h3>Tên khác</h3>
                                         <p>@Model.speciesViewModels.VQgNamGiang.TenKhac</p>
                                         <h3>Phân bố</h3>
@@ -209,37 +263,44 @@
                                     @if (Model.speciesViewModels.VQGMuongTe != null)
                                     {
                                         <h3>Hình ảnh</h3>
-                                        List<string> ListUrl = new List<string>();
-                                        @if (Model != null)
-                                        {
-                                            if (!String.IsNullOrEmpty(Model.speciesViewModels.VQGMuongTe.FileDinhKem))
-                                            {
-                                                ListUrl = (Model.speciesViewModels.VQGMuongTe.FileDinhKem.Split(",")).ToList();
-                                            }
-                                            else
-                                            {
-                                                ListUrl = null;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ListUrl = null;
-                                        }
-
-                                        @if (ListUrl != null)
-                                        {
-                                            @foreach (var Url in ListUrl)
-                                            {
-                                                @if (!String.IsNullOrEmpty(Url.Trim()))
+                                        <div class="popup-gallery1">
+                                            @{
+                                                List<string> ListUrl = new List<string>();
+                                                @if (Model != null)
                                                 {
-                                                    <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                    if (!String.IsNullOrEmpty(Model.speciesViewModels.VQGMuongTe.FileDinhKem))
+                                                    {
+                                                        ListUrl = (Model.speciesViewModels.VQGMuongTe.FileDinhKem.Split(",")).ToList();
+                                                    }
+                                                    else
+                                                    {
+                                                        ListUrl = null;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ListUrl = null;
+                                                }
+
+                                                @if (ListUrl != null)
+                                                {
+                                                    @foreach (var Url in ListUrl)
+                                                    {
+                                                        @if (!String.IsNullOrEmpty(Url.Trim()))
+                                                        {
+                                                            <a href="/user-content/@Url" onclick="zoomImg1() ">
+                                                                <img height="150" width="150" src="/user-content/@Url" alt="..." class="img-thumbnail" style="width: 150px; height: 150px;">
+                                                            </a>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width: 150px; height: 150px;" alt="..." class="img-thumbnail">
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            <img height="150" width="150" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" style="width: 150px; height: 150px;" alt="..." class="img-thumbnail">
-                                        }
+                                        </div>
+
                                         <h3 style="">Tên khác</h3>
                                         <p>@Model.speciesViewModels.VQGMuongTe.TenKhac</p>
                                         <h3>Phân bố</h3>

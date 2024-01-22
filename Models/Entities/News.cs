@@ -30,5 +30,6 @@ namespace DongThucVatQuangTri.Models.Entities
         public string KeySeo { get; set; }
         public string Language { get; set; }
         public int? IdRelated { get; set; }
+        public string? TypeNationPark { get; set; }
     }
 }

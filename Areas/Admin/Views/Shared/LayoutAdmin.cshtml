@@ -121,6 +121,19 @@
                             Giới thiệu
                             <div class="sb-sidenav-collapse-arrow"></div>
                         </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMap" aria-expanded="false" aria-controls="collapseMap">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-map"></i></div>
+                            Bản đồ
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseMap" aria-labelledby="headingTen" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map">Danh sách</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="Map">Thêm mới</a>
+                                </nav>
+                            </nav>
+                        </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Tin tức
@@ -153,24 +166,8 @@
                                     </nav>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMap" aria-expanded="false" aria-controls="collapseMap">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-map"></i></div>
-                                Bản đồ
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseMap" aria-labelledby="headingTen" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" asp-action="Index" asp-controller="Map">Danh sách</a>
-                                        <a class="nav-link" asp-action="Create" asp-controller="Map">Thêm mới</a>
-                                    </nav>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" asp-action="ManageImage" asp-controller="Home">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-image"></i></div>
-                                Thư viện lí ảnh
-                                <div class="sb-sidenav-collapse-arrow"></div>
-                            </a>
+                           
+                            
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducer" aria-expanded="false" aria-controls="collapseProducer">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-hippo"></i></div>
                                 Động vật
@@ -205,6 +202,11 @@
                                     </nav>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" asp-action="ManageImage" asp-controller="Home">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-image"></i></div>
+                                Thư viện lí ảnh
+                                <div class="sb-sidenav-collapse-arrow"></div>
+                            </a>
                             <a class="nav-link collapsed" asp-action="statistical" asp-controller="Home">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-file-export"></i></div>
                                 Báo cáo thống kê

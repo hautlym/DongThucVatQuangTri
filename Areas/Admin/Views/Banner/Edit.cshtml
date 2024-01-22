@@ -26,7 +26,7 @@
                     <label asp-for="linkUrl" class="control-label">Hình ảnh:</label>
                     @if (!String.IsNullOrEmpty(Model.linkUrl))
                     {
-                        <img style="height: 250px;width:250px" src="/user-content/@Model.linkUrl" alt="..." class="img-thumbnail">
+                        <img style="height: 250px;width:250px" src="/banner/@Model.linkUrl" alt="..." class="img-thumbnail">
                         <div class="form-check  ">
                             <input asp-for="isDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
                             <label class="form-check-label" for="defaultCheck1">
@@ -44,7 +44,7 @@
                     @if (!String.IsNullOrEmpty(Model.linkUrlMobile))
                     {
 
-                        <img style="height: 250px;width:250px" src="/user-content/@Model.linkUrlMobile" alt="..." class="img-thumbnail">
+                        <img style="height: 250px;width:250px" src="/banner/@Model.linkUrlMobile" alt="..." class="img-thumbnail">
                         <div class="form-check  ">
                             <input asp-for="isDeleteMobile" class="form-check-input" type="checkbox" id="defaultCheck2">
                             <label class="form-check-label" for="defaultCheck2">

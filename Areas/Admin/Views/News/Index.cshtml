@@ -77,6 +77,12 @@
             </div>
         </div>
         <div class="card-body align-middle">
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
             @if (ViewBag.SuscessMsg != null)
             {
                 <div id="msgAlert" class="alert alert-success" role="alert">
@@ -105,6 +111,9 @@
                             Tin nổi bật
                         </th>
                         <th>
+                            Đơn vị
+                        </th>
+                        <th>
                             Trạng thái
                         </th>
                         <th></th>
@@ -124,7 +133,7 @@
                             <td class="align-middle">
                                 @if (!String.IsNullOrEmpty(item.Image))
                                 {
-                                    <img style="height: 40px;width:60px" src="/user-content/@item.Image" alt="..." class="img-thumbnail">
+                                    <img style="height: 40px;width:60px" src="/news/@item.Image" alt="..." class="img-thumbnail">
                                 }
                                 else
                                 {
@@ -144,6 +153,20 @@
                                     <option value="1">Bật</option>
                                     <option value="0">Tắt</option>
                                 </select>
+                            </td>
+                            <td class="align-middle">
+                                @if (item.typeNationPark == "NationParkNamGiang")
+                                {
+                                    <span>Nam Giang</span>
+                                }
+                                else if (item.typeNationPark == "NationParkMuongTe")
+                                {
+                                    <span>Mường Tè</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
                             </td>
                             <td class="align-middle">
                                 <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">

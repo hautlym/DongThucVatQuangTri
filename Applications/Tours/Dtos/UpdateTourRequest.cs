@@ -14,6 +14,6 @@
         public int? SortOrder { get; set; }
         public short? Status { get; set; }
         public string? Source { get; set; }
-
+        public string? typeNationPark { get; set; }
     }
 }

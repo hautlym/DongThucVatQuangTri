@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.Maps.Dtos;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -14,9 +15,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
     public class MapController : Controller
     {
         private readonly IManageMap _manageMap;
-        public MapController(IManageMap manageMap)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public MapController(IManageMap manageMap, IWebHostEnvironment webHostEnvironment)
         {
             _manageMap = manageMap;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
         {
@@ -129,7 +132,37 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Details(int Id)
         {
             var result = await _manageMap.getMapById(Id);
+            if (TempData["result"] != null)
+            {
+                ViewBag.SuscessMsg = TempData["result"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.ErrorMsg = TempData["error"];
+            }
             return View(result);
+        }
+        [HttpPost]
+        public IActionResult DownloadRarFile(int Id, string fileName)
+        {
+            // Đường dẫn đến file .rar trên server
+            var filePath = new DirectoryInfo(Path.Combine(_webHostEnvironment.WebRootPath, "maps", fileName));
+            if(System.IO.File.Exists(filePath.FullName))
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath.FullName);
+                return File(fileBytes, "application/x-rar-compressed", fileName);
+              
+            }
+            else
+            {
+                TempData["error"] = "file không tồn tại trên hệ thống";
+                return RedirectToAction("Details", new { Id =Id}); ;
+            }
+            // Đọc dữ liệu từ file
+
+            // Đặt tên file khi tải xuống
+            // Trả về file như là phản hồi HTTP
+            
         }
     }
 }

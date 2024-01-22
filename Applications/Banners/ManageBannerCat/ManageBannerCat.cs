@@ -2,11 +2,13 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 using System.Reflection;
 
 namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
@@ -14,13 +16,20 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
     public class ManageBannerCat : IManageBannerCat
     {
         private readonly DongThucVatContext _context;
-        private readonly IManageFile _uploadFile;
-        public ManageBannerCat(DongThucVatContext context, IManageFile uploadFile)
+        private readonly IStorageServiceEdit _uploadFile;
+        public ManageBannerCat(DongThucVatContext context, IStorageServiceEdit uploadFile)
         {
             _context = context;
             _uploadFile = uploadFile;
         }
+        public async Task<string> SaveFile(IFormFile file)
+        {
 
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _uploadFile.SaveFileAsync(file.OpenReadStream(), "banner", fileName);
+            return fileName;
+        }
         public async Task<int> ChangeStatus(ChangeStatusRequest request)
         {
             var bannerCat = await _context.BannerCat.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
@@ -39,7 +48,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
                 ParentId = request.ParentId,
                 Path = request.Path,
                 Level = request.Level,
-                Image = request.Image != null ? await _uploadFile.SaveFile(request.Image) : "",
+                Image = request.Image != null ? await this.SaveFile(request.Image) : "",
                 Status = request.Status,
                 Description = request.Description,
                 SortOrder = request.SortOrder,
@@ -59,7 +68,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
                 return -1;
             if (!String.IsNullOrEmpty(banner.Image))
             {
-                _uploadFile.DeleteFile(banner.Image);
+               await _uploadFile.DeleteFileAsync("banner",banner.Image);
             }
             _context.BannerCat.Remove(banner);
             return await _context.SaveChangesAsync();
@@ -167,7 +176,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
             {
                 if (!String.IsNullOrEmpty(bannerCat.Image))
                 {
-                    _uploadFile.DeleteFile(bannerCat.Image);
+                   await _uploadFile.DeleteFileAsync("banner",bannerCat.Image);
                 }
                 bannerCat.Image ="" ;
             }
@@ -175,9 +184,9 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
             {
                 if (!String.IsNullOrEmpty(bannerCat.Image))
                 {
-                    _uploadFile.DeleteFile(bannerCat.Image);
+                   await _uploadFile.DeleteFileAsync("banner",bannerCat.Image);
                 }
-                bannerCat.Image = await _uploadFile.SaveFile(request.Image);
+                bannerCat.Image = await this.SaveFile(request.Image);
             }
             bannerCat.SortOrder = request.SortOrder;
             bannerCat.Level = request.Level;

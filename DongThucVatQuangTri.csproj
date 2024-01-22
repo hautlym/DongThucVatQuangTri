@@ -34,6 +34,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Datas\" />
     <Folder Include="wwwroot\maps\" />
+    <Folder Include="wwwroot\banner\" />
     <Folder Include="wwwroot\toursImage\" />
     <Folder Include="wwwroot\newsImage\" />
     <Folder Include="wwwroot\user-content\" />

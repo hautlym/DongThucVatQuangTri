@@ -744,8 +744,8 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("ten_khac");
 
-                    //b.Property<string>("TypeNationPark")
-                    //    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("TypeNationPark")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime")
@@ -1260,6 +1260,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasColumnName("total_view")
                         .HasDefaultValueSql("((0))");
 
+                    b.Property<string>("TypeNationPark")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime")
                         .HasColumnName("updated_at");
@@ -1355,6 +1358,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("title_seo");
+
+                    b.Property<string>("TypeNationPark")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -1877,6 +1883,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
 
                     b.Property<int?>("TotalView")
                         .HasColumnType("int");
+
+                    b.Property<string>("TypeNationPark")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

@@ -207,8 +207,8 @@
         line-height: normal;
     }
     /* .BaoTonOption select{
-                                    margin-left: 20px
-                                } */
+                                                    margin-left: 20px
+                                                } */
 </style>
 <div id="content">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
@@ -394,10 +394,39 @@
                                             var itemNganh = Nganh.Where(x => x.Id == itemLop.IdDtvNganh).FirstOrDefault();
                                         }
                                         <h4><a asp-action="Details" asp-route-Id="@item.Id">Loài: @item.Name</a></h4>
-                                        <h6 style="font-size:12px;"> @item.NameHo</h6>
-                                        <h6 style="font-size:12px;"> @ItemBo.Name</h6>
-                                        <h6 style="font-size:12px;"> @itemLop.Name</h6>
-                                        <h6 style="font-size:12px;">@itemNganh.Name</h6>
+
+                                        @{
+                                            try
+                                            {
+                                                <h6 style="font-size:12px;">
+                                                    @if (!String.IsNullOrEmpty(@item.NameHo))
+                                                    {
+                                                        @item.NameHo
+                                                    }
+                                                </h6>
+                                                <h6 style="font-size:12px;">
+                                                    @if (ItemBo != null)
+                                                    {
+                                                        @ItemBo.Name
+                                                    }
+
+                                                </h6>
+                                                <h6 style="font-size:12px;">
+                                                    @if (itemLop != null)
+                                                    {
+                                                        @itemLop.Name
+                                                    }
+
+                                                </h6>
+                                                <h6 style="font-size:12px;">
+                                                    @if (itemNganh != null)
+                                                    {
+                                                        @itemNganh.Name
+                                                    }
+                                                </h6>
+                                            }
+                                            catch (Exception ex) { }
+                                        }
                                         <ul>
                                             <li><a asp-action="Details" asp-route-Id="@item.Id">chi tiết<i class="icon"></i></a></li>
                                         </ul>

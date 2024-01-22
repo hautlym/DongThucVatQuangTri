@@ -1,4 +1,5 @@
-﻿@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos.UpdateNewsRequest
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos.UpdateNewsRequest
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Sửa tin tức";
@@ -67,7 +68,28 @@
                             <option value="0">Tắt</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
+                        <select  asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                            @{
+                                var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+                            }
+                            @if (typeNationPark == "NationParkNamGiang")
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                            }
+                            else if (typeNationPark == "NationParkMuongTe")
+                            {
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
+                            else
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
 
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label asp-for="Description" class="control-label"> Nội dung:</label>
                         <textarea asp-for="Description" id="editor" class="form-control"></textarea>
@@ -80,7 +102,7 @@
                         <label asp-for="linkUrl" class="control-label">Hình ảnh:</label>
                         @if (!String.IsNullOrEmpty(Model.linkUrl))
                         {
-                            <img style="height: 250px;width:250px; display:block;" src="/user-content/@Model.linkUrl" alt="..." class="img-thumbnail">
+                            <img style="height: 250px;width:250px; display:block;" src="/news/@Model.linkUrl" alt="..." class="img-thumbnail">
                             <div class="form-check  ">
                                 <input asp-for="IsDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
                                 <label class="form-check-label" for="defaultCheck1">

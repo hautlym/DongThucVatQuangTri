@@ -1,5 +1,6 @@
 ﻿@using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.Dtos;
 @using DongThucVatQuangTri.Applications.Common;
+@using System.Security.Claims;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model PageResult<SpeciesNationParkViewModel>
 @{
@@ -45,10 +46,35 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Loài @ViewBag.Loai vườn quốc gia</h1>
+    <h1 class="mt-4">
+        Loài @ViewBag.Loai thuộc BQL RPH
+        @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
+        {
+            <span>Nam Giang</span>
+        }
+        else if (User.FindFirstValue(ClaimTypes.Role) == "NationParkMuongTe")
+        {
+            <span>Mường Tè</span>
+        }
+        else
+        {
+            <span>Nam Giang và Mường Tè</span>
+        }
+    </h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Loài @ViewBag.Loai vườn quốc gia</li>
+        <li class="breadcrumb-item active">Loài @ViewBag.Loai thuộc BQL RPH 
+            @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
+            {
+                <span>Nam Giang</span>
+            }
+            else if (User.FindFirstValue(ClaimTypes.Role) == "NationParkMuongTe")
+            {
+                <span>Mường Tè</span>
+            }else{
+                <span>Nam Giang và Mường Tè</span>
+            }
+        </li>
     </ol>
 
     <div class="card mb-12">
@@ -113,6 +139,9 @@
                             Ngày cập nhật
                         </th>
                         <th>
+                            Đơn vị
+                        </th>
+                        <th>
                             Người tạo
                         </th>
                         <th>
@@ -131,7 +160,7 @@
                                     i++;
                                 }
                             </th>
-                            <td class="align-middle" style="width:20%">
+                            <td class="align-middle" style="width:17%">
                                 <a class="text-decoration-none" asp-action="Details" asp-route-Id="@item.Id">
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </a>
@@ -145,6 +174,20 @@
                             </td>
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.UpdatedAt)
+                            </td>
+                            <td class="align-middle">
+                                @if (item.TypeNationPark == "NationParkNamGiang")
+                                {
+                                    <span>Nam Giang</span>
+                                }
+                                else if (item.TypeNationPark == "NationParkMuongTe")
+                                {
+                                    <span>Mường Tè</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
                             </td>
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.NameCreate)

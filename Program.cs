@@ -7,6 +7,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
@@ -116,8 +117,14 @@ builder.Services.AddTransient<IManageRole, ManageRole>();
 builder.Services.AddTransient<IManageIntroduce, ManageIntroduce>();
 builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
+builder.Services.AddTransient<IStorageServiceEdit, FileStorageServiceEdit>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.WebHost.UseUrls("http://0.0.0.0:5028");
+builder.WebHost.UseKestrel(options =>
+{
+    // Cấu hình thời gian chờ cho Kestrel
+    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(10); // Ví dụ: 10 phút
+    options.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(5); // Ví dụ: 5 phút
+}); ;
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

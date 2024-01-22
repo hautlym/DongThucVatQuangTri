@@ -7,6 +7,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
         public string? keyword { get; set; }
         public int? status { get; set; }
         public int? loai { get; set; }
+        public string? typeNationPark { get; set; }
         
     }
 }

@@ -1,23 +1,32 @@
 ﻿using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerCategoryDtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsCatDtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
 {
     public class ManageNewsCat : IManageNewsCat
     {
         private readonly DongThucVatContext _context;
-        private readonly IManageFile _manageFile;
-        public ManageNewsCat(DongThucVatContext context, IManageFile manageFile)
+        private readonly IStorageServiceEdit _manageFile;
+        public ManageNewsCat(DongThucVatContext context, IStorageServiceEdit manageFile)
         {
             _context = context;
             _manageFile = manageFile;
 
+        }
+        public async Task<string> SaveFile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _manageFile.SaveFileAsync(file.OpenReadStream(), "news", fileName);
+            return fileName;
         }
         public async Task<int> ChangeStatus(ChangeStatusRequest request)
         {
@@ -35,7 +44,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
             {
                 Name = request.Name,
                 ParentId = request.ParentId,
-                Image = request.Image != null ? await _manageFile.SaveFile(request.Image) : "",
+                Image = request.Image != null ? await this.SaveFile(request.Image) : "",
                 Status = request.Status,
                 Description = request.Description,
                 SortOrder = request.SortOrder,
@@ -59,7 +68,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
                 return -1;
             if (!String.IsNullOrEmpty(newscat.Image))
             {
-                _manageFile.DeleteFile(newscat.Image);
+               await _manageFile.DeleteFileAsync("news",newscat.Image);
             }
             _context.NewsCat.Remove(newscat);
             return await _context.SaveChangesAsync();
@@ -174,7 +183,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
             {
                 if (!String.IsNullOrEmpty(newsCat.Image))
                 {
-                    _manageFile.DeleteFile(newsCat.Image);
+                  await  _manageFile.DeleteFileAsync("news",newsCat.Image);
                 }
                 newsCat.Image = "";
             }
@@ -182,9 +191,9 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsCatManage
             {
                 if (!String.IsNullOrEmpty(newsCat.Image))
                 {
-                    _manageFile.DeleteFile(newsCat.Image);
+                  await  _manageFile.DeleteFileAsync("news",newsCat.Image);
                 }
-                newsCat.Image = await _manageFile.SaveFile(request.Image);
+                newsCat.Image = await this.SaveFile(request.Image);
             }
             newsCat.SortOrder = request.SortOrder;
             newsCat.Alias = request.Alias;

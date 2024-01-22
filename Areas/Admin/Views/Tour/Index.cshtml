@@ -95,6 +95,9 @@
                             Ngày tạo
                         </th>
                         <th>
+                            Đơn vị
+                        </th>
+                        <th>
                             Người tạo
                         </th>
                         <th>
@@ -117,7 +120,7 @@
                             <td class="align-middle">
                                 @if (!String.IsNullOrEmpty(item.Image))
                                 {
-                                    <img style="height: 40px;width:60px" src="/user-content/@item.Image" alt="..." class="img-thumbnail">
+                                    <img style="height: 40px;width:60px" src="/tours/@item.Image" alt="..." class="img-thumbnail">
                                 }
                                 else
                                 {
@@ -131,6 +134,20 @@
                             </td>
                             <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.CreatedAt)
+                            </td>
+                            <td class="align-middle">
+                                @if (item.typeNationPark == "NationParkNamGiang")
+                                {
+                                    <span>Nam Giang</span>
+                                }
+                                else if (item.typeNationPark == "NationParkMuongTe")
+                                {
+                                    <span>Mường Tè</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
                             </td>
                             <td class="align-middle" style="width:20%">
                                 @Html.DisplayFor(modelItem => item.Author)

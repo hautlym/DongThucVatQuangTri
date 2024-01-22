@@ -3,6 +3,7 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.D
 using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
+using DongThucVatQuangTri.Areas.Admin.Models;
 
 namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage
 {
@@ -15,5 +16,6 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
         public Task<long> createItem(CreateSpeciesNationParkRequest request);
         public Task<int> deleteItem(int id);
         public Task<int> ChangeStatus(ChangeStatusRequest request);
+        public Task<List<ImageModel>> getImage();
     }
 }

@@ -177,7 +177,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> ManageImage(int idLoai, int PageIndex = 1, int PageSize = 12)
+        public async Task<IActionResult> ManageImage(int idLoai, int PageIndex = 1, int PageSize = 8)
         {
             var listLoai = await _manageSpecies.getAllItem();
             ViewBag.Loai = listLoai.Select(x => new SelectListItem()
@@ -186,27 +186,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Value = x.Id.ToString(),
                 Selected=x.Id==idLoai,
             });
-            var listImg = (await _manageSpeciesNationPark.getAllItem()).Select(x => new ImageModel()
-            {
-                IdLoai = x.IdDtvLoai,
-                NameImg = x.FileDinhKem,
-                Loai = _context.DtvLoai.Where(l => l.Id == x.IdDtvLoai).Select(x => x.Name).FirstOrDefault()
-            }).ToList();
-            var newList = new List<ImageModel>();
-            foreach (var item in listImg)
-            {
-                var kq = item.NameImg.Trim().Split(",");
-                foreach (var item2 in kq)
-                {
-                    var img = new ImageModel()
-                    {
-                        Loai = item.Loai,
-                        IdLoai = item.IdLoai,
-                        NameImg = item2
-                    };
-                    newList.Add(img);
-                }
-            }
+            var newList = await _manageSpeciesNationPark.getImage();
             if (idLoai > 0)
             {
                 newList = newList.Where(x => x.IdLoai == idLoai).ToList();

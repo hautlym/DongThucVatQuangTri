@@ -1,6 +1,7 @@
 ﻿using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos;
 using DongThucVatQuangTri.Applications.Tours.Dtos;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
@@ -8,6 +9,7 @@ using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
 
 namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
@@ -15,14 +17,20 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
     public class ManageNews : IManageNews
     {
         private readonly DongThucVatContext _context;
-        private readonly IManageFile _manageFile;
-        public ManageNews(DongThucVatContext context, IManageFile manageFile)
+        private readonly IStorageServiceEdit _manageFile;
+        public ManageNews(DongThucVatContext context, IStorageServiceEdit manageFile)
         {
             _context = context;
             _manageFile = manageFile;
 
         }
-
+        public async Task<string> SaveFile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _manageFile.SaveFileAsync(file.OpenReadStream(), "news", fileName);
+            return fileName;
+        }
         public async Task<int> ChangeIsHot(ChangeIsHotRequest request)
         {
             var news = await _context.News.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
@@ -45,7 +53,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
 
         public async Task<long> CreateNews(CreateNewsRequest request)
         {
-            var checkExist = _context.News.Where(x=>x.Name == request.Name|| x.Alias==request.Alias).FirstOrDefault();
+            var checkExist = _context.News.Where(x => x.Name == request.Name || x.Alias == request.Alias).FirstOrDefault();
             if (checkExist != null)
                 return -1;
             var item = new News()
@@ -54,7 +62,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 RootNewsCatId = request.RootNewsCatId,
                 NewsCatId = request.NewsCatId,
                 Name = request.Name,
-                Image = request.Image != null ? await _manageFile.SaveFile(request.Image) : "",
+                Image = request.Image != null ? await this.SaveFile(request.Image) : "",
                 ShortDescription = request.ShortDescription,
                 Description = request.Description,
                 SortOrder = request.SortOrder,
@@ -66,9 +74,10 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 PostAt = DateTime.Now,
                 TitleSeo = request.TitleSeo,
                 ContentSeo = request.ContentSeo,
-                KeySeo =request.KeySeo,
+                KeySeo = request.KeySeo,
                 Language = request.Language,
                 IdRelated = request.IdRelated,
+                TypeNationPark = request.typeNationPark
             };
             _context.News.Add(item);
             await _context.SaveChangesAsync();
@@ -82,7 +91,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 return -1;
             if (!String.IsNullOrEmpty(news.Image))
             {
-                _manageFile.DeleteFile(news.Image);
+                await _manageFile.DeleteFileAsync("news", news.Image);
             }
             _context.News.Remove(news);
             return await _context.SaveChangesAsync();
@@ -130,11 +139,15 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
+            if (!string.IsNullOrEmpty(request.typeNationPark))
+            {
+                query = query.Where(x => x.b.TypeNationPark == request.typeNationPark);
+            }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
                 .Select(request => new NewsViewModels()
                 {
-                    Id= request.b.Id,
+                    Id = request.b.Id,
                     Alias = request.b.Alias,
                     RootNewsCatId = request.b.RootNewsCatId,
                     NewsCatId = request.b.NewsCatId,
@@ -154,7 +167,9 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                     KeySeo = request.b.KeySeo,
                     Language = request.b.Language,
                     IdRelated = request.b.IdRelated,
-                    NewsCatName = request.bc.Name
+                    NewsCatName = request.bc.Name,
+                    typeNationPark = request.b.TypeNationPark
+                    
                 }).ToListAsync();
             var pageResult = new PageResult<NewsViewModels>
             {
@@ -200,6 +215,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 KeySeo = request.b.KeySeo,
                 Language = request.b.Language,
                 IdRelated = request.b.IdRelated,
+                typeNationPark = request.b.TypeNationPark
             }).FirstOrDefaultAsync();
             return NewsVm;
         }
@@ -209,7 +225,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             var news = await _context.News.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (news == null)
                 return -1;
-            news.TotalView +=1 ;
+            news.TotalView += 1;
             _context.News.Update(news);
             return await _context.SaveChangesAsync();
         }
@@ -228,31 +244,32 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
-            
+
             var tempdata = await query.Select(request => new NewsViewModels()
-                {
-                    Id = request.b.Id,
-                    Alias = request.b.Alias,
-                    RootNewsCatId = request.b.RootNewsCatId,
-                    NewsCatId = request.b.NewsCatId,
-                    Name = request.b.Name,
-                    Image = request.b.Image,
-                    ShortDescription = request.b.ShortDescription,
-                    Description = request.b.Description,
-                    SortOrder = request.b.SortOrder,
-                    IsHot = request.b.IsHot,
-                    IsSystem = request.b.IsSystem,
-                    Status = request.b.Status,
-                    Author = request.b.Author,
-                    Source = request.b.Source,
-                    PostAt = request.b.PostAt,
-                    TitleSeo = request.b.TitleSeo,
-                    ContentSeo = request.b.ContentSeo,
-                    KeySeo = request.b.KeySeo,
-                    Language = request.b.Language,
-                    IdRelated = request.b.IdRelated,
-                    NewsCatName = request.bc.Name
-                }).ToListAsync();
+            {
+                Id = request.b.Id,
+                Alias = request.b.Alias,
+                RootNewsCatId = request.b.RootNewsCatId,
+                NewsCatId = request.b.NewsCatId,
+                Name = request.b.Name,
+                Image = request.b.Image,
+                ShortDescription = request.b.ShortDescription,
+                Description = request.b.Description,
+                SortOrder = request.b.SortOrder,
+                IsHot = request.b.IsHot,
+                IsSystem = request.b.IsSystem,
+                Status = request.b.Status,
+                Author = request.b.Author,
+                Source = request.b.Source,
+                PostAt = request.b.PostAt,
+                TitleSeo = request.b.TitleSeo,
+                ContentSeo = request.b.ContentSeo,
+                KeySeo = request.b.KeySeo,
+                Language = request.b.Language,
+                IdRelated = request.b.IdRelated,
+                NewsCatName = request.bc.Name,
+                typeNationPark = request.b.TypeNationPark
+            }).ToListAsync();
             if (request.type != 0)
             {
                 var listnewData = new List<NewsViewModels>();
@@ -260,37 +277,22 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 {
                     foreach (var item in tempdata)
                     {
-                        var vqgLoai = _context.News.Where(x => x.Id == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
+                        if (item.typeNationPark == "NationParkMuongTe")
                         {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkMuongTe")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
+                            listnewData.Add(item);
+                            break;
                         }
+
                     }
                 }
                 if (request.type == 1)
                 {
                     foreach (var item in tempdata)
                     {
-                        var vqgLoai = _context.News.Where(x => x.Id == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
+                        if (item.typeNationPark == "NationParkNamGiang")
                         {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item2.Author).Select(x => x.Roles).FirstOrDefault();
-                                if (checkRoleUser == "NationParkNamGiang")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
+                            listnewData.Add(item);
+                            break;
                         }
                     }
                 }
@@ -313,12 +315,12 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             var news = await _context.News.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (news == null)
                 return -1;
-            
+
             if (request.IsDelete == true)
             {
                 if (!String.IsNullOrEmpty(news.Image))
                 {
-                    _manageFile.DeleteFile(news.Image);
+                    await _manageFile.DeleteFileAsync("news", news.Image);
                 }
                 news.Image = "";
             }
@@ -326,9 +328,9 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             {
                 if (!String.IsNullOrEmpty(news.Image))
                 {
-                    _manageFile.DeleteFile(news.Image);
+                    await _manageFile.DeleteFileAsync("news", news.Image);
                 }
-                news.Image = await _manageFile.SaveFile(request.Image);
+                news.Image = await this.SaveFile(request.Image);
             }
             news.NewsCatId = request.NewsCatId;
             news.Name = request.Name;
@@ -352,6 +354,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             news.Status = request.Status;
             news.Language = request.Language;
             news.UpdatedAt = DateTime.Now;
+            news.TypeNationPark = request.typeNationPark;
             _context.News.Update(news);
             return await _context.SaveChangesAsync();
         }

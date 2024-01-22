@@ -44,6 +44,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 //PhanBo = item.ln.PhanBo,
                 //TenKhac = item.ln.TenKhac,
             }).ToListAsync();
+            data = data.OrderByDescending(x=>x.FileDinhKem).ToList();
             return data;
         }
 
@@ -166,7 +167,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 tempdata = listnewData;
             }
             int totalRow =  tempdata.Count;
-            var data = tempdata.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+            var data = tempdata.OrderByDescending(x=>x.FileDinhKem).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 //.Select(x => new SpeciesPublicViewModel()
                 //{
                 //    Id = x.b.Id,

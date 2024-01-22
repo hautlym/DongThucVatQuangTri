@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -29,6 +30,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 PageSize = PageSize,
                 Keyword = keyword
             };
+            if (User.FindFirstValue(ClaimTypes.Role) != "Administator")
+            {
+                request.typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+            }
             var data = await _manageTour.GetAlllPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
@@ -84,6 +89,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     Description = result.Description,
                     SortOrder = result.SortOrder,
                     Status = result.Status,
+                    typeNationPark = result.typeNationPark,
                 };
                 return View(updateRequest);
             }

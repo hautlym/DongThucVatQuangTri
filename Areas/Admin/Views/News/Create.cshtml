@@ -1,4 +1,5 @@
-﻿@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos.CreateNewsRequest
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos.CreateNewsRequest
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Thêm tin tức";
@@ -80,6 +81,28 @@
                         <select asp-for="IsHot" class="form-control" id="dropdown" name="IsHot">
                             <option value="1">Bật</option>
                             <option value="0">Tắt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
+                        <select  asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                            @{
+                                var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+                            }
+                            @if (typeNationPark == "NationParkNamGiang")
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                            }
+                            else if (typeNationPark == "NationParkMuongTe")
+                            {
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
+                            else
+                            {
+                                <option value="NationParkNamGiang">RPH Nam Giang</option>
+                                <option value="NationParkMuongTe">RPH Mường Tè</option>
+                            }
+
                         </select>
                     </div>
                     <div class="form-group">

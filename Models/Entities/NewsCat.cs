@@ -24,5 +24,6 @@ namespace DongThucVatQuangTri.Models.Entities
         public string ContentSeo { get; set; }
         public string KeySeo { get; set; }
         public int? IdRelated { get; set; }
+        public string? TypeNationPark { get; set; }
     }
 }

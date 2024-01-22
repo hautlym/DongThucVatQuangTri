@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using DongThucVatQuangTri.Models.Entities;
 using System.Security.Claims;
+using DongThucVatQuangTri.Applications.Common;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
@@ -36,11 +37,19 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 PageSize = PageSize,
                 Keyword = keyword
             };
+            if(User.FindFirstValue(ClaimTypes.Role)!= "Administator")
+            {
+                request.typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+            }
             var data = await _news.GetAlllPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {
                 ViewBag.SuscessMsg = TempData["result"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.ErrorMsg = TempData["error"];
             }
             return View(data.ResultObj);
         }
@@ -91,6 +100,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Value = x.Id.ToString(),
             });
             var result = await _news.getNewsById(id);
+            if (!HelperMethod.CheckUser(result.Author, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index");
+            }
             if (result != null)
             {
                 var updateRequest = new UpdateNewsRequest()
@@ -109,6 +123,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     TitleSeo = result.TitleSeo,
                     ContentSeo = result.ContentSeo,
                     KeySeo = result.KeySeo,
+                    typeNationPark = result.typeNationPark
+
                 };
                 return View(updateRequest);
             }
@@ -141,9 +157,15 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int Id)
         {
+          
             if (!ModelState.IsValid)
                 return RedirectToAction("Index");
-
+            var item = await _news.getNewsById(Id);
+            if (!HelperMethod.CheckUser(item.Author, User))
+            {
+                TempData["error"] = "Bạn không được quyền xóa";
+                return RedirectToAction("Index");
+            }
             var result = await _news.deleteNews(Id);
             if (result > 0)
             {

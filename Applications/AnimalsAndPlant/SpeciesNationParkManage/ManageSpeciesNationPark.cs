@@ -3,9 +3,11 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage.D
 using DongThucVatQuangTri.Applications.Banners.Dtos;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
+using DongThucVatQuangTri.Areas.Admin.Models;
 using DongThucVatQuangTri.Models.EF;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage
 {
@@ -160,12 +162,14 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
             }
-
             if (request.status == 1 || request.status == 0)
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
-
+            if (!request.typeNationPark.Contains("Administator"))
+            {
+                query = query.Where(x=>x.lv.TypeNationPark==request.typeNationPark);
+            }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
                 .Select(x => new SpeciesNationParkViewModel()
@@ -293,6 +297,37 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
             {
                 return -1;
             }
+        }
+
+        public async Task<List<ImageModel>> getImage()
+        {
+            var query = from lv in _context.DtvLoai_VQGs
+                        select lv;
+            var data =await query.Select(x => new ImageModel()
+            {
+                IdLoai = x.IdDtvLoai,
+                NameImg = x.FileDinhKem,
+                Loai = _context.DtvLoai.Where(l => l.Id == x.IdDtvLoai).Select(x => x.Name).FirstOrDefault()
+            }).ToListAsync();
+            var newList = new List<ImageModel>();
+            foreach (var item in data)
+            {
+                if (!String.IsNullOrEmpty(item.NameImg))
+                {
+                    var kq = item.NameImg.Trim().Split(",");
+                    foreach (var item2 in kq)
+                    {
+                        var img = new ImageModel()
+                        {
+                            Loai = item.Loai,
+                            IdLoai = item.IdLoai,
+                            NameImg = item2
+                        };
+                        newList.Add(img);
+                    }
+                }
+            }
+            return newList;
         }
     }
 }
