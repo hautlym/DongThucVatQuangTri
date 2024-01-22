@@ -203,7 +203,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                         if (item.typeNationPark == "NationParkMuongTe")
                         {
                             listnewData.Add(item);
-                            break;
+                           
                         }
                     }
                 }
@@ -214,7 +214,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                         if (item.typeNationPark == "NationParkNamGiang")
                         {
                             listnewData.Add(item);
-                            break;
+                            
                         }
                     }
                 }

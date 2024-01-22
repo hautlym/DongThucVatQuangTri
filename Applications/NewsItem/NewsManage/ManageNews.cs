@@ -280,7 +280,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                         if (item.typeNationPark == "NationParkMuongTe")
                         {
                             listnewData.Add(item);
-                            break;
+                          
                         }
 
                     }
@@ -292,7 +292,7 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                         if (item.typeNationPark == "NationParkNamGiang")
                         {
                             listnewData.Add(item);
-                            break;
+                       
                         }
                     }
                 }

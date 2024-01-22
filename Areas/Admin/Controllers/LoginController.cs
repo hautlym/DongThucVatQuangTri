@@ -64,7 +64,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var authProperties = new AuthenticationProperties
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
-                IsPersistent = false
+                IsPersistent = true
             };
             HttpContext.Session.SetString("Token", token.ResultObj);
             await HttpContext.SignInAsync(

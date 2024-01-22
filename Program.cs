@@ -66,6 +66,8 @@ builder.Services.AddAuthentication(options =>
 {
     options.LoginPath = "/admin/Login/Index";
     options.AccessDeniedPath = "/Home/Index";
+    options.ExpireTimeSpan=TimeSpan.FromHours(1);
+    options.SlidingExpiration = true;
 });
 builder.Services.AddAuthorization(options =>
 {
