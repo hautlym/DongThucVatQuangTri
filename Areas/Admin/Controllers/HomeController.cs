@@ -61,50 +61,44 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ExportExcel(int vqg, string fileName)
+        public async Task<IActionResult> ExportExcel(ExportExcelOption request)
         {
 
-
-            if (vqg == 0)
-            {
-                TempData["error"] = "Vui lòng chọn vườn quốc gia";
-                return RedirectToAction("statistical");
-            }
-            if (String.IsNullOrEmpty(fileName))
+            if (String.IsNullOrEmpty(request.FileName))
             {
                 TempData["error"] = "Vui lòng nhập tên muốn lưu";
                 return RedirectToAction("statistical");
             }
-
+            if (request.BeginDate != null && request.ExpiredDate != null)
+            {
+                if (request.BeginDate.Value.Date > request.ExpiredDate.Value.Date)
+                {
+                    TempData["error"] = "Ngày bắt đầu phải nhỏ hơn ngày kết thúc";
+                    return RedirectToAction("statistical");
+                }
+                if (request.ExpiredDate.Value.Date > DateTime.Now.Date)
+                {
+                    TempData["error"] = "Thời gian phải nhỏ hơn hiện tại";
+                    return RedirectToAction("statistical");
+                }
+            }
             var listVQG = await _manageSpeciesNationPark.getAllItem();
-            if (vqg == 1)
+            var query = from l in listVQG
+                        select l;
+
+            if (request.TypeSpceies != -1)
             {
-                var newData = new List<SpeciesNationParkViewModel>();
-                foreach (var item in listVQG)
-                {
-                    var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item.CreatedBy).Select(x => x.Roles).FirstOrDefault();
-                    if (checkRoleUser == "NationParkMuongTe")
-                    {
-                        newData.Add(item);
-                    }
-                }
-                listVQG = newData;
+                query = query.Where(x => x.Loai == request.TypeSpceies);
             }
-            if (vqg == 2)
+
+            query = query.Where(x => x.TypeNationPark == request.typeNationPark);
+            if ((request.BeginDate != null && request.ExpiredDate != null))
             {
-                var newData = new List<SpeciesNationParkViewModel>();
-                foreach (var item in listVQG)
-                {
-                    var checkRoleUser = _context.appUsers.Where(x => x.Id.ToString() == item.CreatedBy).Select(x => x.Roles).FirstOrDefault();
-                    if (checkRoleUser == "NationParkNamGiang")
-                    {
-                        newData.Add(item);
-                    }
-                }
-                listVQG = newData;
+                query = query.Where(x => x.CreatedAt != null && x.CreatedAt.Value.Date > request.BeginDate.Value.Date && x.CreatedAt < request.ExpiredDate.Value.Date);
             }
+            var data = query.ToList();
             var listExport = new List<StatisticalModel>();
-            foreach (var item in listVQG)
+            foreach (var item in data)
             {
                 try
                 {
@@ -172,7 +166,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 {
                     excelPackage.SaveAs(memoryStream);
                     // Đặt tên file và trả về nó như là một FileResult
-                    return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{fileName}.xlsx");
+                    return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{request.FileName}.xlsx");
                 }
             }
         }
@@ -184,7 +178,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
-                Selected=x.Id==idLoai,
+                Selected = x.Id == idLoai,
             });
             var newList = await _manageSpeciesNationPark.getImage();
             if (idLoai > 0)

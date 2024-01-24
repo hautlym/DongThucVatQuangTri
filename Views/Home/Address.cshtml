@@ -17,6 +17,8 @@
 {
     <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
     <script defer src="/dataMaps/newMap/data/muongte_htr.js" onload="myInit()"></script>
+@*     <link rel="preload" href="/dataMaps/newMap/data/muongte_htr.js" as="script" fetchpriority="low"> *@
+
 }
 else if (vqg == "1")
 {
@@ -264,20 +266,20 @@ else
             
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
-                return d == 3 ? '#40a035' :
-                    d == 2 ? '#E2BF30' :
-                        d == 1 ? '#A41414' :
+                return d == 3 ? '#00FF00' :
+                    d == 2 ? '#FFFF00' :
+                        d == 1 ? '#FF0000' :
                             '#FFEDA0';
             }
 
             function style(feature) {
                 return {
                     fillColor: getColor(feature.properties.pc),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
+                    weight: 1,
+                    opacity: 0.7,
+                    color: '#696969',
                     dashArray: '3',
-                    fillOpacity: 0.7
+                    fillOpacity: 1
                 };
             }
 
@@ -435,7 +437,10 @@ else
                 div.innerHTML += "<h4>Chú thích</h4>";
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
-                return div;
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/blue.png" alt=""><span> Cấp ĐDSH Thấp</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/yeallow.png" alt=""><span> Cấp ĐDSH Trung bình</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/red.png" alt=""><span> Cấp ĐDSH Cao</span><br>';
+                            return div;
             };
             legend.addTo(map);
             /*===================================================
@@ -632,7 +637,7 @@ else
             var stylelayer = {
                 defecto: {
                     color: "red",
-                    opacity: 1,
+                    opacity: 0.7,
                     fillcolor: "red",
                     fillOpacity: 0.1,
                     weight: 0.5
@@ -695,20 +700,20 @@ else
             
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
-                return d == 3 ? '#40a035' :
-                    d == 2 ? '#E2BF30' :
-                        d == 1 ? '#A41414' :
+                return d == 3 ? '#00FF00' :
+                    d == 2 ? '#FFFF00' :
+                        d == 1 ? '#FF0000' :
                             '#FFEDA0';
             }
 
             function style(feature) {
                 return {
                     fillColor: getColor(feature.properties.pc),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
+                    weight: 1,
+                    opacity: 0.7,
+                    color: '#696969',
                     dashArray: '3',
-                    fillOpacity: 0.7
+                    fillOpacity: 1
                 };
             }
 
@@ -846,6 +851,9 @@ else
                 div.innerHTML += "<h4>Chú thích</h4>";
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/blue.png" alt=""><span> Cấp ĐDSH Thấp</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/yeallow.png" alt=""><span> Cấp ĐDSH Trung bình</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/red.png" alt=""><span> Cấp ĐDSH Cao</span><br>';
                 return div;
             };
             legend.addTo(map);
@@ -1106,20 +1114,20 @@ else
            
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
-                return d == 3 ? '#40a035' :
-                    d == 2 ? '#E2BF30' :
-                        d == 1 ? '#A41414' :
+                return d == 3 ? '#00FF00' :
+                    d == 2 ? '#FFFF00' :
+                        d == 1 ? '#FF0000' :
                             '#FFEDA0';
             }
 
             function style(feature) {
                 return {
                     fillColor: getColor(feature.properties.pc),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
+                    weight: 1,
+                    opacity: 0.7,
+                    color: '#696969',
                     dashArray: '3',
-                    fillOpacity: 0.7
+                    fillOpacity: 1
                 };
             }
             function onEachFeature(feature, layer) {
@@ -1254,6 +1262,9 @@ else
                 div.innerHTML += "<h4>Chú thích</h4>";
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/Elephant.png" alt=""><span> Động vật </span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/blue.png" alt=""><span> Cấp ĐDSH Thấp</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/yeallow.png" alt=""><span> Cấp ĐDSH Trung bình</span><br>';
+                div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/red.png" alt=""><span> Cấp ĐDSH Cao</span><br>';
                 return div;
             };
             legend.addTo(map);

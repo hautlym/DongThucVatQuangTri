@@ -30,17 +30,63 @@
                 @ViewBag.SuscessMsg
             </div>
         }
-        <form class="text-center" asp-action="ExportExcel" method="post">
-            <select class=" form-control mt-3" style="width:30%; margin:auto;" name="vqg">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <option selected value="0">--Chọn vườn quốc gia---</option>
-                <option value="1">VQG Mường Tè</option>
-                <option value="2">VQG Nam Giang</option>
-            </select>
-            <input type="text" name="fileName" style="width:30%; margin:auto;" placeholder="Nhập tên file..." class="form-control mt-3" />
-            <button type="submit" class="btn btn-primary mt-3">Xuất file Excel</button>
+        <form asp-action="ExportExcel" method="post" class="mt-4">
+            <div class="form-validation col-lg-9 col-md-8 col-12 m-auto">
+                <div class="form-group row mt-3 justify-content-center">
+                    <label class="col-lg-2 col-form-label" for="val-website">
+                        Rừng phòng hộ <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-lg-6 d-flex align-items-center justify-content-between">
+                        <label>
+                            <input type="radio" name="typeNationPark" checked value="NationParkNamGiang"> RPH Nam Giang
+                        </label>
+                        <label>
+                            <input type="radio" name="typeNationPark" value="NationParkMuongTe"> RPH Mường Tè
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group row mt-3 justify-content-center">
+                    <label class="col-lg-2 col-form-label" for="val-website">
+                        Loài: <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-lg-6 d-flex align-items-center justify-content-between">
+                        <label >
+                            <input type="radio" name="TypeSpceies" value="-1" checked> Tất cả
+                        </label>
+                        <label>
+                            <input type="radio" name="TypeSpceies" value="1"> Động vật
+                        </label>
+                        <label>
+                            <input type="radio" name="TypeSpceies" value="0"> Thực vật
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group row mt-3 justify-content-center">
+                    <label class="col-lg-2 col-form-label" for="val-website">
+                        Tên file:<span class="text-danger">*</span>
+                    </label>
+                    <div class="col-lg-6 d-flex align-items-center ">
+                        <input type="text" name="FileName" placeholder="Nhập tên file..." class="form-control ">
+                    </div>
+                </div>
+                <div class="form-group row mt-3 justify-content-center">
+                    <label class="col-lg-2 col-form-label" for="val-website">
+                        Thời gian:
+                    </label>
+                    <div class="col-lg-6 d-flex align-items-center ">
+                        <input name="BeginDate" class="form-control " placeholder="Ngày bắt đầu..." type="date">
+                        <div class="ms-1 me-1">đến</div>
+                        <input type="date" name="ExpiredDate" placeholder="Ngày kết thúc..." class="form-control ">
+                    </div>
+                </div>
+                
+                <div class="form-group row mt-1 justify-content-center">
+                    <div class="col-lg-8 ml-auto text-center">
+                         <button type="submit" class="btn btn-primary mt-3">Xuất file Excel</button>
+                    </div>
+                </div>
+            </div>
         </form>
-
     </div>
 </div>
 

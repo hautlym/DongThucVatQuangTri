@@ -47,8 +47,8 @@
 }
 <div class="container-fluid px-4">
     <h1 class="mt-4">
-        Loài @ViewBag.Loai thuộc BQL RPH
-        @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
+        Loài @ViewBag.Loai thuộc BQL RPH
+     @*    @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
         {
             <span>Nam Giang</span>
         }
@@ -59,12 +59,12 @@
         else
         {
             <span>Nam Giang và Mường Tè</span>
-        }
+        } *@
     </h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Loài @ViewBag.Loai thuộc BQL RPH 
-            @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
+        <li class="breadcrumb-item active">Loài @ViewBag.Loai thuộc BQL RPH 
+           @*  @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
             {
                 <span>Nam Giang</span>
             }
@@ -73,7 +73,7 @@
                 <span>Mường Tè</span>
             }else{
                 <span>Nam Giang và Mường Tè</span>
-            }
+            } *@
         </li>
     </ol>
 
