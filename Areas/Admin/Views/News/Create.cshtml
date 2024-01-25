@@ -140,6 +140,7 @@
             </div>
             <div class="row">
                 <div class="form-group m-2">
+                    <input type="hidden" asp-for="Author" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
                     <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Thêm tin tức</button>
                     <button type="reset" class="btn btn-secondary" /><i class="fa-solid fa-eraser" style="color: #ffffff;"></i> Reset</button>
                    
