@@ -343,13 +343,13 @@
     }
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Thêm loài @ViewBag.Loai vườn quốc gia </h1>
+    <h1 class="mt-4">Thêm loài @ViewBag.Loai thuộc RPH </h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
         <li class="breadcrumb-item active">Thêm loài @ViewBag.Loai </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh loài @ViewBag.Loai vườn quốc gia</a>
+        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh loài @ViewBag.Loai thuộc RPH</a>
     </div>
     <div class="row">
         <form asp-action="Create" asp-route-loai="@idLoai" enctype="multipart/form-data" class="row">

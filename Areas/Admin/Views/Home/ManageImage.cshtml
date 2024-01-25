@@ -27,6 +27,27 @@
                 }
             });
         }
+        function zoomImg() {
+            event.preventDefault();
+            console.log("hello")
+
+            $('.popup-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                tLoading: 'Loading image #%curr%...',
+                mainClass: 'mfp-img-mobile',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+                },
+                image: {
+                    tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+
+                }
+            });
+
+        }
     </script>
 }
 <div class="container-fluid px-4">
@@ -46,7 +67,7 @@
                 </select>
             </form>
         </div>
-        <div class="card-body align-middle row justify-content-center">
+        <div class="card-body align-middle row justify-content-center ">
             @{
                 int i = ((Model.PageIndex - 1) * Model.PageSize) + 1;
             }
@@ -57,9 +78,12 @@
                 {
                     foreach (var item2 in Url)
                     {
-                        <div class="card m-2" style="width: 15rem;">
-                            <img src="/user-content/@item2" class="card-img-top" style="height:180px;" alt="...">
-                            <div class="card-body">
+                        <div class="card m-2 popup-gallery" style="width: 15rem;">
+                            <a href="/user-content/@item2" onclick="zoomImg()">
+                                <img src="/user-content/@item2" class="card-img-top" style="height:180px;" alt="...">
+                            </a>
+
+                            <div class="card-body ">
                                 <h5 class="card-title" style="font-size: 15px;">Loài: @item.Loai</h5>
                                 <p class="card-text" style="font-size: 15px;">@item2</p>
                             </div>
