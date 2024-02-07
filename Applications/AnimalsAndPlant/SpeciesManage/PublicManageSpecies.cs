@@ -51,12 +51,13 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
         public async Task<ApiResult<PageResult<SpeciesPublicViewModel>>> GetAlllPaging(getSpeciesPublicRequest request)
         {
             var query =
-                        from b in _context.DtvLoai
+                        from lv in _context.DtvLoai_VQGs
+                        join b in _context.DtvLoai on(long)lv.IdDtvLoai equals b.Id
                         join n in _context.DtvHo on (long)b.IdDtvHo equals n.Id
                         join bo in _context.DtvBo on (long)n.IdDtvBo equals bo.Id
                         join lop in _context.DtvLop on (long)bo.IdDtvLop equals lop.Id
                         join nganh in _context.DtvNganh on (long)lop.IdDtvNganh equals nganh.Id
-                        select new { b, n, bo, lop, nganh };
+                        select new { b, n, bo, lop, nganh,lv };
             if (request.loai == 1 || request.loai == 0)
             {
                 query = query.Where(x => x.b.Loai == request.loai);
@@ -105,6 +106,10 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             {
                 query = query.Where(x => x.nganh.Id == request.id_nganh);
             }
+            if(!String.IsNullOrEmpty(request.vqg))
+            {
+                query = query.Where(x => x.lv.TypeNationPark == request.vqg);
+            }
             var tempdata =await query.Select(x => new SpeciesPublicViewModel()
             {
                 Id = x.b.Id,
@@ -125,47 +130,6 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 FileDinhKem = _context.DtvLoai_VQGs.Where(z => z.IdDtvLoai == x.b.Id).Select(k => k.FileDinhKem)
                     .Count() > 0 ? String.Join(",", _context.DtvLoai_VQGs.Where(z => z.IdDtvLoai == x.b.Id).Select(k => k.FileDinhKem).ToList()) : ""
             }).ToListAsync();
-            if (request.vqg != 0)
-            {
-                var listnewData = new List<SpeciesPublicViewModel>();
-                if (request.vqg == 1)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        var vqgLoai = _context.DtvLoai_VQGs.Where(x => x.IdDtvLoai == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
-                        {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                if (item2.TypeNationPark == "NationParkMuongTe")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (request.vqg == 2)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        var vqgLoai = _context.DtvLoai_VQGs.Where(x => x.IdDtvLoai == item.Id).ToList();
-                        if (vqgLoai.Count > 0)
-                        {
-                            foreach (var item2 in vqgLoai)
-                            {
-                                if (item2.TypeNationPark == "NationParkNamGiang")
-                                {
-                                    listnewData.Add(item);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                tempdata = listnewData;
-            }
             int totalRow =  tempdata.Count;
             var data = tempdata.OrderByDescending(x=>x.FileDinhKem).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 //.Select(x => new SpeciesPublicViewModel()

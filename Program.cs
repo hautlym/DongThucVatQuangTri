@@ -8,6 +8,10 @@ using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
+using DongThucVatQuangTri.Applications.ConservationAreas;
+using DongThucVatQuangTri.Applications.ConservationInfors;
+using DongThucVatQuangTri.Applications.Contacts;
+using DongThucVatQuangTri.Applications.EcotourismSafeties;
 using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
@@ -120,13 +124,19 @@ builder.Services.AddTransient<IManageIntroduce, ManageIntroduce>();
 builder.Services.AddTransient<IManageSpeciesNationPark, ManageSpeciesNationPark>();
 builder.Services.AddTransient<IPublicManageSpecies, PublicManageSpecies>();
 builder.Services.AddTransient<IStorageServiceEdit, FileStorageServiceEdit>();
+builder.Services.AddTransient<IManageConservationInfor, ManageConservationInfor>();
+builder.Services.AddTransient<IManageEcotourismSafety, ManageEcotourismSafety>();
+builder.Services.AddTransient<IManageTourCat, ManageTourCat>();
+builder.Services.AddTransient<IManageConservationArea, ManageConservationArea>();
+builder.Services.AddTransient<IManageContact, ManageContact>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromDays(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; 
 });
-
 
 builder.Services.Configure<IISServerOptions>(options =>
 {

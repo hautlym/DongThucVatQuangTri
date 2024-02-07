@@ -4,6 +4,7 @@
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int? typeMap { get; set; }
         public IFormFile linkMap { get; set; }
         public string? CreateBy { get; set; }
     }

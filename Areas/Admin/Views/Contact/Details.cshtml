@@ -1,0 +1,92 @@
+﻿@using DongThucVatQuangTri.Applications.Contacts.Dtos;
+@using DongThucVatQuangTri.Applications.Enums;
+@using DongThucVatQuangTri.Models.Entities;
+@using static DongThucVatQuangTri.Applications.Common.HelperMethod;
+@model Contact
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Thông tin du lịch";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+<style>
+    th:first-child {
+        width: 30%;
+    }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách du lịch</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="row">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Người gửi: </th>
+                                    <td> @Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Email:</th>
+                                    <td>@Html.DisplayFor(model => model.Email)</td>
+                                </tr>
+                                <tr>
+                                    <th>Số điện thoại:</th>
+                                    <td>
+                                        @Html.DisplayFor(model => model.NumberPhone)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Rừng phòng hộ:</th>
+                                    <td>@Html.DisplayFor(model => model.typeNationPark)</td>
+                                </tr>
+                                <tr>
+                                    <th>Ngày nhận:</th>
+                                    <td>@Html.DisplayFor(model => model.CreateAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Trạng thái:</th>
+                                    <td>
+                                        @foreach (var status1 in Enum.GetValues(typeof(statusContact)))
+                                        {
+                                            if (Model.status == status1.ToString())
+                                            {
+                                                <span>@EnumExtensions.GetEnumMemberValue((statusContact)status1)</span>
+                                                break;
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th> Nội dung:</th>
+                                    <td>@Html.DisplayFor(model => model.Message)</td>
+                                </tr>
+                                <tr>
+                                    <th> Ghi chú:</th>
+                                    <td>@Html.DisplayFor(model => model.Note)</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </dl>
+                    <div>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
+                            <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                            Chỉnh sửa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

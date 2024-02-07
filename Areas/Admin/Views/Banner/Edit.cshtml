@@ -1,4 +1,5 @@
-﻿@model DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos.UpdateBannerRequest
+﻿@using System.Security.Claims;
+@model DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos.UpdateBannerRequest
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Sửa banner";
@@ -99,6 +100,28 @@
                     <select asp-for="Status" class="form-control" id="dropdown" name="Status">
                         <option value="1">Bật</option>
                         <option value="0">Tắt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
+                    <select onchange="zoomMap()" asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                        @{
+                            var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+                        }
+                        @if (typeNationPark == "NationParkNamGiang")
+                        {
+                            <option value="NationParkNamGiang">RPH Nam Giang</option>
+                        }
+                        else if (typeNationPark == "NationParkMuongTe")
+                        {
+                            <option value="NationParkMuongTe">RPH Mường Tè</option>
+                        }
+                        else
+                        {
+                            <option value="NationParkNamGiang">RPH Nam Giang</option>
+                            <option value="NationParkMuongTe">RPH Mường Tè</option>
+                        }
+
                     </select>
                 </div>
                 <div class="form-group">

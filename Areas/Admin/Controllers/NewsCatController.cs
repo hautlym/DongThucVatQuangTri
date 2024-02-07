@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AdministratorPolicy")]
     public class NewsCatController : BaseController
     {
         private readonly IManageNewsCat _newsCat;

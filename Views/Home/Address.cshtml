@@ -1,9 +1,15 @@
-﻿@model addressModel
+﻿@using Microsoft.AspNetCore.Http
+@model addressModel
 @{
     ViewData["Title"] = "Bản đồ";
 }
 @{
-    string vqg = ViewContext.HttpContext.Request.Query["vqg"];
+    string vqg =  Context.Session.GetString("NationPark");
+    var vqg1 = vqg;
+    if  (vqg == "All")
+    {
+        vqg = ViewContext.HttpContext.Request.Query["vqg"];
+    }
 }
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -13,14 +19,14 @@
 <script type="text/javascript" src="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.js"></script>
 <link rel="stylesheet" href="/dataMaps/newMap/js/dist/Leaflet.Coordinates-0.1.5.css" />
 <link rel="stylesheet" href="/dataMaps/newMap/js/dist/leaflet.groupedlayercontrol.css" />
-@if (vqg == "0")
+@if (vqg == "NationParkMuongTe")
 {
     <script src="/dataMaps/newMap/data/muongte_rrx_wgs84.js"></script>
     <script defer src="/dataMaps/newMap/data/muongte_htr.js" onload="myInit()"></script>
-@*     <link rel="preload" href="/dataMaps/newMap/data/muongte_htr.js" as="script" fetchpriority="low"> *@
+    @*     <link rel="preload" href="/dataMaps/newMap/data/muongte_htr.js" as="script" fetchpriority="low"> *@
 
 }
-else if (vqg == "1")
+else if (vqg == "NationParkNamGiang")
 {
     <script src="/dataMaps/newMap/data/NamGiang_rrx.js"></script>
     <script defer src="/dataMaps/newMap/data/namgiang_htr.js" onload="myInit()"></script>
@@ -79,11 +85,11 @@ else
         border-radius: 5px;
     }
 
-    .info.leaflet-control h4 {
-        margin: 0 0 5px;
+        .info.leaflet-control h4 {
+            margin: 0 0 5px;
             font: 14px/16px Arial, Helvetica, sans-serif !important;
-        color: #777;
-    }
+            color: #777;
+        }
 
     .legend {
         line-height: 18px;
@@ -100,6 +106,7 @@ else
             opacity: 0.7;
         }
 </style>
+
 
 <style>
     .address {
@@ -130,14 +137,14 @@ else
     <h2 style="font-size: 2rem;">Bản đồ</h2>
 </div>
 <div class="row m-2 justify-content-center">
-    <div class="col-sm-4">
+    <div class="col-sm-4" id="selectElement">
         <label class="control-label"> Bản đồ: </label>
         <form asp-action="Address" asp-controller="Home" method="get">
             <select class="form-control select2" name="vqg" onchange="this.form.submit()" id="optionNationPark">
-                <option value="0">
+                <option value="NationParkMuongTe">
                     Bản đồ động thực vật BQL RPH Mường Tè
                 </option>
-                <option value="1">
+                <option value="NationParkNamGiang">
                     Bản đồ động thực vật BQL RPH Nam Giang
                 </option>
             </select>
@@ -197,7 +204,7 @@ else
 
     </div>
     <div id="map" class="col-lg-8 col-md-12 col-12"></div>
-    @if (vqg == "0")
+    @if (vqg == "NationParkMuongTe")
     {
         <script>
             var stylelayer = {
@@ -263,7 +270,7 @@ else
 
 
 
-            
+
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
                 return d == 3 ? '#00FF00' :
@@ -283,27 +290,27 @@ else
                 };
             }
 
-         
-          @*   function myInit() {
-                var kkr = L.geoJson(muongtehtr, {
-                    style: style,
-                    onEachFeature: onEachFeature
-                });
-                var groupoverlays = {
-                    "HTR-RG": {
-                        "Ranh giới": mtData,
-                        "Hiện trạng rừng": kkr,
-                        //"Park" : parks,
-                    },
-                };
-                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
-                L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
-            } *@
-            /*show info layers*/
-            var info = L.control({
-                position: 'bottomleft'
+
+            @*   function myInit() {
+            var kkr = L.geoJson(muongtehtr, {
+            style: style,
+            onEachFeature: onEachFeature
             });
-           
+            var groupoverlays = {
+            "HTR-RG": {
+            "Ranh giới": mtData,
+            "Hiện trạng rừng": kkr,
+            //"Park" : parks,
+            },
+            };
+            //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+            L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            } *@
+                                                                        /*show info layers*/
+                                                                        var info = L.control({
+                    position: 'bottomleft'
+                });
+
 
             function onEachFeature(feature, layer) {
                 layer.on({
@@ -440,7 +447,7 @@ else
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/blue.png" alt=""><span> Cấp ĐDSH Thấp</span><br>';
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/yeallow.png" alt=""><span> Cấp ĐDSH Trung bình</span><br>';
                 div.innerHTML += '<img height ="30" width="30" src="/dataMaps/newMap/pic/red.png" alt=""><span> Cấp ĐDSH Cao</span><br>';
-                            return div;
+                return div;
             };
             legend.addTo(map);
             /*===================================================
@@ -482,14 +489,14 @@ else
                 var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                        ];
+                                                                            ];
             var planesPlant = [
             @foreach (var item in Model.SpeciesPlant)
             {
                 var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                                ];
+                                                                            ];
 
             for (var i = 0; i < planesAnimal.length; i++) {
                 marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
@@ -530,54 +537,54 @@ else
                                 }
                             }
                             row = `<tr>
-                                                           <th>Tên loài</th>
-                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên latinh</th>
-                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên khác</th>
-                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Phân bố</th>
-                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn IUCN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn SDVN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn NDCP</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th> Mức độ bảo tồn ND64CP</th>
-                                                           <td>
-                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                                   <th>Ảnh</th>
-                                                                                <td >
-                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
-                                                                                          ${imgitem}
-                                                                                </div>
+                                                                                                                       <th>Tên loài</th>
+                                                                                                                               <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên latinh</th>
+                                                                                                                                <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên khác</th>
+                                                                                                                                <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Phân bố</th>
+                                                                                                                                <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn IUCN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn SDVN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn NDCP</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th> Mức độ bảo tồn ND64CP</th>
+                                                                                                                       <td>
+                                                                                                                                 ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                               <th>Ảnh</th>
+                                                                                                                                            <td >
+                                                                                                                                            <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                                                                                      ${imgitem}
+                                                                                                                                            </div>
 
-                                                           </td>
-                                                        </tr>`
+                                                                                                                       </td>
+                                                                                                                    </tr>`
                             $('#speciesTable tbody').html(row);
                         }
                         //
@@ -619,21 +626,21 @@ else
 
                     '<h4>Thông tin chi tiết</h4>' + (properties ?
                         `
-                                 Xã:${properties.x}<br>
-                                 Lô:${properties.l}<br>
-                                 Khoảnh:${properties.K}<br>
-                                 Tiểu khu:${properties.tk}<br>
-                                 Phân Cấp:${properties.pcs}<br>
-                                       ` : 'Hover over a state');;
+                                                                                             Xã:${properties.x}<br>
+                                                                                             Lô:${properties.l}<br>
+                                                                                             Khoảnh:${properties.K}<br>
+                                                                                             Tiểu khu:${properties.tk}<br>
+                                                                                             Phân Cấp:${properties.pcs}<br>
+                                                                                                   ` : 'Hover over a state');;
             };
 
             info.addTo(map);
         </script>
     }
-    else if (vqg == "1")
+    else if (vqg == "NationParkNamGiang")
     {
         <script>
-            
+
             var stylelayer = {
                 defecto: {
                     color: "red",
@@ -697,7 +704,7 @@ else
 
 
 
-            
+
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
                 return d == 3 ? '#00FF00' :
@@ -717,7 +724,7 @@ else
                 };
             }
 
-            
+
 
             function onEachFeature(feature, layer) {
                 layer.on({
@@ -896,14 +903,14 @@ else
                 var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                        ];
+                                                                            ];
             var planesPlant = [
             @foreach (var item in Model.SpeciesPlant)
             {
                 var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                                ];
+                                                                            ];
 
             for (var i = 0; i < planesAnimal.length; i++) {
                 marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
@@ -944,54 +951,54 @@ else
                                 }
                             }
                             row = `<tr>
-                                                           <th>Tên loài</th>
-                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên latinh</th>
-                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên khác</th>
-                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Phân bố</th>
-                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn IUCN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn SDVN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn NDCP</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th> Mức độ bảo tồn ND64CP</th>
-                                                           <td>
-                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                                   <th>Ảnh</th>
-                                                                                <td >
-                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
-                                                                                          ${imgitem}
-                                                                                </div>
+                                                                                                                       <th>Tên loài</th>
+                                                                                                                               <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên latinh</th>
+                                                                                                                                <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên khác</th>
+                                                                                                                                <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Phân bố</th>
+                                                                                                                                <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn IUCN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn SDVN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn NDCP</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th> Mức độ bảo tồn ND64CP</th>
+                                                                                                                       <td>
+                                                                                                                                 ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                               <th>Ảnh</th>
+                                                                                                                                            <td >
+                                                                                                                                            <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                                                                                      ${imgitem}
+                                                                                                                                            </div>
 
-                                                           </td>
-                                                        </tr>`
+                                                                                                                       </td>
+                                                                                                                    </tr>`
                             $('#speciesTable tbody').html(row);
                         }
                         //
@@ -1015,7 +1022,7 @@ else
                         //"Park" : parks,
                     },
                 };
-         
+
                 //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
                 L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
             }
@@ -1034,12 +1041,12 @@ else
                 this._div.innerHTML =
                     '<h4>Thông tin chi tiết</h4>' + (properties ?
                         `
-                                 Xã:${properties.x}<br>
-                                 Lô:${properties.l}<br>
-                                 Khoảnh:${properties.K}<br>
-                                 Tiểu khu:${properties.tk}<br>
-                                 Phân Cấp:${properties.pcs}<br>
-                                       ` : 'Hover over a state');;
+                                                                                             Xã:${properties.x}<br>
+                                                                                             Lô:${properties.l}<br>
+                                                                                             Khoảnh:${properties.K}<br>
+                                                                                             Tiểu khu:${properties.tk}<br>
+                                                                                             Phân Cấp:${properties.pcs}<br>
+                                                                                                   ` : 'Hover over a state');;
             };
 
             info.addTo(map);
@@ -1109,9 +1116,9 @@ else
             //var popup = L.popup();
             var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
 
-           
 
-           
+
+
             //var parks = L.geoJson(muongtedatarrx);
             function getColor(d) {
                 return d == 3 ? '#00FF00' :
@@ -1307,14 +1314,15 @@ else
                 var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                        ];
+                                                                            ];
+
             var planesPlant = [
             @foreach (var item in Model.SpeciesPlant)
             {
                 var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
                 @Html.Raw(text)
             }
-                                                                                                                                                ];
+                                                                            ];
 
             for (var i = 0; i < planesAnimal.length; i++) {
                 marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
@@ -1355,54 +1363,54 @@ else
                                 }
                             }
                             row = `<tr>
-                                                           <th>Tên loài</th>
-                                                                   <td>${data.item.name == null ? "Không" : data.item.name}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên latinh</th>
-                                                                    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Tên khác</th>
-                                                                    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Phân bố</th>
-                                                                    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn IUCN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn SDVN</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th>Mức độ bảo tồn NDCP</th>
-                                                           <td>
-                                                                    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                           <th> Mức độ bảo tồn ND64CP</th>
-                                                           <td>
-                                                                     ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                                   <th>Ảnh</th>
-                                                                                <td >
-                                                                                <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
-                                                                                          ${imgitem}
-                                                                                </div>
+                                                                                                                       <th>Tên loài</th>
+                                                                                                                               <td>${data.item.name == null ? "Không" : data.item.name}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên latinh</th>
+                                                                                                                                <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Tên khác</th>
+                                                                                                                                <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Phân bố</th>
+                                                                                                                                <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn IUCN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn SDVN</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th>Mức độ bảo tồn NDCP</th>
+                                                                                                                       <td>
+                                                                                                                                ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                       <th> Mức độ bảo tồn ND64CP</th>
+                                                                                                                       <td>
+                                                                                                                                 ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
+                                                                                                                       </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                               <th>Ảnh</th>
+                                                                                                                                            <td >
+                                                                                                                                            <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
+                                                                                                                                                      ${imgitem}
+                                                                                                                                            </div>
 
-                                                           </td>
-                                                        </tr>`
+                                                                                                                       </td>
+                                                                                                                    </tr>`
                             $('#speciesTable tbody').html(row);
                         }
                         //
@@ -1428,7 +1436,7 @@ else
                 //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
                 L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
             }
-           
+
             /*show info layers*/
             var info = L.control({
                 position: 'bottomleft'
@@ -1444,12 +1452,12 @@ else
 
                     '<h4>Thông tin chi tiết</h4>' + (properties ?
                         `
-                                 Xã:${properties.x}<br>
-                                 Lô:${properties.l}<br>
-                                 Khoảnh:${properties.K}<br>
-                                 Tiểu khu:${properties.tk}<br>
-                                 Phân Cấp:${properties.pcs}<br>
-                                       ` : 'Hover over a state');;
+                                                                                             Xã:${properties.x}<br>
+                                                                                             Lô:${properties.l}<br>
+                                                                                             Khoảnh:${properties.K}<br>
+                                                                                             Tiểu khu:${properties.tk}<br>
+                                                                                             Phân Cấp:${properties.pcs}<br>
+                                                                                                   ` : 'Hover over a state');;
             };
 
             info.addTo(map);
@@ -1680,32 +1688,38 @@ else
     }
     </script> *@
     <script>
-
-        var currentUrl = window.location.href;
-
-        if (currentUrl.includes("?")) {
-            var urlParams = new URLSearchParams(window.location.search);
-            var id = urlParams.get('vqg');
-            console.log(id)
-            var dropdown = document.getElementById("optionNationPark");
-            console.log(dropdown)
-            // Thiết lập giá trị mà bạn muốn chọn
-            var selectedValue = id + "";
-
-            // Lặp qua từng option trong dropdown
-            for (var i = 0; i < dropdown.options.length; i++) {
-                // Nếu giá trị của option trùng với giá trị muốn chọn, đặt selected = true
-                if (dropdown.options[i].value === selectedValue) {
-                    dropdown.options[i].selected = true;
-                    break;  // Kết thúc vòng lặp nếu đã tìm thấy và đặt giá trị
+        selectNationPark()
+        function selectNationPark() {
+            var currentUrl = window.location.href;
+            if (currentUrl.includes("?")) {
+                var urlParams = new URLSearchParams(window.location.search);
+                var id = urlParams.get('vqg');
+                console.log(id)
+                var dropdown = document.getElementById("optionNationPark");
+                console.log(dropdown)
+                // Thiết lập giá trị mà bạn muốn chọn
+                var selectedValue = id + "";
+                // Lặp qua từng option trong dropdown
+                for (var i = 0; i < dropdown.options.length; i++) {
+                    // Nếu giá trị của option trùng với giá trị muốn chọn, đặt selected = true
+                    if (dropdown.options[i].value === selectedValue) {
+                        dropdown.options[i].selected = true;
+                        break;  // Kết thúc vòng lặp nếu đã tìm thấy và đặt giá trị
+                    }
                 }
-            }
-        } else {
+            } else {
 
+            }
         }
 
     </script>
-
+    <script>
+        if ('@vqg1' != "All") {
+            var select = document.getElementById("selectElement")
+            console.log(select)
+            select.style.display = "none";
+        }
+    </script>
 
 </div>
 

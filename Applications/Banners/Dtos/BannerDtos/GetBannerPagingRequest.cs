@@ -6,5 +6,6 @@ namespace DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos
     {
         public string? Keyword { get; set; }
         public int? status { get; set; }
+        public string? typeNationPark { get; set; }
     }
 }

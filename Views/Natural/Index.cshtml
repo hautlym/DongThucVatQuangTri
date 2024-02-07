@@ -5,11 +5,15 @@
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
 @using DongThucVatQuangTri.Applications.Common;
+@using Microsoft.AspNetCore.Http
 @model PageResult<SpeciesPublicViewModel>
 
 @{
     ViewData["Title"] = "Danh sách loài";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string vqg = Context.Session.GetString("NationPark");
 }
 @{
     var idLoai = -1;
@@ -302,17 +306,17 @@
                         </div>
 
                     </div>
-                    <div class="NationParkOption ">
+                    <div class="NationParkOption " id="selectElement">
                         <div class="col-md-3">Chọn rừng phòng hộ: </div>
                         <div class="col-md-9">
                             <select class="form-control col-md-9 " name="vqg">
-                                <option value="0">
+                                <option value="All">
                                     Tất cả
                                 </option>
-                                <option value="1">
+                                <option value="NationParkMuongTe">
                                     BQL RPH Mường Tè
                                 </option>
-                                <option value="2">
+                                <option value="NationParkNamGiang">
                                     BQL RPH Nam Giang
                                 </option>
                             </select>
@@ -448,3 +452,10 @@
     </div><!--end tintuc-->
     @await Component.InvokeAsync("Pagi", Model)
 </div><!--end content-->
+<script>
+    if ('@vqg' != "All") {
+        var select = document.getElementById("selectElement")
+        console.log(select)
+        select.style.display = "none";
+    }
+</script>

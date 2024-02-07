@@ -72,7 +72,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var result = await _manageTour.getTourById(id);
-            if (!HelperMethod.CheckUser(result.Author, User))
+            if (!HelperMethod.CheckUser(result.typeNationPark, User))
             {
                 TempData["error"] = "Bạn không được quyền chỉnh sửa";
                 return RedirectToAction("Index");
@@ -119,7 +119,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index");
             var item = await _manageTour.getTourById(Id);
-            if (!HelperMethod.CheckUser(item.Author, User))
+            if (!HelperMethod.CheckUser(item.typeNationPark, User))
             {
                 TempData["error"] = "Bạn không được quyền xóa";
                 return RedirectToAction("Index");

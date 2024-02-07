@@ -2,14 +2,16 @@
 using DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
+using DongThucVatQuangTri.Applications.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Policy = "AdministatorOrAdminPolicy")]
+    [Authorize(Policy = "AdministatorOrNationParkPolicy")]
     public class BannerController : BaseController
     {
         private readonly IManageBanner _banner;
@@ -25,7 +27,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
-                Keyword = keyword
+                Keyword = keyword,
+                typeNationPark = User.FindFirstValue(ClaimTypes.Role)
             };
             var data = await _banner.GetAlllPaging(request);
             ViewBag.Keyword = keyword;
@@ -80,6 +83,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Value = x.Id.ToString(),
             });
             var result = await _banner.getBannerById(id);
+            if (!HelperMethod.CheckUser(result.typeNationPark, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index");
+            }
             if (result != null)
             {
                 var updateRequest = new UpdateBannerRequest()
@@ -94,6 +102,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     Language = result.Language,
                     IdRelated = result.IdRelated,
                     BannerCatId = result.BannerCatId,
+                    typeNationPark = result.typeNationPark,
                 };
                 return View(updateRequest);
             }
@@ -126,6 +135,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int Id)
         {
+            var result1 = await _banner.getBannerById(Id);
+            if (!HelperMethod.CheckUser(result1.typeNationPark, User))
+            {
+                TempData["error"] = "Bạn không được quyền xóa";
+                return RedirectToAction("Index");
+            }
             if (!ModelState.IsValid)
                 return RedirectToAction("Index");
 

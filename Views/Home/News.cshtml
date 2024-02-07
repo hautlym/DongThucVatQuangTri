@@ -1,9 +1,13 @@
-﻿@model NewsModels
+﻿@using Microsoft.AspNetCore.Http
+
+@model NewsModels
 @{
     ViewData["Title"] = "Tin tức";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    string vqg = Context.Session.GetString("NationPark");
+}
 <style>
     .pagination,
     .page-item {
@@ -16,14 +20,15 @@
                 } */
 </style>
 <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
-<div class="d-flex justify-content-center mb-5">
-    <a asp-action="News" asp-controller="Home" asp-route-type="0" class="btn btn-primary mr-1 border optionNationPark" style="margin-right:10px;">
+<div class=" justify-content-center mb-5" id="selectElement" style="display:flex;">
+    
+    <a asp-action="News" asp-controller="Home" asp-route-type="All" class="btn btn-primary mr-1 border optionNationPark" style="margin-right:10px;">
         Tất cả
     </a>
-    <a asp-action="News" asp-controller="Home" asp-route-type="1" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
+    <a asp-action="News" asp-controller="Home" asp-route-type="NationParkNamGiang" class="btn btn-light mr-1 border bg-white optionNationPark" style="margin-right:10px;">
         BQL RPH Nam Giang
     </a>
-    <a asp-action="News" asp-controller="Home" asp-route-type="2" class="btn btn-light border bg-white optionNationPark">
+    <a asp-action="News" asp-controller="Home" asp-route-type="NationParkMuongTe" class="btn btn-light border bg-white optionNationPark">
         BQL RPH Mường Tè
     </a>
 </div>
@@ -194,13 +199,13 @@ else
         var id = urlParams.get('type');
         console.log(typeof id)
         switch (id) {
-            case "1":
+            case "NationParkNamGiang":
                 console.log("1")
-                listElement[id].classList.remove("btn-light");
-                listElement[id].classList.add("btn-primary");
-                listElement[id].classList.remove("bg-white");
+                listElement[1].classList.remove("btn-light");
+                listElement[1].classList.add("btn-primary");
+                listElement[1].classList.remove("bg-white");
                 for (var i = 0; i < listElement.length; i++) {
-                    if (i == id) {
+                    if (i == 1) {
                         continue;
                     }
                     listElement[i].classList.add("btn-light");
@@ -208,12 +213,12 @@ else
                     listElement[i].classList.add("bg-white");
                 };
                 break;
-            case "2": ;
-                listElement[id].classList.remove("btn-light");
-                listElement[id].classList.add("btn-primary");
-                listElement[id].classList.remove("bg-white");
+            case "NationParkMuongTe": ;
+                listElement[2].classList.remove("btn-light");
+                listElement[2].classList.add("btn-primary");
+                listElement[2].classList.remove("bg-white");
                 for (var i = 0; i < listElement.length; i++) {
-                    if (i == id) {
+                    if (i == 2) {
                         continue;
                     }
                     listElement[i].classList.add("btn-light");
@@ -242,4 +247,11 @@ else
         }
     }
 
+</script>
+<script>
+    if ('@vqg' != "All") {
+        var select = document.getElementById("selectElement")
+        console.log(select)
+        select.style.display = "none";
+    }
 </script>

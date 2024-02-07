@@ -126,25 +126,8 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                 ViDo = x.lv.ViDo,
                 TypeNationPark =x.lv.TypeNationPark,
                 NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
-            }).ToListAsync();
-            //var data = await _context.DtvLoai_VQGs.Select(item => new SpeciesNationParkViewModel()
-            //{
-            //    Id = item.Id,
-            //    Status = item.Status,
-            //    Loai = item.Loai,
-            //    CreatedAt = item.CreatedAt,
-            //    UpdatedAt = item.UpdatedAt,
-            //    CreatedBy = item.CreatedBy,
-            //    IdDtvLoai=item.IdDtvLoai,
-            //    GiaTriSuDung = item.GiaTriSuDung,
-            //    NguonTaiLieu = item.NguonTaiLieu,
-            //    FileDinhKem = item.FileDinhKem,
-            //    DacDiem = item.DacDiem,
-            //    PhanBo = item.PhanBo,
-            //    TenKhac = item.TenKhac,
-            //    KinhDo= item.KinhDo,
-            //    ViDo=item.ViDo
-            //}).ToListAsync();
+            }).OrderByDescending(x => x.FileDinhKem).ToListAsync();
+
             return data2;
         }
 
@@ -199,7 +182,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
                     ViDo=x.lv.ViDo,
                     TypeNationPark = x.lv.TypeNationPark,
                     NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.lv.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
-                }).ToListAsync();
+                }).OrderByDescending(x => x.FileDinhKem).ToListAsync();
             var pageResult = new PageResult<SpeciesNationParkViewModel>
             {
                 TotalRecords = totalRow,

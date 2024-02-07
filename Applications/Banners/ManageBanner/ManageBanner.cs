@@ -51,6 +51,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
                 Language = request.Language,
                 IdRelated = request.IdRelated,
                 CreatedAt = DateTime.Now,
+                typeNationPark= request.typeNationPark
             };
             _context.Banner.Add(item);
             await _context.SaveChangesAsync();
@@ -88,6 +89,10 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
+            if (!request.typeNationPark.Contains("Administator"))
+            {
+                query = query.Where(x => x.b.typeNationPark == request.typeNationPark);
+            }
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
                 .Select(x => new BannerViewModels()
@@ -110,6 +115,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
                     BannerCat = x.bc.Name,
+                    typeNationPark = x.b.typeNationPark
                 }).ToListAsync();
             var pageResult = new PageResult<BannerViewModels>
             {
@@ -151,7 +157,8 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
                 IdRelated = x.b.IdRelated,
                 CreatedAt = x.b.CreatedAt,
                 UpdatedAt = x.b.UpdatedAt,
-                BannerCat = x.bc.Name
+                BannerCat = x.bc.Name,
+                typeNationPark = x.b.typeNationPark
             }).FirstOrDefaultAsync();
             return BannerCateVm;
         }
@@ -206,6 +213,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
             banner.Language = request.Language;
             banner.IdRelated = request.IdRelated;
             banner.UpdatedAt = DateTime.Now;
+            banner.typeNationPark = request.typeNationPark;
             _context.Banner.Update(banner);
             return await _context.SaveChangesAsync();
         }
@@ -237,6 +245,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBanner
                 Src = banner.Src,
                 Status = banner.Status,
                 SortOrder = banner.SortOrder,
+                typeNationPark = banner.typeNationPark
             }).ToListAsync();
             return data;
         }

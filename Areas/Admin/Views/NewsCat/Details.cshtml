@@ -10,13 +10,13 @@
     }
 </style>
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Thông tin danh mục banner</h1>
+    <h1 class="mt-4">Thông tin danh mục tin tức</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Thông tin danh mục banner </li>
+        <li class="breadcrumb-item active">Thông tin danh mục tin tức </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách danh mục banner</a>
+        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách danh mục tin tức</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -52,15 +52,15 @@
                                 </tr>
                                 <tr>
                                     <th>Tiêu đề SEO: </th>
-                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                    <td> @Html.DisplayFor(model => model.TitleSeo)</td>
                                 </tr>
                                 <tr>
                                     <th>Nội dung SEO: </th>
-                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                    <td> @Html.DisplayFor(model => model.ContentSeo)</td>
                                 </tr>
                                 <tr>
                                     <th>Từ khóa SEO: </th>
-                                    <td> @Html.DisplayFor(model => model.Alias)</td>
+                                    <td> @Html.DisplayFor(model => model.KeySeo)</td>
                                 </tr>
                                 <tr>
                                     <th> Thứ tự sắp xếp:</th>

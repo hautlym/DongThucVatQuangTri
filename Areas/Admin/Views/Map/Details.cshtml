@@ -1,7 +1,18 @@
-﻿@using DongThucVatQuangTri.Applications.Maps.Dtos;
+﻿@using DongThucVatQuangTri.Applications.Enums;
+@using DongThucVatQuangTri.Applications.Maps.Dtos;
+@using static DongThucVatQuangTri.Applications.Common.HelperMethod;
 @model MapViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
+    string nameTypeMap = "";
+    foreach (var status1 in Enum.GetValues(typeof(typeMap)))
+    {
+        if (Model.typeMap== (int)status1)
+        {
+            nameTypeMap = @EnumExtensions.GetEnumMemberValue((typeMap)status1);
+            break;
+        }
+    }
     ViewData["Title"] = "Thông tin bản đồ";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
@@ -24,7 +35,7 @@
         <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
     <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách du lịch</a>
+        <a class="btn btn-success" asp-action="Index" asp-route-type="@Model.typeMap"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách @nameTypeMap</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -84,6 +95,10 @@
                                 <tr>
                                     <th> Ngày tạo:</th>
                                     <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                </tr>
+                                <tr>
+                                    <th> Loại bản đồ:</th>
+                                    <td>@nameTypeMap</td>
                                 </tr>
                                 <tr>
                                     <th> Ngày cập nhật:</th>

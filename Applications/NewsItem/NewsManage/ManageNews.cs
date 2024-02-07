@@ -245,7 +245,9 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
-
+            if(!String.IsNullOrEmpty(request.typeNationPark)){
+                query = query.Where(x => x.b.TypeNationPark == request.typeNationPark);
+            }
             var tempdata = await query.Select(request => new NewsViewModels()
             {
                 Id = request.b.Id,
@@ -271,34 +273,6 @@ namespace DongThucVatQuangTri.Applications.NewsItem.NewsManage
                 NewsCatName = request.bc.Name,
                 typeNationPark = request.b.TypeNationPark
             }).ToListAsync();
-            if (request.type != 0)
-            {
-                var listnewData = new List<NewsViewModels>();
-                if (request.type == 2)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        if (item.typeNationPark == "NationParkMuongTe")
-                        {
-                            listnewData.Add(item);
-                          
-                        }
-
-                    }
-                }
-                if (request.type == 1)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        if (item.typeNationPark == "NationParkNamGiang")
-                        {
-                            listnewData.Add(item);
-                       
-                        }
-                    }
-                }
-                tempdata = listnewData;
-            }
             int totalRow = tempdata.Count;
             var data = tempdata.OrderByDescending(x => x.PostAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             var pageResult = new PageResult<NewsViewModels>

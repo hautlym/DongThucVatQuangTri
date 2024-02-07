@@ -6,5 +6,7 @@ namespace DongThucVatQuangTri.Applications.Maps.Dtos
     {
         public string? Keyword { get; set; }
         public int? status { get; set; }
+        public int? typeMap { get; set; }
+
     }
 }

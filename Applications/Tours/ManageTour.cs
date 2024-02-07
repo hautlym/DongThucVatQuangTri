@@ -176,7 +176,10 @@ namespace DongThucVatQuangTri.Applications.Tours
             {
                 query = query.Where(x => x.b.Status == request.status);
             }
-
+            if(!String.IsNullOrEmpty(request.typeNationPark))
+            {
+                query = query.Where(x => x.b.TypeNationPark == request.typeNationPark);
+            }
             var tempdata = await query.Select(request => new TourViewModel()
             {
                 Id = request.b.Id,
@@ -194,33 +197,6 @@ namespace DongThucVatQuangTri.Applications.Tours
                 typeNationPark = request.b.TypeNationPark
                 
             }).ToListAsync();
-            if (request.type != 0)
-            {
-                var listnewData = new List<TourViewModel>();
-                if (request.type == 2)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        if (item.typeNationPark == "NationParkMuongTe")
-                        {
-                            listnewData.Add(item);
-                           
-                        }
-                    }
-                }
-                if (request.type == 1)
-                {
-                    foreach (var item in tempdata)
-                    {
-                        if (item.typeNationPark == "NationParkNamGiang")
-                        {
-                            listnewData.Add(item);
-                            
-                        }
-                    }
-                }
-                tempdata = listnewData;
-            }
             int totalRow = tempdata.Count;
             var data = tempdata.OrderBy(x=>x.CreatedAt).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             var pageResult = new PageResult<TourViewModel>

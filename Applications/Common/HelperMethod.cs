@@ -1,5 +1,7 @@
 ﻿using DongThucVatQuangTri.Applications.Enums;
 using DongThucVatQuangTri.Models.Entities;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 
 namespace DongThucVatQuangTri.Applications.Common
@@ -17,7 +19,10 @@ namespace DongThucVatQuangTri.Applications.Common
                     return true;
                 }
                 if(String.IsNullOrEmpty(userItem)) { return false; }
-                if (userItem.Equals(userIdentityId))
+                if (userItem.Equals(userIdentityRole))
+                {
+                    return true;
+                }else if(userItem.Equals(userIdentityId))
                 {
                     return true;
                 }
@@ -29,6 +34,24 @@ namespace DongThucVatQuangTri.Applications.Common
             }catch(Exception ex)
             {
                 return false;
+            }
+        }
+        public static class EnumExtensions
+        {
+            public static string GetEnumMemberValue(Enum value)
+            {
+                Type type = value.GetType();
+                MemberInfo[] memInfo = type.GetMember(value.ToString());
+
+                if (memInfo != null && memInfo.Length > 0)
+                {
+                    object[] attrs = memInfo[0].GetCustomAttributes(typeof(EnumMemberAttribute), false);
+
+                    if (attrs != null && attrs.Length > 0)
+                        return ((EnumMemberAttribute)attrs[0]).Value;
+                }
+
+                return value.ToString();
             }
         }
     }

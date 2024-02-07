@@ -22,7 +22,7 @@ namespace DongThucVatQuangTri.Applications.Maps
         }
         public async Task<long> CreateMap(CreateMapRequest request)
         {
-            var checkExist = _context.map.Where(x => x.Name == request.Name).FirstOrDefault();
+            var checkExist = _context.map.Where(x => x.Name == request.Name && x.typeMap==request.typeMap.ToString()).FirstOrDefault();
             if (checkExist != null)
             {
                 return -1;
@@ -33,6 +33,7 @@ namespace DongThucVatQuangTri.Applications.Maps
                 Description = request.Description,
                 CreateBy = request.CreateBy,
                 CreatedAt = DateTime.Now,
+                typeMap = request.typeMap.ToString(),
                 linkMap = await SaveFile(request.linkMap)
             };
             _context.map.Add(item);
@@ -65,6 +66,7 @@ namespace DongThucVatQuangTri.Applications.Maps
                 CreateBy = request.CreateBy,
                 linkMap = request.linkMap,
                 UpdatedAt = request.UpdatedAt,
+                typeMap =Convert.ToInt32( request.typeMap)
             }).ToListAsync();
             return data;
         }
@@ -72,12 +74,14 @@ namespace DongThucVatQuangTri.Applications.Maps
         public async Task<ApiResult<PageResult<MapViewModel>>> GetAlllPaging(GetMapPagingRequest request)
         {
             var query = from b in _context.map
+                        where b.typeMap == request.typeMap.ToString()
                         select new { b };
             var list = query.ToList();
             if (!string.IsNullOrEmpty(request.Keyword))
             {
                 query = query.Where(x => x.b.Name.Contains(request.Keyword));
             }
+            
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
                 .Select(request => new MapViewModel()
@@ -91,6 +95,7 @@ namespace DongThucVatQuangTri.Applications.Maps
                     linkMap = request.b.linkMap,
                     CreateBy = request.b.CreateBy,
                     UpdatedAt = request.b.UpdatedAt,
+                    typeMap = Convert.ToInt32(request.b.typeMap),
                 }).ToListAsync();
             var pageResult = new PageResult<MapViewModel>
             {
@@ -123,6 +128,7 @@ namespace DongThucVatQuangTri.Applications.Maps
                 linkMap = request.b.linkMap,
                 CreateBy = request.b.CreateBy,
                 UpdatedAt = request.b.UpdatedAt,
+                typeMap = Convert.ToInt32(request.b.typeMap),
             }).FirstOrDefaultAsync();
             return NewsVm;
         }
@@ -144,6 +150,7 @@ namespace DongThucVatQuangTri.Applications.Maps
             news.Name = request.Name;
             news.Description = request.Description;
             news.UpdatedAt = DateTime.Now;
+            news.typeMap = request.typeMap;
             _context.map.Update(news);
             return await _context.SaveChangesAsync();
         }

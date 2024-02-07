@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FileBrowswe</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <style>
+        body{
+            font-family:'Segoe UI', Verdana,  Helvetica, sans-serif;
+            font-size:80%;
+        }
+        #form{
+            width:100%
+        }
+        #fileExplorer{
+            display: flex;
+            width:680px;
+            border-left: 1px solid #dff0ff
+        }
+
+        span {
+            width:100%;
+        }
+        .thumbnail {
+            float:left;
+            margin: 3px;
+            padding: 3px;
+            border: 1px solid #dff0ff
+        }
+        ul{
+            list-style:none;
+            margin:0;
+            padding:0;
+            
+        }
+        li{
+            padding:0;
+        }
+    </style>
+    <script >
+        $(document).ready(function(){
+            var FuncNum = @(Context.Request.Query["CKEditorFuncNum"]+";")
+                $("#fileExplorer").on("click", "img", function () {
+                    var fileUrl = "/ConservationInforImage/" + $(this).attr("title");
+                    window.opener.CKEDITOR.tools.callFunction(FuncNum, fileUrl);
+                    window.close();
+                }).hover(function(){
+                    $(this).css("cursor","pointer");
+                })
+        })
+    </script>
+</head>
+<body>
+    <div id="fileExplorer">
+        @foreach (var fileInfor in ViewBag.FileInfos)
+        {
+            <div class="thumbnail">
+                <img src="/ConservationInforImage/@fileInfor.Name" alt="thumb" title="@fileInfor.Name" width="120" height="100" />
+                <br/>
+                <span>@fileInfor.Name</span>
+            </div>
+        }
+    </div>
+    
+</body>
+</html>

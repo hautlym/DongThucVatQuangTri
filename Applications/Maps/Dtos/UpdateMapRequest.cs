@@ -8,5 +8,6 @@
         public string Url { get; set; }
         public IFormFile? linkMap { get; set; }
         public string? UpdateBy { get; set; }
+        public string? typeMap { get; set; }
     }
 }

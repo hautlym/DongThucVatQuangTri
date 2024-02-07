@@ -26,5 +26,7 @@ namespace DongThucVatQuangTri.Models.Entities
         public short Status { get; set; }
         public string SecretKey { get; set; }
         public string Role { get; set; }
+
+        
     }
 }

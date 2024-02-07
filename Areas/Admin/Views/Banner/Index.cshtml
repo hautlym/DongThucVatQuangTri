@@ -105,6 +105,9 @@
                             Thứ tự
                         </th>
                         <th>
+                            Đơn vị
+                        </th>
+                        <th>
                             Ngày cập nhật
                         </th>
                         <th>
@@ -145,6 +148,20 @@
                             <td>
                                 <input asp-for="@item.SortOrder" onchange="changeSortOrder(@item.Id,this.value)" type="number" class="form-control" />
                                 @*@Html.DisplayFor(model => item.SortOrder)*@
+                            </td>
+                            <td class="align-middle">
+                                @if (item.typeNationPark == "NationParkNamGiang")
+                                {
+                                    <span>Nam Giang</span>
+                                }
+                                else if (item.typeNationPark == "NationParkMuongTe")
+                                {
+                                    <span>Mường Tè</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
                             </td>
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.UpdatedAt)

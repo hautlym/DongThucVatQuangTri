@@ -1,0 +1,91 @@
+﻿@using DongThucVatQuangTri.Applications.ConservationAreas.Dtos;
+@using System.Security.Claims;
+@model UpdateConservationAreaRequest
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Sửa thông tin khu bảo tồn";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@section Scripts{
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"] </h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
+    </ol>
+    <div style="margin: 20px 0;">
+        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách khu bảo tồn</a>
+    </div>
+    <div class="row">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <div class="form-group">
+                        <label asp-for="NameConservation" class="control-label">Tên khu bảo tồn:</label>
+                        <input asp-for="NameConservation" class="form-control" />
+                        <span asp-validation-for="NameConservation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label">Địa chỉ:</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">Email:</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label">Số điện thoại:</label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Image" class="control-label">Hình ảnh:</label>
+                        <input type="file" asp-for="Image" class="form-control" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"> Nội dung:</label>
+                        <textarea asp-for="Description" id="editor" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="linkUrl" class="control-label">Hình ảnh:</label>
+                        @if (!String.IsNullOrEmpty(Model.linkUrl))
+                        {
+                            <img style="height: 250px;width:250px; display:block;" src="/ConservationArea/@Model.linkUrl" alt="..." class="img-thumbnail">
+                            <div class="form-check  ">
+                                <input asp-for="IsDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Xóa ảnh
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <img style="height: 250px;width:250px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mt-2">
+                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

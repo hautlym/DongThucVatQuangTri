@@ -48,7 +48,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 keyword = keyword,
                 loai = loai,
                 typeNationPark = User.FindFirstValue(ClaimTypes.Role)
-        };
+            };
             if (loai == 1)
             {
                 ViewBag.Loai = "Động Vật";
@@ -133,7 +133,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
 
             var result = await _manageSpecies.getItemById(id);
-            if (!HelperMethod.CheckUser(result.CreatedBy, User))
+            if (!HelperMethod.CheckUser(result.TypeNationPark, User))
             {
                 TempData["error"] = "Bạn không được quyền chỉnh sửa";
                 return RedirectToAction("Index", new { loai = result.Loai });
@@ -223,7 +223,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", new { loai = LoaiDtv });
             var item = await _manageSpecies.getItemById(Id);
-            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            if (!HelperMethod.CheckUser(item.TypeNationPark, User))
             {
                 TempData["error"] = "Bạn không được quyền xóa";
                 return RedirectToAction("Index", new { loai = item.Loai });
@@ -242,7 +242,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
             var item = await _manageSpecies.getItemById(request.Id);
-            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            if (!HelperMethod.CheckUser(item.TypeNationPark, User))
             {
                 return Json(new { success = false, message = "Bạn không có quyền thay đổi" });
             }

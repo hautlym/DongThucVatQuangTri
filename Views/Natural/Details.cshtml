@@ -2,11 +2,16 @@
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
+@using Microsoft.AspNetCore.Http
+
 @model DetailsModels
 
 @{
     ViewData["Title"] = "Thông tin loài";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string vqg = Context.Session.GetString("NationPark");
 }
 @section CilentScript{
     <script>
@@ -132,15 +137,15 @@
                                 }
                                 <tr>
                                     <th>Họ: </th>
-                                    <td> @itemHo.Name</td>
+                                    <td> @itemHo?.Name</td>
                                 </tr>
                                 <tr>
                                     <th>Bộ: </th>
-                                    <td> @ItemBo.Name</td>
+                                    <td> @ItemBo?.Name</td>
                                 </tr>
                                 <tr>
                                     <th>Lớp: </th>
-                                    <td>@itemLop.Name </td>
+                                    <td>@itemLop?.Name </td>
                                 </tr>
                                 @*     <tr>
                                 <th>Phân bố: </th>
@@ -148,7 +153,7 @@
                                 </tr> *@
                                 <tr>
                                     <th>Ngành: </th>
-                                    <td> @itemNganh.Name</td>
+                                    <td> @itemNganh?.Name</td>
                                 </tr>
                                 <tr>
                                     <th>Mức độ bảo tồn IUCN: </th>
@@ -177,7 +182,7 @@
                 </div>
             </div>
             <div class="accordion " id="accordionPanelsStayOpenExample">
-                <div class="accordion-item border-0 border-bottom">
+                <div class="accordion-item border-0 border-bottom" id="modeNationParkMuongTe">
                     <h2 class="accordion-header mb-1" id="panelsStayOpen-headingOne">
                         <button class="accordion-button collapsed p-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                             <h3><span>Thông tin tại BQL rừng phòng hộ Nam Giang <span></span></span></h3>
@@ -250,7 +255,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item border-0 border-bottom">
+                <div class="accordion-item border-0 border-bottom" id="modeNationParkNamGiang">
                     <h2 class="accordion-header mb-1" id="panelsStayOpen-headingTwo">
                         <button class="accordion-button collapsed p-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
                             <h3><span>Thông tin tại BQL rừng phòng hộ Mường Tè <span></span></span></h3>
@@ -390,3 +395,10 @@
 
         </div><!--end duantieubieu-->
     </div><!--end content-->
+    <script>
+        if ('@vqg' != "All") {
+            var select = document.getElementById("mode" + '@vqg')
+            console.log(select)
+            select.style.display = "none";
+        }
+    </script>

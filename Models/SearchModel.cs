@@ -15,6 +15,6 @@ namespace DongThucVatQuangTri.Models
         public int sdvn { get; set; } 
         public int ndcp { get; set; } 
         public int nd64cp { get; set; } 
-        public int vqg { get; set; }
+        public string? vqg { get; set; }
     }
 }

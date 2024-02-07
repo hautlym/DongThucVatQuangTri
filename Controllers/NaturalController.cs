@@ -35,6 +35,11 @@ namespace DongThucVatQuangTri.Controllers
 
         public async Task<IActionResult> Index(SearchModel searchModel, int PageIndex = 1, int PageSize = 20)
         {
+            var typeNationPark = HttpContext.Session.GetString("NationPark");
+            if (String.IsNullOrEmpty(searchModel.vqg))
+            {
+                searchModel.vqg = typeNationPark;
+            }
             var request = new getSpeciesPublicRequest()
             {
                 PageIndex = PageIndex,
@@ -50,7 +55,7 @@ namespace DongThucVatQuangTri.Controllers
                 id_ho = searchModel.id_ho,
                 id_lop = searchModel.id_lop,
                 id_nganh = searchModel.id_nganh,
-                vqg = searchModel.vqg,
+                vqg = searchModel.vqg == "All" ? "" : searchModel.vqg,
                 status = 1
             };
 
@@ -103,7 +108,8 @@ namespace DongThucVatQuangTri.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int Id)
         {
-            var result = await _manageSpecies.getItemById(Id);
+            var result1 = await _manageSpeciesNationPark.getItemById(Id);
+            var result = await _manageSpecies.getItemById(result1.IdDtvLoai);
             var loai = result.Loai;
             var item = (await _manageBranch.getAllItem()).Where(x => x.Loai == loai).Where(x => x.Status == 1).ToList();
 

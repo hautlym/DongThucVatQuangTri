@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using DongThucVatQuangTri.Applications.Enums;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,9 +46,9 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">@User.FindFirst(ClaimTypes.GivenName).Value</a></li>
+                    <li><a class="dropdown-item" href="#!">@User.FindFirstValue(ClaimTypes.GivenName)</a></li>
                     <li><a class="dropdown-item" href="/Home/Index"><i class="fa-solid fa-house"></i> Website</a></li>
-                    <li><a class="dropdown-item" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></li>
+                    <li><a class="dropdown-item" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirstValue(ClaimTypes.NameIdentifier)"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li>
                         <form method="post" asp-controller="User" asp-action="Logout">
@@ -59,7 +60,7 @@
         </ul>
     </nav>
     <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
+        <div id="layoutSidenav_nav" style="width:250px;">
             <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
@@ -71,7 +72,7 @@
                         <div class="sb-sidenav-menu-heading">Danh mục quản lý</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
-                            Quản lý User
+                            Quản lý người dùng
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
@@ -88,8 +89,6 @@
                                 <a class="nav-link" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">Thông tin User</a>
                             </nav>
                         </div>
-                        @if (User.FindFirst(ClaimTypes.Role).Value.Contains("Admin"))
-                        {
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fa-brands fa-product-hunt"></i></div>
                                 Banner
@@ -107,13 +106,11 @@
                                     </nav>
                                 </nav>
                             </div>
-
-                        }
                         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                         {
                             <a class="nav-link collapsed" asp-controller="Role" asp-action="Index">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-sitemap"></i></div>
-                                Nhóm quyền
+                                Nhóm người dùng
                                 <div class="sb-sidenav-collapse-arrow"></div>
                             </a>
                         }
@@ -130,11 +127,30 @@
                         <div class="collapse" id="collapseMap" aria-labelledby="headingTen" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Map">Danh sách</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="Map">Thêm mới</a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map" asp-route-type="@typeMap.TopographicMaps">Bản đồ địa hình </a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map" asp-route-type="@typeMap.ClimateMap">Bản đồ khí hậu </a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map" asp-route-type="@typeMap.SoilMap">Bản đồ thổ nhưỡng</a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map" asp-route-type="@typeMap.EcologicalMap">Bản đồ sinh thái</a>
+                                    <a class="nav-link" asp-action="Index" asp-controller="Map" asp-route-type="@typeMap.ForestStatusMap">Bản đồ hiện trạng rừng</a>
                                 </nav>
                             </nav>
                         </div>
+                         @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                        {
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseConservationArea" aria-expanded="false" aria-controls="collapseConservationArea">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-republican"></i></div>
+                                Khu bảo tồn
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseConservationArea" aria-labelledby="headingThirteen" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" asp-action="Index" asp-controller="ConservationArea">Danh sách</a>
+                                        <a class="nav-link" asp-action="Create" asp-controller="ConservationArea">Thêm mới</a>
+                                    </nav>
+                                </nav>
+                            </div>
+                        }
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Tin tức
@@ -145,9 +161,9 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" asp-action="Index" asp-controller="News">Danh sách</a>
                                     <a class="nav-link" asp-action="Create" asp-controller="News">Thêm mới</a>
-                                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Admin"))
+                                    @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                                     {
-                                        <a class="nav-link" asp-action="Index" asp-controller="NewsCat">Danh mục</a>
+                                        <a class="nav-link" asp-action="Index" asp-controller="NewsCat">Phân loại bài viết</a>
                                     }
                                 </nav>
                             </nav>
@@ -164,11 +180,45 @@
                                     <nav class="sb-sidenav-menu-nested nav">
                                         <a class="nav-link" asp-action="Index" asp-controller="Tour">Danh sách</a>
                                         <a class="nav-link" asp-action="Create" asp-controller="Tour">Thêm mới</a>
+                                        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
+                                        {
+                                            <a class="nav-link" asp-action="Index" asp-controller="TourCat">Phân loại du lịch</a>
+                                        }
                                     </nav>
                                 </nav>
                             </div>
-                           
-                            
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEcoSafety" aria-expanded="false" aria-controls="collapseEcoSafety">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-helmet-safety"></i></div>
+                                Tin an toàn du lịch 
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseEcoSafety" aria-labelledby="headingTen" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" asp-action="Index" asp-controller="EcotourismSafety">Danh sách</a>
+                                        <a class="nav-link" asp-action="Create" asp-controller="EcotourismSafety">Thêm mới</a>
+                                    </nav>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseConservation" aria-expanded="false" aria-controls="collapseConservation">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-newspaper"></i></div>
+                                Tin bảo tồn
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseConservation" aria-labelledby="headingEleven" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" asp-action="Index" asp-controller="ConservationInfor">Danh sách</a>
+                                        <a class="nav-link" asp-action="Create" asp-controller="ConservationInfor">Thêm mới</a>
+                                    </nav>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" asp-action="Index" asp-controller="Contact" >
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-envelope"></i></div>
+                                Phản hồi
+                                <div class="sb-sidenav-collapse-arrow"></div>
+                            </a>
+                          
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducer" aria-expanded="false" aria-controls="collapseProducer">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-hippo"></i></div>
                                 Động vật
@@ -219,7 +269,7 @@
                 </div>
             </nav>
         </div>
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" style="padding-left: 250px;">
             <main>
                 @RenderBody()
             </main>

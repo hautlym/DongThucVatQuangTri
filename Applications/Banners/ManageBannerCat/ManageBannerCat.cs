@@ -91,6 +91,7 @@ namespace DongThucVatQuangTri.Applications.Banners.ManageBannerCat
                 Language = bannerCat.Language,
                 IdRelated = bannerCat.IdRelated,
                 CreatedAt = bannerCat.CreatedAt,
+                
             }).ToListAsync();
             return data;
         }

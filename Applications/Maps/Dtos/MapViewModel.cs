@@ -6,6 +6,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string linkMap { get; set; }
+        public int? typeMap { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? CreateBy { get; set; }

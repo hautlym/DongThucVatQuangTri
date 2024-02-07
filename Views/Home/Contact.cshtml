@@ -1,0 +1,212 @@
+﻿@model DongThucVatQuangTri.Applications.Contacts.Dtos.CreateContactRequest
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string vqg = Context.Session.GetString("NationPark");
+}
+<style>
+    .contact-content
+{
+    margin:50px 160px;
+}
+.contact-description
+{
+    text-align: center;
+
+}
+.contact-form
+{
+    margin: 50px 165px;
+}
+.contact-form_wrap   
+{
+    display: flex;
+}
+.contact-form_name
+{
+    width: 50%;
+    margin-right: 10px;
+}
+.contact-form_email
+{
+    width: 50%;
+    margin-left: 10px;
+}
+textarea,
+input
+{
+    width: 100%;
+    margin: 10px 0 10px;
+    height: 40px;
+    padding-left: 10px;
+    background-color: #F7F7F7;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}
+.contact-form_content input
+{
+    height: 150px;
+    padding-bottom: 100px;
+}
+.submit-form
+{
+    background-color: black;
+    color: white;
+}
+.submit-form:hover
+{
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+
+/* Responsive */
+/* Tablet */
+@@media (min-width:740px) and (max-width:1023px)
+{
+    .contact-form,
+    .contact-content
+    {
+        margin:  20px 5px;
+    }
+}
+/* Moblie */
+@@media (max-width:739px)
+{
+    .contact-form,
+    .contact-content
+    {
+        margin:  20px 5px;
+    }
+    .contact-form_wrap
+    {
+        display: block;
+    }
+
+    .contact-form_email,
+    .contact-form_name
+    {
+        width: 100%;
+        margin: 0;
+    }
+}
+</style>
+@section CilentScript{
+    @if (TempData["success"] != null)
+    {
+        <script type="text/javascript">
+            toastr.info('@TempData["success"]', "Thành công", {
+                timeOut: 5e3,
+                closeButton: !0,
+                debug: !1,
+                newestOnTop: !0,
+                progressBar: !0,
+                positionClass: "toast-top-right",
+                preventDuplicates: !0,
+                onclick: null,
+                showDuration: "300",
+                hideDuration: "1000",
+                extendedTimeOut: "1000",
+                showEasing: "swing",
+                hideEasing: "linear",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                tapToDismiss: !1,
+            })
+        </script>
+    }
+    @if (TempData["failed"] != null)
+    {
+        <script type="text/javascript">
+            toastr.error('@TempData["failed"]', "Thất bại", {
+                timeOut: 5e3,
+                closeButton: !0,
+                debug: !1,
+                newestOnTop: !0,
+                progressBar: !0,
+                positionClass: "toast-top-right",
+                preventDuplicates: !0,
+                onclick: null,
+                showDuration: "300",
+                hideDuration: "1000",
+                extendedTimeOut: "1000",
+                showEasing: "swing",
+                hideEasing: "linear",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                tapToDismiss: !1,
+            })
+        </script>
+    }
+}
+<div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" />
+</div>
+
+<div class="contact-content">
+    <div class="contact-description">
+        <h4>GỬI THÔNG TIN</h4>
+        Bạn hãy điền nội dung tin nhắn vào form dưới đây và gửi cho chúng tôi. Chúng tôi sẽ trả lời bạn sau khi nhận được.
+    </div>
+    <div class="contact-form">
+        <form asp-action="ContactPost" asp-controller="Home" method="post">
+            <div class="contact-form_wrap">
+                <div class="contact-form_name">
+                    <div class="form_name_title">
+                        Họ và tên
+                    </div>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="contact-form_email">
+                    <div class="form-email_title">
+                        Email
+                    </div>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="contact-form_phone">
+                <div class="form-phone_title">
+                    Điện thoại
+                </div>
+                <input asp-for="NumberPhone" class="form-control" />
+                <span asp-validation-for="NumberPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="typeNationPark" class="control-label">Rừng phòng hộ: </label>
+                <select onchange="zoomMap()" asp-for="typeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                    @{
+                        var typeNationPark = vqg;
+                    }
+                    @if (typeNationPark == "NationParkNamGiang")
+                    {
+                        <option value="NationParkNamGiang">RPH Nam Giang</option>
+                    }
+                    else if (typeNationPark == "NationParkMuongTe")
+                    {
+                        <option value="NationParkMuongTe">RPH Mường Tè</option>
+                    }
+                    else
+                    {
+                        <option value="NationParkNamGiang">RPH Nam Giang</option>
+                        <option value="NationParkMuongTe">RPH Mường Tè</option>
+                    }
+                </select>
+            </div>
+            <div class="contact-form_content">
+                <div class="form-content-title">
+                    Nội dung
+                </div>
+                <textarea type="text" required asp-for="Message" placeholder="Nhập nội dung liên hệ" style="height:200px;"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <input type="submit" value="GỬI TIN NHẮN"class="submit-form btn btn-primary">
+        </form>
+    </div>
+</div>
+

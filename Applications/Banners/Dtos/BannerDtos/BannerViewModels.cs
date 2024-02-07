@@ -20,5 +20,6 @@
         public DateTime? UpdatedAt { get; set; }
         public string Language { get; set; }
         public int? IdRelated { get; set; }
+        public string? typeNationPark { get; set; }
     }
 }
