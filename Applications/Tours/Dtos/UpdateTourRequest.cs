@@ -15,5 +15,6 @@
         public short? Status { get; set; }
         public string? Source { get; set; }
         public string? typeNationPark { get; set; }
+        public int? TourCatId { get; set; }
     }
 }

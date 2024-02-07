@@ -17,5 +17,6 @@
         public string Source { get; set; }
         public string? typeNationPark { get; set; }
         public string? NameCreate { get; set; }
+        public int? TourCatId { get; set; }
     }
 }

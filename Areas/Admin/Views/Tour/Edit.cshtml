@@ -53,6 +53,11 @@
                         <input asp-for="ShortDescription" class="form-control" />
                         <span asp-validation-for="ShortDescription" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="TourCatId" class="control-label">Danh mục du lịch: </label>
+                        <select asp-for="TourCatId" class="form-control" id="dropdown" asp-items="@ViewBag.Categories" name="TourCatId">
+                        </select>
+                    </div>
                     <input type="hidden" asp-for="linkUrl" />
                     <div class="form-group">
                         <label asp-for="Status" class="control-label">Trạng thái: </label>
