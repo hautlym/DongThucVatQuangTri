@@ -7,11 +7,13 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
 using DongThucVatQuangTri.Applications.Banners.ManageBanner;
 using DongThucVatQuangTri.Applications.Banners.ManageBannerCat;
 using DongThucVatQuangTri.Applications.Common;
+using DongThucVatQuangTri.Applications.Common.Email;
 using DongThucVatQuangTri.Applications.Common.FileStorageEdit;
 using DongThucVatQuangTri.Applications.ConservationAreas;
 using DongThucVatQuangTri.Applications.ConservationInfors;
 using DongThucVatQuangTri.Applications.Contacts;
 using DongThucVatQuangTri.Applications.EcotourismSafeties;
+using DongThucVatQuangTri.Applications.GroupUsers;
 using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.Maps;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
@@ -28,6 +30,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -105,6 +108,7 @@ builder.Services.AddAuthorization(options =>
 });
 //builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/admin/Login/Index");
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+//builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IStorageService, FileStorageService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IManageBanner, ManageBanner>();
@@ -129,6 +133,9 @@ builder.Services.AddTransient<IManageEcotourismSafety, ManageEcotourismSafety>()
 builder.Services.AddTransient<IManageTourCat, ManageTourCat>();
 builder.Services.AddTransient<IManageConservationArea, ManageConservationArea>();
 builder.Services.AddTransient<IManageContact, ManageContact>();
+builder.Services.AddTransient<IEmailSender, SendMailService>();
+builder.Services.AddTransient<IManageGroupUser, ManageGroupUser>();
+
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSession(options =>
@@ -137,6 +144,18 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true; 
 });
+builder.Services.Configure<IdentityOptions>(option =>
+{
+    option.Password.RequiredLength = 8;
+    option.Password.RequireUppercase = true;
+    option.Password.RequireLowercase = true;
+    option.Password.RequireDigit = true;
+    option.Password.RequireNonAlphanumeric = true;
+    option.User.RequireUniqueEmail = true;
+    option.SignIn.RequireConfirmedEmail = false;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+    option.SignIn.RequireConfirmedPhoneNumber = false;
+});
+builder.Services.Configure<SecurityStampValidatorOptions>(o => o.ValidationInterval = TimeSpan.FromHours(10));
 
 builder.Services.Configure<IISServerOptions>(options =>
 {
@@ -150,6 +169,9 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 2147483648; // 2GB
 });
+builder.Services.AddOptions();                                        // Kích hoạt Options
+var mailsettings = builder.Configuration.GetSection("MailSettings");  // đọc config
+builder.Services.Configure<MailSettings>(mailsettings);               // đăng ký để Inject
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

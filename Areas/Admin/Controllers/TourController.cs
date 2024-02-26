@@ -2,7 +2,6 @@
 using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Tours;
 using DongThucVatQuangTri.Applications.Tours.Dtos;
-using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,13 +15,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
     public class TourController : BaseController
     {
         private readonly IManageTour _manageTour;
-        private readonly IManageTourCat _manageTourCat;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public TourController(IManageTour manageTour, IWebHostEnvironment webHostEnvironment, IManageTourCat manageTourCat)
+        public TourController(IManageTour manageTour, IWebHostEnvironment webHostEnvironment)
         {
-            _manageTour = manageTour;
+           _manageTour= manageTour;
             _webHostEnvironment = webHostEnvironment;
-            _manageTourCat = manageTourCat;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
@@ -52,24 +49,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var categories = await _manageTourCat.GetAll();
-            ViewBag.Categories = categories.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
             return View();
         }
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] CreateTourRequest request)
         {
-            var categories = await _manageTourCat.GetAll();
-            ViewBag.Categories = categories.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
+           
             if (!ModelState.IsValid)
                 return View();
             var result = await _manageTour.CreateTour(request);
@@ -86,12 +72,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var result = await _manageTour.getTourById(id);
-            var categories = await _manageTourCat.GetAll();
-            ViewBag.Categories = categories.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
             if (!HelperMethod.CheckUser(result.typeNationPark, User))
             {
                 TempData["error"] = "Bạn không được quyền chỉnh sửa";
@@ -110,7 +90,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     SortOrder = result.SortOrder,
                     Status = result.Status,
                     typeNationPark = result.typeNationPark,
-                    TourCatId = result.TourCatId,
                 };
                 return View(updateRequest);
             }
@@ -120,12 +99,6 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Edit([FromForm] UpdateTourRequest request)
         {
-            var categories = await _manageTourCat.GetAll();
-            ViewBag.Categories = categories.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
             if (!ModelState.IsValid)
             {
                 return View(request);

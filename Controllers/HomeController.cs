@@ -36,7 +36,7 @@ namespace DongThucVatQuangTri.Controllers
         private readonly DongThucVatContext _context;
         public HomeController(ILogger<HomeController> logger, IManageBanner manageBanner, IManageNews manageNews,
             IPublicManageSpecies manageSpecies, IManageTour manageTour, IManageSpeciesNationPark manageSpeciesNationPark,
-            IManageIntroduce manageIntroduce, DongThucVatContext context,IManageContact manageContact)
+            IManageIntroduce manageIntroduce, DongThucVatContext context, IManageContact manageContact)
         {
             _logger = logger;
             _manageBanner = manageBanner;
@@ -95,9 +95,9 @@ namespace DongThucVatQuangTri.Controllers
             ViewBag.Vqg = vqg;
             var data = await _manageSpeciesNationPark.getAllItem();
             data = data.Where(x => !String.IsNullOrEmpty(x.ViDo) && !String.IsNullOrEmpty(x.KinhDo)).ToList();
-            if(vqg != null && vqg!="All")
+            if (vqg != null && vqg != "All")
             {
-                data = data.Where(x=>x.TypeNationPark==vqg).ToList();
+                data = data.Where(x => x.TypeNationPark == vqg).ToList();
             }
             var model = new addressModel()
             {
@@ -106,10 +106,10 @@ namespace DongThucVatQuangTri.Controllers
             };
             return View(model);
         }
-        public async Task<IActionResult> News(string? type , int PageIndex = 1, int PageSize = 5)
+        public async Task<IActionResult> News(string? type, int PageIndex = 1, int PageSize = 5)
         {
             var typeNationPark = HttpContext.Session.GetString("NationPark");
-            if(String.IsNullOrEmpty(type))
+            if (String.IsNullOrEmpty(type))
             {
                 type = typeNationPark;
             }
@@ -117,7 +117,7 @@ namespace DongThucVatQuangTri.Controllers
             {
                 PageIndex = PageIndex,
                 PageSize = PageSize,
-                typeNationPark = type == "All"?"": type
+                typeNationPark = type == "All" ? "" : type
             };
             var listNew = await _manageNews.PublicNewsPaging(request);
             var ListNews = listNew.ResultObj.Items.Where(x => x.Status == 1).OrderByDescending(x => x.PostAt).ToList();
@@ -136,7 +136,7 @@ namespace DongThucVatQuangTri.Controllers
             return View(item);
         }
         [HttpGet]
-        public async Task<IActionResult> Tour(string? type , int PageIndex = 1, int PageSize = 12)
+        public async Task<IActionResult> Tour(string? type, int PageIndex = 1, int PageSize = 12)
         {
             var typeNationPark = HttpContext.Session.GetString("NationPark");
             if (String.IsNullOrEmpty(type))
@@ -181,7 +181,7 @@ namespace DongThucVatQuangTri.Controllers
                 return RedirectToAction("Contact"); ;
             }
             var kq = await _manageContact.Create(request);
-            if (kq>0)
+            if (kq > 0)
             {
                 TempData["success"] = "Phản hồi thành công";
                 return RedirectToAction("Contact");
@@ -190,15 +190,17 @@ namespace DongThucVatQuangTri.Controllers
             return RedirectToAction("Contact"); ;
         }
         [HttpGet]
-        public async Task<IActionResult> introduce(string typeNationPak = "All")
+        public async Task<IActionResult> introduce(string? typeNationPak)
         {
+            var typeNationPark = HttpContext.Session.GetString("NationPark");
+            if (string.IsNullOrEmpty(typeNationPak))
+            {
+                typeNationPak = typeNationPark;
+            }
             var data = await _manageIntroduce.getAll();
             var intro = data.Where(x => x.typeNationPak == typeNationPak).FirstOrDefault();
-            if (intro == null)
-            {
-                intro = data.FirstOrDefault();
-            }
             return View(intro);
+
         }
         //[HttpGet("{Id}")]
         [HttpGet]

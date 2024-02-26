@@ -72,6 +72,7 @@ namespace DongThucVatQuangTri.Controllers
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
+                Selected = x.Id == searchModel.id_nganh
             });
             var data = await _manageSpecies.GetAlllPaging(request);
             ViewBag.Keyword = searchModel.keyword;
@@ -88,21 +89,26 @@ namespace DongThucVatQuangTri.Controllers
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
-                Selected= x.Key.ToString().Equals(searchModel.icun)
+                Selected= x.Key==searchModel.icun
             });
             ViewBag.MucDoBaoTonSDVN = MucDoBaoTon.MuDoBaoTonSDVN.Select(x => new SelectListItem()
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
-                Selected = x.Key.ToString().Equals(searchModel.sdvn)
+                Selected = x.Key==searchModel.sdvn
             });
             ViewBag.MucDoBaoTonNDCP = MucDoBaoTon.MuDoBaoTonNDCP[searchModel.IdLoai].Select(x => new SelectListItem()
             {
                 Text = x.Value,
                 Value = x.Key.ToString(),
-                Selected = x.Key.ToString().Equals(searchModel.ndcp)
+                Selected = x.Key==searchModel.ndcp
             });
-
+            ViewBag.MucDoBaoTonND64CP = MucDoBaoTon.MuDoBaoTonNDCP[searchModel.IdLoai].Select(x => new SelectListItem()
+            {
+                Text = x.Value,
+                Value = x.Key.ToString(),
+                Selected = x.Key == searchModel.nd64cp
+            });
             return View(data.ResultObj);
         }
         [HttpGet]

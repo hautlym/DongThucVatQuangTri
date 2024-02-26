@@ -53,8 +53,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Author = request.Author,
                 Source = request.Source,
                 CreatedAt = DateTime.Now,
-                TypeNationPark = request.typeNationPark,
-                TourCatId = request.TourCatId
+                TypeNationPark = request.typeNationPark
             };
             _context.tour.Add(item);
             await _context.SaveChangesAsync();
@@ -112,8 +111,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                     Source = request.b.Source,
                     CreatedAt = request.b.CreatedAt,
                     UpdatedAt = request.b.UpdatedAt,
-                    typeNationPark = request.b.TypeNationPark,
-                    TourCatId = request.b.TourCatId,
+                    typeNationPark = request.b.TypeNationPark
                 }).ToListAsync();
             var pageResult = new PageResult<TourViewModel>
             {
@@ -150,8 +148,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Author = request.b.Author,
                 CreatedAt = request.b.CreatedAt,
                 UpdatedAt = request.b.UpdatedAt,
-                typeNationPark = request.b.TypeNationPark,
-                TourCatId=request.b.TourCatId
+                typeNationPark = request.b.TypeNationPark
             }).FirstOrDefaultAsync();
             return NewsVm;
         }
@@ -197,8 +194,7 @@ namespace DongThucVatQuangTri.Applications.Tours
                 Source = request.b.Source,
                 CreatedAt = request.b.CreatedAt,
                 UpdatedAt = request.b.UpdatedAt,
-                typeNationPark = request.b.TypeNationPark,
-                TourCatId=request.b.TourCatId,
+                typeNationPark = request.b.TypeNationPark
                 
             }).ToListAsync();
             int totalRow = tempdata.Count;
@@ -246,7 +242,6 @@ namespace DongThucVatQuangTri.Applications.Tours
             news.Status = request.Status;
             news.UpdatedAt = DateTime.Now;
             news.TypeNationPark = request.typeNationPark;
-            news.TourCatId = request.TourCatId;
             _context.tour.Update(news);
             return await _context.SaveChangesAsync();
         }

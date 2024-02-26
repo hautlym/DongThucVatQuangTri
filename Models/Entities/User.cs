@@ -27,6 +27,6 @@ namespace DongThucVatQuangTri.Models.Entities
         public string SecretKey { get; set; }
         public string Role { get; set; }
 
-        
+        public int? GroupUserId { get; set; }
     }
 }

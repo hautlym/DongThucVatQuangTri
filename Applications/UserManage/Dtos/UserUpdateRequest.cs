@@ -17,5 +17,6 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
         public string Address { get; set; }
         public short Status { get; set; }
         public string Roles { get; set; }
+        public int? GroupUserId { get; set; }
     }
 }

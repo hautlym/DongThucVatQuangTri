@@ -8,20 +8,23 @@ using System.Security.Claims;
 using DongThucVatQuangTri.Applications.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DongThucVatQuangTri.Applications.Roles;
+using DongThucVatQuangTri.Applications.GroupUsers;
+using DongThucVatQuangTri.Models.Entities;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace DongThucVatQuangTri.Areas.Admin.Controllers
 {
     [Area("admin")]
-    
-
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IManageRole _manageRole;
-        public UserController(IUserService userService, IManageRole manageRole)
+        private readonly IManageGroupUser _manageGroupUser;
+        public UserController(IUserService userService, IManageRole manageRole,IManageGroupUser manageGroupUser)
         {
             _userService = userService;
             _manageRole = manageRole;
+            _manageGroupUser = manageGroupUser;
         }
         [Authorize(Policy = "AdministatorOrNationParkPolicy")]
         public async Task<IActionResult> Index(string keyword,string Roles, int PageIndex = 1, int PageSize = 10)
@@ -125,10 +128,16 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             var role =await _manageRole.getAll();
+            var groupUser =await _manageGroupUser.getAll();
             ViewBag.Roles = role.Select(x => new SelectListItem()
             {
                 Text = x.Name,
                 Value = x.Value.ToString(),
+            });
+            ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
             });
             return View();
         }
@@ -137,10 +146,18 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Create(RegisterRequest request)
         {
             var role = await _manageRole.getAll();
+            var groupUser = await _manageGroupUser.getAll();
+            ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = request.GroupUserId == x.Id
+            });
             ViewBag.Roles = role.Select(x => new SelectListItem()
             {
                 Text = x.Name,
                 Value = x.Value.ToString(),
+                Selected = request.Roles == x.Value
             });
             if (!ModelState.IsValid)
                 return View();
@@ -152,6 +169,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             if (result.IsSuccessed)
             {
                 TempData["result"] = "Thêm tài khoản thành công";
+
                 return RedirectToAction("Index");
             }
             else
@@ -182,6 +200,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Text = x.Name,
                 Value = x.Value.ToString(),
             });
+            var groupUser = await _manageGroupUser.getAll();
+            ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            });
             var result = await _userService.GetById(id);
             if (result.IsSuccessed)
             {
@@ -195,6 +219,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     Gender = user.Gender,
                     Address = user.Address,
                     Roles = user.Roles,
+                    GroupUserId = user.GroupUserId,
                     Status = Convert.ToInt16(user.Status.Contains("Kích hoạt") ? 1 : user.Status.Contains("Khóa") ? 0 : -1),
                 };
                 return View(updateRequest);
@@ -209,6 +234,14 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 Text = x.Name,
                 Value = x.Value.ToString(),
+                Selected = x.Value == request.Roles
+            });
+            var groupUser = await _manageGroupUser.getAll();
+            ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = x.Id == request.GroupUserId
             });
             if (!ModelState.IsValid)
                 return View(request);
@@ -247,8 +280,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Details(Guid Id)
         {
             var result = await _userService.GetById(Id);
+            var groupUser =await _manageGroupUser.getAll();
+            var user = result.ResultObj;
             var role = result.ResultObj.Roles;
             result.ResultObj.Roles = Permittion.Roles[role];
+            result.ResultObj.GroupUserName = groupUser.Where(x => x.Id == user.GroupUserId).Select(x=>x.Name).FirstOrDefault();
             return View(result.ResultObj);
         }
     }

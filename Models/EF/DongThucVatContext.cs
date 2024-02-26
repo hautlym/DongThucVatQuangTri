@@ -27,6 +27,7 @@ namespace DongThucVatQuangTri.Models.EF
         public DbSet<ConservationArea> conservationAreas { get; set; }
         public DbSet<ConservationInfor> conservationInfors { get; set; }
         public DbSet<EcotourismSafety> ecotourismSafeties { get; set; }
+        public DbSet<GroupUser> groupUsers { get; set; }
         public DbSet<tourCat> tourCats { get; set; }
         public DbSet<Contact> contacts { get; set; }
         public DbSet<AppUser> appUsers { get; set; }

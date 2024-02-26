@@ -3,15 +3,22 @@ using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.UserManage.Dtos;
 using DongThucVatQuangTri.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,11 +29,18 @@ namespace DongThucVatQuangTri.Applications.UserManage
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _config;
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration config)
+        //private readonly IActionContextAccessor _actionContextAccessor;
+        //private readonly IUrlHelperFactory _urlHelperFactory;
+        //private readonly IEmailSender _emailSender;
+        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration config
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
+            //_actionContextAccessor = actionContextAccessor;
+            //_urlHelperFactory = urlHelperFactory;
+            //_emailSender = emailSender;
         }
 
         public async Task<ApiResult<bool>> AdminChangePassword(Guid id, AdminUpdatePasswordRequest request)
@@ -154,6 +168,9 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 Status = user.Status == 1 ? "Kích hoạt" : user.Status == 0 ? "Khóa" : "None",
                 Phone = user.PhoneNumber,
                 Roles = user.Roles,
+                GroupUserId = user.GroupUserId,
+                
+                
             };
             return new ApiSuccessResult<UserViewModels>(userVm);
         }
@@ -184,6 +201,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
                     LastSigninedTime = user.LastSigninedTime,
                     Status = user.Status == 1 ? "Kích hoạt" : user.Status == 0 ? "Khóa" : "None",
                     Phone = user.PhoneNumber,
+                    GroupUserId = user.GroupUserId,
                 }).ToListAsync();
             var PageResult = new PageResult<UserViewModels>()
             {
@@ -216,11 +234,23 @@ namespace DongThucVatQuangTri.Applications.UserManage
                 Avatar = request.Avatar,
                 Status = request.Status,
                 Roles = request.Roles,
+                GroupUserId = request.GroupUserId,
                 IsAdmin = request.Roles.Contains("Admin") ? Convert.ToInt16(1) : Convert.ToInt16(0),
             };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
+                //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                //ActionContext actionContext = _actionContextAccessor.ActionContext;
+                //// Tạo IUrlHelper từ IUrlHelperFactory
+                //IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
+                //string scheme = urlHelper.ActionContext.HttpContext.Request.Scheme;
+
+                //// Tạo URL cho action "MyAction" trong controller "MyController"
+                //var confirmationLink = urlHelper.Action("VerifyEmail", "Login", new { userId = user.Id, code = token }, scheme);
+                //await _emailSender.SendEmailAsync(request.Email, "Xác thực Email", $"Hãy xác nhận địa chỉ email bằng cách <a href='{confirmationLink}'>Bấm vào đây</a>.");
+
                 return new ApiSuccessResult<bool>();
             }
             return new ApiErrorResult<bool>("Đăng ký không thành công");
@@ -241,6 +271,7 @@ namespace DongThucVatQuangTri.Applications.UserManage
             user.Status = request.Status;
             user.UpdatedAt = DateTime.Now;
             user.Roles = request.Roles;
+            user.GroupUserId = request.GroupUserId;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {

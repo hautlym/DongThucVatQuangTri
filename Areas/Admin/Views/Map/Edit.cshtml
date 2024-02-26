@@ -35,7 +35,7 @@
     <div class="row">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="row justify-content-center">
+            <div class="row">
                 <div class="col-md-6">
                     <input type="hidden" asp-for="Id" class="form-control" />
                     <input type="hidden" asp-for="typeMap" class="form-control" />
@@ -57,9 +57,13 @@
                     </div>
                     
                 </div>
-                
+                <div class="col-md-6">
+                   @*  <div class="form-group">
+                        <label asp-for="linkMap" class="control-label">File:</label>
+                    </div> *@
+                </div>
             </div>
-            <div class="row text-center">
+            <div class="row">
                 <div class="form-group mt-2">
                     <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
                     <button asp-action="Index" asp-route-type="@ViewBag.typeMap" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>

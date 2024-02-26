@@ -23,5 +23,7 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
         public string Status { get; set; }
         
         public string Roles { get; set; }
+        public int? GroupUserId { get; set; }
+        public string? GroupUserName { get; set; }
     }
 }

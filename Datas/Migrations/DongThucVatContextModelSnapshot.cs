@@ -91,6 +91,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupUserId")
+                        .HasColumnType("int");
+
                     b.Property<short>("IsAdmin")
                         .HasColumnType("smallint");
 
@@ -1099,6 +1102,26 @@ namespace DongThucVatQuangTri.Datas.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("email_letter", "dongthucvat");
+                });
+
+            modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.GroupUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("groupUsers");
                 });
 
             modelBuilder.Entity("DongThucVatQuangTri.Models.Entities.ImageGeneral", b =>
@@ -2208,6 +2231,9 @@ namespace DongThucVatQuangTri.Datas.Migrations
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)")
                         .HasColumnName("gender");
+
+                    b.Property<int?>("GroupUserId")
+                        .HasColumnType("int");
 
                     b.Property<short>("IsAdmin")
                         .HasColumnType("smallint")

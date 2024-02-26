@@ -18,5 +18,6 @@ namespace DongThucVatQuangTri.Models.Entities
         public short IsAdmin { get; set; }
         public short Status { get; set; }
         public string Roles { get; set; }
+        public int? GroupUserId { get; set; }
     }
 }

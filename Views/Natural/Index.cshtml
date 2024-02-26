@@ -88,7 +88,11 @@
     // });
 </script>
 <script type="text/javascript">
-
+    
+    function CallDownLoad() { 
+        if (idNganh != null) { 
+        }
+    }
     function getListLop(idNganh) {
         $(".LopSearch").show();
         $.ajax({
@@ -298,7 +302,7 @@
                             <div class="col-md-3">
                                 @if (idLoai == 1)
                                 {
-                                    <select name="nd63cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
+                                    <select name="nd64cp" asp-items="@ViewBag.MucDoBaoTonND64CP" class="form-control">
                                         <option value="0">Nghị định 64/ NĐ-CP</option>
                                     </select>
                                 }
