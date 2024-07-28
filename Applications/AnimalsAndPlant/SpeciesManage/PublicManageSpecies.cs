@@ -112,7 +112,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
             }
             var tempdata =await query.Select(x => new SpeciesPublicViewModel()
             {
-                Id = x.b.Id,
+                Id = x.lv.Id,
                 IdDtvHo = x.b.IdDtvHo,
                 NameHo = x.n.Name,
                 Name = x.b.Name,

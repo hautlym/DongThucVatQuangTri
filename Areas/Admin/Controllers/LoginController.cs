@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Text;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
@@ -27,14 +29,17 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
-        public LoginController(IConfiguration configuration, IUserService userService, IEmailSender emailService, UserManager<AppUser> userManager)
+        private readonly IWebHostEnvironment _env;
+        public LoginController(IConfiguration configuration, IUserService userService, IEmailSender emailService, 
+            UserManager<AppUser> userManager, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _userService = userService;
             _emailSender = emailService;
             _userManager = userManager;
+            _env = env;
         }
-
+       
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -125,11 +130,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 ViewBag.ErrorForgotPass = "người dùng không tồn tại vui lòng liên hệ người quản lí";
                 return View();
             }
+           
+            var img = $"{Request.Scheme}://{Request.Host.Value}" + "/images/logo.png";
 
-            var img = $"{Request.Scheme}://{Request.Host.Value}"+ "/images/logo.png"; 
-            
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+           
             var confirmationLink = Url.Action("ResetPassword", "Login", new { userId = user.Id, code = token, Email = email }, Request.Scheme);
             string temapletHTML =
                 $"\r\n<!doctype html>\r\n<html lang=\"en-US\">\r\n\r\n<head>\r\n    <meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\" />\r\n    <title>Quên mật khẩu</title>\r\n    <meta name=\"description\" content=\"Reset Password Email Template.\">\r\n    <style type=\"text/css\">\r\n        a:hover {{text-decoration: underline !important;}}\r\n    </style>\r\n</head>\r\n\r\n<body marginheight=\"0\" topmargin=\"0\" marginwidth=\"0\" style=\"margin: 0px; background-color: #f2f3f8;\" leftmargin=\"0\">\r\n    <!--100% body table-->\r\n    <table cellspacing=\"0\" border=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#f2f3f8\"\r\n        " +
@@ -140,9 +147,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 $"       </tr>\r\n  <tr>\r\n   <td style=\"height:40px;\">&nbsp;</td>\r\n         </tr>\r\n                            </table>\r\n                        </td>\r\n                     </table>\r\n            </td>\r\n    <tr>\r\n                        <td style=\"height:20px;\">&nbsp;</td>\r\n                    </tr>\r\n                         </tr>\r\n    </table>\r\n    <!--/100% body table-->\r\n</body>\r\n\r\n</html>";
 
 
-            await _emailSender.SendEmailAsync(email, "Quên mật khẩu ", temapletHTML);
+             _emailSender.SendEmailAsync(email, "Quên mật khẩu ", temapletHTML);
             return RedirectToAction("NoticeEmail");
         }
+       
         [HttpGet]
         public async Task<IActionResult> ResetPassword(string userId,string code,string Email)
         {

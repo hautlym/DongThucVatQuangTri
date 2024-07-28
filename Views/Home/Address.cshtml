@@ -126,8 +126,8 @@ else
         width: 100%;
     }
 </style>
-@*
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+@* <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="/dataMaps/data/muongte_rrx_wgs84.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
@@ -291,21 +291,21 @@ else
             }
 
 
-            @*   function myInit() {
-            var kkr = L.geoJson(muongtehtr, {
-            style: style,
-            onEachFeature: onEachFeature
-            });
-            var groupoverlays = {
-            "HTR-RG": {
-            "Ranh giới": mtData,
-            "Hiện trạng rừng": kkr,
-            //"Park" : parks,
-            },
+              function myInit() {
+                    var kkr = L.geoJson(muongtehtr, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                    });
+                    var groupoverlays = {
+                    "HTR-RG": {
+                    "Ranh giới": mtData,
+                    "Hiện trạng rừng": kkr,
+                    //"Park" : parks,
+                    },
             };
-            //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
-            L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
-            } *@
+                //    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+             L.control.groupedLayers(basemaps, groupoverlays).addTo(map);
+            }
                                                                         /*show info layers*/
                                                                         var info = L.control({
                     position: 'bottomleft'
