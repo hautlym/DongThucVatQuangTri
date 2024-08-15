@@ -6,7 +6,7 @@
     ViewData["Title"] = "Thêm loài";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
-@section Scripts{
+@section Scripts {
     <script>
         setTimeout(function () {
             $('#msgAlert').fadeOut("slow");
@@ -29,88 +29,114 @@
     }
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Thêm loài @ViewBag.Loai </h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">Thêm loài @ViewBag.Loai </h4>
+    <ol class="breadcrumb mb-4 shadow">
+
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-loai="@idLoai">Quản lý loài @ViewBag.Loai</a></li>
         <li class="breadcrumb-item active">Thêm loài @ViewBag.Loai </li>
     </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh loài  @ViewBag.Loai</a>
-    </div>
-    <div class="row">
-        <form asp-action="Create" asp-route-loai="@idLoai" enctype="multipart/form-data" class="row justify-content-center">
-            <div class="col-md-6">
-                @if (ViewBag.ErrorMsg != null)
-                {
-                    <div id="msgAlert" class="alert alert-danger" role="alert">
-                        @ViewBag.ErrorMsg
-                    </div>
-                }
-                <div class="form-group">
-                    <label asp-for="IdDtvHo" class="control-label"> Họ:</label>
-                    <select asp-for="IdDtvHo" name="IdDtvHo" asp-items="@ViewBag.Categories" class="form-control select2">
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label">Tên tiếng Việt:</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
-                    <input asp-for="NameLatinh" class="form-control" />
-                    <span asp-validation-for="NameLatinh" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Mức độ bảo tồn IUCN:</label>
-                    <div class="d-flex flex-row">
-                        <select asp-for="MucDoBaoTonIucn" name="MucDoBaoTonIucn" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control select2 ">
-                            <option value="0">
-                                <i class="fa-solid fa-arrow-down"></i>
-                                ICUN
-                            </option>
-                        </select>
-                        <select asp-for="MucDoBaoTonSdvn" name="MucDoBaoTonSdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control select2">
-                            <option value="0">Sách đỏ Việt Nam</option>
-                        </select>
-                        <select asp-for="MucDoBaoTonNdcp" name="MucDoBaoTonNdcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control select2">
-                            @if (idLoai == 1)
-                            {
-                                <option value="0">Nghị định 84/ NĐ-CP</option>
-                            }
-                            @if (idLoai == 0)
-                            {
-                                <option value="0">Nghị định 32/ NĐ-CP</option>
-                            }
-                        </select>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="row">
+                <form asp-action="Create" asp-route-loai="@idLoai" enctype="multipart/form-data" class="row justify-content-center">
+                    <div class="col-md-10">
+                        @if (ViewBag.ErrorMsg != null)
+                        {
+                            <div id="msgAlert" class="alert alert-danger" role="alert">
+                                @ViewBag.ErrorMsg
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label asp-for="IdDtvHo" class="control-label col-lg-3"> Họ <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <select asp-for="IdDtvHo" name="IdDtvHo" asp-items="@ViewBag.Categories" class="form-control select2">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Name" class="control-label col-lg-3"> Tên tiếng Việt <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="NameLatinh" class="control-label col-lg-3"> Tên Latinh <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <input asp-for="NameLatinh" class="form-control" />
+                                <span asp-validation-for="NameLatinh" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="MucDoBaoTonIucn" class="control-label col-lg-3"> Mức độ bảo tồn IUCN: <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <select asp-for="MucDoBaoTonIucn" name="MucDoBaoTonIucn" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control select2 ">
+                                    <option value="0">
+                                        <i class="fa-solid fa-arrow-down"></i>
+                                        ICUN
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="MucDoBaoTonIucn" class="control-label col-lg-3"> Mức độ bảo tồn SDVN: <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <select asp-for="MucDoBaoTonSdvn" name="MucDoBaoTonSdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control select2">
+                                    <option value="0">Sách đỏ Việt Nam</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="MucDoBaoTonIucn" class="control-label col-lg-3"> Mức độ bảo tồn NDCP: <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <select asp-for="MucDoBaoTonNdcp" name="MucDoBaoTonNdcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control select2">
+                                    @if (idLoai == 1)
+                                    {
+                                        <option value="0">Nghị định 84/ NĐ-CP</option>
+                                    }
+                                    @if (idLoai == 0)
+                                    {
+                                        <option value="0">Nghị định 32/ NĐ-CP</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                         @if (idLoai == 1)
                         {
-                            <select asp-for="MucDoBaoTonNd64cp" name="MucDoBaoTonNd64cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
-                                <option value="0">Nghị định 64/ NĐ-CP</option>
-                            </select>
+                            <div class="form-group row">
+                                <label asp-for="MucDoBaoTonIucn" class="control-label col-lg-3"> Mức độ bảo tồn ND34CP: <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <select asp-for="MucDoBaoTonNd64cp" name="MucDoBaoTonNd64cp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control">
+                                        <option value="0">Nghị định 64/ NĐ-CP</option>
+                                    </select>
+                                </div>
+                            </div>
                         }
+                        <div class="form-group row">
+                            <label asp-for="Status" class="control-label col-lg-3"> Trạng thái: <span class="text-danger">*</span>:</label>
+                            <div class="col-lg-8">
+                                <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                                    <option value="1">Bật</option>
+                                    <option value="0">Tắt</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group m-2 text-center">
+                            <input type="hidden" asp-for="Loai" value="@idLoai" />
+                            <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                            <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                            <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                            @*      <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
+                            <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
+                        </div>
                     </div>
-
-                </div>
-                <div class="form-group">
-                    <label asp-for="Status" class="control-label">Trạng thái: </label>
-                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
-                        <option value="1">Bật</option>
-                        <option value="0">Tắt</option>
-                    </select>
-                </div>
-                <div class="form-group m-2">
-                    <input type="hidden" asp-for="Loai" value="@idLoai" />
-                    <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
-
-                    @*      <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
-                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
-                </div>
+                </form>
             </div>
-        </form>
+
+        </div>
     </div>
+
 </div>
 
 

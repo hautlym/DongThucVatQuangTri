@@ -3,71 +3,83 @@
 @model CreateConservationAreaRequest
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Thêm tin du lịch";
+    ViewData["Title"] = "Thêm khu bảo tồn";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 @section Scripts{
     <script src="/admin/assets/ckeditor/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor');
-        
     </script>
    
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">@ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"]</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="ConservationArea">Quản lý khu bảo tồn</a></li>
         <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="Tour"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách tin tức</a>
-    </div>
-    <div class="row">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card shadow">
+        <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="NameConservation" class="control-label">Tên khu bảo tồn:</label>
-                        <input asp-for="NameConservation" class="form-control" />
-                        <span asp-validation-for="NameConservation" class="text-danger"></span>
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <div class="form-group row">
+                                <label asp-for="NameConservation" class="control-label col-lg-3"> Tên khu bảo tồn <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <input asp-for="NameConservation" class="form-control" />
+                                    <span asp-validation-for="NameConservation" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Address" class="control-label col-lg-3"> Địa chỉ <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Email" class="control-label col-lg-3"> Email <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <input asp-for="Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Phone" class="control-label col-lg-3"> Số điện thoại <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <input asp-for="Phone" class="form-control" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Image" class="control-label col-lg-3"> Hình ảnh :</label>
+                                <div class="col-lg-8">
+                                    <input type="file" asp-for="Image" class="form-control" />
+                                    <span asp-validation-for="Image" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Description" class="control-label col-lg-3"> Mô tả <span class="text-danger">*</span>:</label>
+                                <div class="col-lg-8">
+                                    <textarea asp-for="Description" id="editor" class="form-control"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Address" class="control-label">Địa chỉ:</label>
-                        <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger"></span>
+                    <div class="row">
+                        <div class="form-group m-2 text-center">
+                            <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Thêm khu bảo tồn </button>
+                            <button type="reset" class="btn btn-secondary" /><i class="fa-solid fa-eraser" style="color: #ffffff;"></i> Reset</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label">Email:</label>
-                        <input asp-for="Email" class="form-control" type="email"/>
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Phone" class="control-label">Số điện thoại:</label>
-                        <input asp-for="Phone" class="form-control" />
-                        <span asp-validation-for="Phone" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Image" class="control-label">Hình ảnh:</label>
-                        <input type="file" asp-for="Image" class="form-control" />
-                        <span asp-validation-for="Image" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="control-label"> Nội dung:</label>
-                        <textarea asp-for="Description" id="editor" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                   
-                </div>
+                </form>
             </div>
-            <div class="row">
-                <div class="form-group m-2">
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Thêm tin </button>
-                    <button type="reset" class="btn btn-secondary" /><i class="fa-solid fa-eraser" style="color: #ffffff;"></i> Reset</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

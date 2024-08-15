@@ -34,6 +34,10 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkMana
         {
             try
             {
+                var checkExist = _context.DtvLoai_VQGs.Where(x => x.IdDtvLoai == request.IdDtvLoai && x.TypeNationPark == x.TypeNationPark).FirstOrDefault();
+                if (checkExist != null)
+                    return -2;
+
                 var item = new DtvLoai_VQG()
                 {
                     IdDtvLoai = request.IdDtvLoai,

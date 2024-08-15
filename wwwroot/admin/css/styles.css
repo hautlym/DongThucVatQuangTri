@@ -235,11 +235,12 @@ sup {
 }
 
 a {
-  color: #0d6efd;
-  text-decoration: underline;
+  transition: all 0.4s ease-in-out;
+  color: #76838f;
+  text-decoration: none;
 }
 a:hover {
-  color: #0a58ca;
+  color: #2e28f6;
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -1959,7 +1960,6 @@ progress {
 .table, .dataTable-table {
     border-radius: 10px;
     overflow:hidden;
-    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
     --bs-table-bg: transparent;
     --bs-table-accent-bg: transparent;
     --bs-table-striped-color: gray;
@@ -2160,6 +2160,9 @@ progress {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+}
+.form-group{
+	margin-bottom: 20px;
 }
 .form-label {
   margin-bottom: 0.5rem;
@@ -4530,15 +4533,17 @@ textarea.form-control-lg {
 }
 
 .card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+	margin-bottom: 30px;
+    border: 0px;
+    border-radius: 0.625rem;
+    box-shadow: 6px 11px 41px -28px #a99de7;
 }
 .card > hr {
   margin-right: 0;
@@ -4588,7 +4593,7 @@ textarea.form-control-lg {
 .card-header {
   padding: 0.5rem 1rem;
   margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 .card-header:first-child {
@@ -4797,10 +4802,12 @@ textarea.form-control-lg {
 
 .breadcrumb {
   display: flex;
-  flex-wrap: wrap;
-  padding: 0 0;
-  margin-bottom: 1rem;
-  list-style: none;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
+    background-color: #fff ;
+    border-radius: 0.25rem;
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -4813,7 +4820,7 @@ textarea.form-control-lg {
   content: var(--bs-breadcrumb-divider, "/") /* rtl: var(--bs-breadcrumb-divider, "/") */;
 }
 .breadcrumb-item.active {
-  color: #6c757d;
+  color: #000;
 }
 
 .pagination, .dataTable-pagination ul {

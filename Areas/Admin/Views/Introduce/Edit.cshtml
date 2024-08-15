@@ -10,41 +10,44 @@
     <script>
         $(document).ready(function () {
             $('#summernote').summernote({
-                height: 300,
+                height: 400,
             });
         });
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Sửa tin</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"]</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Sửa tin </li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Introduce">Quản lí giới thiệu</a></li>
+        <li class="breadcrumb-item active">@ViewData["Title"]</li>
     </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="Introduce"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách tin tức</a>
-    </div>
-    <div class="row">
-        <form asp-action="Edit" >
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="row justify-content-center">
-                <div class="col-md-10 ">
-                    <input type="hidden" asp-for="id" class="form-control" />
-                    <div class="form-group">
-                        <label asp-for="content" class="control-label"> Nội dung:</label>
-                        <textarea id="summernote" asp-for="content"></textarea>
-                        <span asp-validation-for="content" class="text-danger" style="display:block;"></span>
-                    </div>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="row">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 ">
+                            <input type="hidden" asp-for="id" class="form-control" />
+                            <div class="form-group">
+                                <label asp-for="content" class="control-label"> Nội dung:</label>
+                                <textarea id="summernote" asp-for="content"></textarea>
+                                <span asp-validation-for="content" class="text-danger" style="display:block;"></span>
+                            </div>
 
-                </div>
-                <input type="hidden" asp-for="UpdateBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                        </div>
+                        <input type="hidden" asp-for="UpdateBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 mt-2 align-text-center">
+                            <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                            <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-md-3 mt-2 align-text-center">
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
+    
 </div>

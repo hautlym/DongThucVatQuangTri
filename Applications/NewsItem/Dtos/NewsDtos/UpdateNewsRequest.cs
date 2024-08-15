@@ -11,7 +11,7 @@
         public string? linkUrl { get; set; }
         public IFormFile? Image { get; set; }
         public string? ShortDescription { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
         public int? TotalView { get; set; }
         public int? SortOrder { get; set; }
         public short? IsHot { get; set; }

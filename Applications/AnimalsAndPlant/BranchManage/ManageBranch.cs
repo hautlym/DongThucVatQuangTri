@@ -30,22 +30,31 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
 
         public async Task<long> createItem(CreateBranchRequest request)
         {
-            var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
-            if (item != null) return -2;
-            var branch = new DtvNganh()
+            try
             {
-                Name = request.Name,
-                NameLatinh = request.NameLatinh.Trim().ToUpper(),
-                Status = request.Status,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                CreatedBy = request.CreatedBy,
-                UpdatedBy = request.UpdatedBy,
-                Loai = request.Loai,
-            };
-            _context.DtvNganh.Add(branch);
-            await _context.SaveChangesAsync();
-            return branch.Id;
+                var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+                if (item != null) return -2;
+                var branch = new DtvNganh()
+                {
+                    Name = request.Name,
+                    NameLatinh = request.NameLatinh.Trim().ToUpper(),
+                    Status = request.Status,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    CreatedBy = request.CreatedBy,
+                    UpdatedBy = request.UpdatedBy,
+                    Loai = request.Loai,
+                };
+                _context.DtvNganh.Add(branch);
+                await _context.SaveChangesAsync();
+                return branch.Id;
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync("fdsfđsf");
+                return 0;
+            }
+
         }
 
         public async Task<int> deleteItem(int id)
@@ -153,12 +162,12 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.BranchManage
 
         public async Task<int> updateItem(UpdateBranchRequest request)
         {
-            var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh)).FirstOrDefault();
-            if (item != null)
-                return -2;
             var branch = await _context.DtvNganh.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (branch == null)
                 return -1;
+            var item = _context.DtvNganh.Where(x => x.NameLatinh.Equals(request.NameLatinh)).FirstOrDefault();
+            if (item != null && item.NameLatinh != branch.NameLatinh)
+                return -2;
             branch.Status = request.Status;
             branch.Name = request.Name;
             branch.NameLatinh = request.NameLatinh;

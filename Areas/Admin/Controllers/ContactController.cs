@@ -66,28 +66,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             return View(request);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await _manageContact.GetById(id);
-            if (!HelperMethod.CheckUser(result.typeNationPark, User))
-            {
-                TempData["error"] = "Bạn không được quyền chỉnh sửa";
-                return RedirectToAction("Index");
-            }
-            if (result != null)
-            {
-                var updateRequest = new UpdateContactRequest()
-                {
-                    Id = result.Id,
-                    typeNationPark = result.typeNationPark,
-                    Note = result.Note,
-                    status =result.status,
-                };
-                return View(updateRequest);
-            }
-            return RedirectToAction("Error", "Home");
-        }
+       
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Edit([FromForm] UpdateContactRequest request)

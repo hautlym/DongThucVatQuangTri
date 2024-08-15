@@ -21,18 +21,17 @@
     }
 </style>
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Thông tin loài  @ViewBag.Loai thuộc RPH</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">Thông tin loài  @ViewBag.Loai thuộc RPH</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-loai="@idLoai">Quản lý @ViewBag.Loai thuộc BQL RPH </a></li>
         <li class="breadcrumb-item active">Thông tin loài @ViewBag.Loai thuộc RPH </li>
     </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách loài @ViewBag.Loai thuộc RPH</a>
-    </div>
-    <div class="card mb-4">
+
+    <div class="card mb-4 shadow">
         <div class="card-body">
             <div class="row mb-3 d-flex justify-content-center">
-                <div class="col-md-12">
+                <div class="col-md-12 text-center">
                     <div>Hình ảnh:</div>
                     @{
                         List<string> ListUrl = new List<string>();

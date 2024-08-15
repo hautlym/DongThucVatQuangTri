@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
 {
-    public class ManageSet:IManageSet
+    public class ManageSet : IManageSet
     {
         private readonly DongThucVatContext _context;
         public ManageSet(DongThucVatContext context)
@@ -72,14 +72,14 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                 UpdatedAt = request.UpdatedAt,
                 CreatedAt = request.CreatedAt,
                 Loai = request.Loai,
-                CreatedBy= request.CreatedBy,
+                CreatedBy = request.CreatedBy,
                 UpdatedBy = request.UpdatedBy,
-               
+
             }).ToListAsync();
             return data;
         }
 
-        public async Task<ApiResult<PageResult<SetViewModels>>> GetAlllPaging(GetSetRequest request)
+        public async Task<ApiResult<PageResult<SetViewModels>>> GetAlllPaging(GetSetRequest request, bool isAdmin = false)
         {
             var query = from b in _context.DtvBo
                         join n in _context.DtvLop on (long)b.IdDtvLop equals n.Id
@@ -92,6 +92,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
             {
                 query = query.Where(x => x.b.Name.Contains(request.keyword) || x.b.NameLatinh.Contains(request.keyword));
             }
+
             if (request.status == 1 || request.status == 0)
             {
                 query = query.Where(x => x.b.Status == request.status);
@@ -109,9 +110,9 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                     Loai = x.b.Loai,
                     CreatedAt = x.b.CreatedAt,
                     UpdatedAt = x.b.UpdatedAt,
-                    CreatedBy= x.b.CreatedBy,
-                    UpdatedBy= x.b.UpdatedBy,
-                    NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
+                    CreatedBy = x.b.CreatedBy,
+                    UpdatedBy = x.b.UpdatedBy,
+                    NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(x.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
                 }).ToListAsync();
             var pageResult = new PageResult<SetViewModels>
             {
@@ -147,18 +148,20 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
                 UpdatedAt = item.b.UpdatedAt,
                 CreatedBy = item.b.CreatedBy,
                 UpdatedBy = item.b.UpdatedBy,
-                NameCreate= _context.appUsers.Where(c => c.Id.ToString().Equals(item.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
+                NameCreate = _context.appUsers.Where(c => c.Id.ToString().Equals(item.b.CreatedBy)).Select(x => x.FirstName).FirstOrDefault()
             };
             return lopVm;
         }
 
         public async Task<int> updateItem(UpdateSetRequest request)
         {
-            var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
-            if (item2 != null) return -2;
             var result = await _context.DtvBo.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;
+
+            var item2 = _context.DtvBo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null && item2.NameLatinh != result.NameLatinh) return -2;
+
             result.Status = request.Status;
             result.IdDtvLop = request.IdDtvLop;
             result.Name = request.Name;

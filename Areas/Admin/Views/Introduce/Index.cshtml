@@ -4,7 +4,7 @@
 @model List<IntroduceViewModel>
 
 @{
-    ViewData["Title"] = "Giới thiệu";
+    ViewData["Title"] = "Quản lí giới thiệu";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 
@@ -16,14 +16,13 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Danh sách @ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"]</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Danh sách  @ViewData["Title"] </li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
 
-    <div class="card mb-12">
-        
+    <div class="card mb-12 shadow">
         <div class="card-body align-middle">
             @if (ViewBag.ErrorMsg != null)
             {

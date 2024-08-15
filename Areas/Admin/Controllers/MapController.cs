@@ -62,9 +62,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 TempData["result"] = "Thêm thông tin thành công";
                 return RedirectToAction("Index" , new { type = request.typeMap});
             }
+            else if(result == -1)
+            {
+                ModelState.AddModelError("Name", "Tên bản đồ đã tồn tại");
+            }
             else
             {
-                TempData["error"] = "bản đồ đã tồn tại";
+                TempData["error"] = "Thêm không thành công";
                 return RedirectToAction("Index", new { type = request.typeMap });
             }
             return View(request);

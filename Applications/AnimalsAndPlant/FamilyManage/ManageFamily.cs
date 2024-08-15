@@ -154,11 +154,12 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage
 
         public async Task<int> updateItem(UpdateFamilyRequest request)
         {
-            var item2 = _context.DtvHo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
-            if (item2 != null) return -2;
             var result = await _context.DtvHo.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;
+            var item2 = _context.DtvHo.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item2 != null && item2.NameLatinh != result.NameLatinh) return -2;
+           
             result.Status = request.Status;
             result.IdDtvBo = request.IdDtvBo;
             result.Name = request.Name;

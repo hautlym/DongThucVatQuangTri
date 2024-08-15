@@ -34,9 +34,12 @@
                 success: function (result) {
                     console.log(result)
                     if (!result.success) {
-                        alert(result.message);
+                        var text = document.querySelector('.card-body.align-middle').innerHTML;
+                        document.querySelector('.card-body.align-middle').innerHTML = `<div id="msgAlert" class="alert alert-danger" role="alert">
+                        Bản không thể chỉnh sửa
+                                                </div>`+ text;
                         location.reload()
-                    }
+                    } 
                 },
                 error: function (error) {
                     alert("Đã xảy ra lỗi: " + error);
@@ -46,7 +49,7 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">
+    <h4 class="mt-4">
         Loài @ViewBag.Loai thuộc BQL RPH
      @*    @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
         {
@@ -60,10 +63,10 @@
         {
             <span>Nam Giang và Mường Tè</span>
         } *@
-    </h1>
-    <ol class="breadcrumb mb-4">
+    </h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Loài @ViewBag.Loai thuộc BQL RPH 
+        <li class="breadcrumb-item active">Quản lý @ViewBag.Loai thuộc BQL RPH 
            @*  @if (User.FindFirstValue(ClaimTypes.Role) == "NationParkNamGiang")
             {
                 <span>Nam Giang</span>
@@ -77,28 +80,24 @@
         </li>
     </ol>
 
-    <div class="card mb-12">
+    <div class="card mb-12 shadow">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6 col-xs-12 mt-1">
                     <a asp-action="Create" asp-route-loai="@idLoai" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i>  Thêm mới</a>
                 </div>
                 <div class="col-md-6 col-xs-12 mt-1">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <form asp-action="Index" asp-route-loai="@idLoai" method="post">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <form asp-action="Index" asp-route-loai="@idLoai" method="post" class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group mb-3">
+                                        <input type="text" value="@ViewBag.Keyword" class="form-control" name="keyword" placeholder="Nhập từ khóa cần tìm ...">
+                                        <button class="btn btn-primary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
+                                        <a class="btn btn-secondary" href="@Url.Action("Index","SpeciesNationPark",new {keyword = "",loai=idLoai})">Reset</a>
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                        <div class="col-md-2">
-                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","SpeciesNationPark",new {keyword = "",loai=idLoai})">Reset</a>
                         </div>
                     </div>
                 </div>
@@ -169,7 +168,7 @@
                             <td class="align-middle" style="width:15%">
                                 @Html.DisplayFor(modelItem => item.TenKhac)
                             </td>
-                            <td class="align-middle" style="width:15%">
+                            <td class="align-middle" style="width:13%">
                                 @Html.DisplayFor(modelItem => item.NameHo)
                             </td>
                             <td class="align-middle">
@@ -193,12 +192,20 @@
                                 @Html.DisplayFor(modelItem => item.NameCreate)
                             </td>
                             <td class="align-middle">
-                                <select onchange="changeStatus(@item.Id,this.options[this.selectedIndex].value)" asp-for="@item.Status" class="form-control" id="dropdown" name="Status">
-                                    <option value="1">Bật</option>
-                                    <option value="0">Tắt</option>
-                                </select>
+                                @if (item.Status != null && item.Status == 1)
+                                {
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" onchange="changeStatus(@item.Id,checked?1:0)" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="Status" checked />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" onchange="changeStatus(@item.Id,checked?1:0)" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="Status" />
+                                    </div>
+                                }
                             </td>
-                            <td class="align-middle">
+                            <td class="align-middle" >
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
                                     <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
                                 </a>

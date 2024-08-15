@@ -51,12 +51,12 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">@ViewData["Title"] </h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"] </h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
         <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
-    <div class="card mb-12">
+    <div class="card mb-12 shadow">
         <div class="card-header">
             Hiển thị:
             <form asp-action="ManageImage" asp-controller="Home" method="get">
@@ -78,7 +78,7 @@
                 {
                     foreach (var item2 in Url)
                     {
-                        <div class="card m-2 popup-gallery" style="width: 15rem;">
+                        <div class="card m-2 popup-gallery shadow" style="width: 15rem;">
                             <a href="/user-content/@item2" onclick="zoomImg()">
                                 <img src="/user-content/@item2" class="card-img-top" style="height:180px;" alt="...">
                             </a>

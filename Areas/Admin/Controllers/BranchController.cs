@@ -54,19 +54,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(data.ResultObj);
         }
-        [HttpGet]
-        public async Task<IActionResult> Create(int loai)
-        {
-            if (loai == 1)
-            {
-                ViewBag.Loai = "động vật";
-            }
-            if (loai == 0)
-            {
-                ViewBag.Loai = "thực vật";
-            }
-            return View();
-        }
+     
         [HttpPost]
         public async Task<IActionResult> Create(int loai,CreateBranchRequest request)
         {
@@ -85,50 +73,24 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageBranch.createItem(request);
             if(result==-2)
             {
-                ViewBag.ErrorMsg = "Ngành đã tồn tại";
-                return View();
+                TempData["error"] = "Ngành đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+                
             }
             if (result > 0)
             {
                 TempData["result"] = "Thêm thành công";
                 return RedirectToAction("Index",new {loai = LoaiDtv } );
             }
+            else
+            {
+                TempData["error"] = "Thêm mới không thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+            }
             return View(request);
         }
 
-        [HttpGet]
-   
-        public async Task<IActionResult> Edit( int id)
-        {
-            
-            var result = await _manageBranch.getItemById(id);
-           
-            if (result.Loai == 1)
-            {
-                ViewBag.Loai = "Động Vật";
-            }
-            if (result.Loai == 0)
-            {
-                ViewBag.Loai = "Thực vật";
-            }
-            if (!HelperMethod.CheckUser(result.CreatedBy, User))
-            {
-                TempData["error"] = "Bạn không được quyền chỉnh sửa";
-                return RedirectToAction("Index", new { loai = result.Loai });
-            }
-            if (result != null)
-            {
-                var updateRequest = new UpdateBranchRequest()
-                {
-                    Name = result.Name,
-                    NameLatinh =  result.NameLatinh,
-                    Status = result.Status,
-
-                };
-                return View(updateRequest);
-            }
-            return RedirectToAction("Error", "Home");
-        }
+      
         [HttpPost]
         public async Task<IActionResult> Edit(int loai,UpdateBranchRequest request)
         {
@@ -143,22 +105,31 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
                 return View();
-
+            var item = await _manageBranch.getItemById((int)request.Id);
+            if (!HelperMethod.CheckUser(item.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index", new { loai = item.Loai });
+            }
             request.UpdatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _manageBranch.updateItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "Ngành đã tồn tại";
-                return View();
+                TempData["error"] = "Ngành đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+
             }
             if (result > 0)
             {
                 TempData["result"] = "Cập nhật thông tin thành công";
                 return RedirectToAction("Index", new { loai = LoaiDtv });
             }
-
-            ModelState.AddModelError("", "Cập nhật không thành công");
-            return View(request);
+            else
+            {
+                TempData["error"] = "Thêm mới không thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
+            }
+          
         }
         [HttpPost]
         public async Task<IActionResult> Delete(int loai,int Id)

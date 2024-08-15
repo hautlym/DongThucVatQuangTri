@@ -40,7 +40,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 ViewBag.Loai = "Thực vật";
             }
-
+            var ListBranch = await _manageBranch.getAllItem();
+            ViewBag.Categories = ListBranch.Where(x => x.Loai == loai).Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            });
             var data = await _manageClass.GetAlllPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
@@ -53,26 +58,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(data.ResultObj);
         }
-        [HttpGet]
-
-        public async Task<IActionResult> Create(int loai)
-        {
-            var ListBranch = await _manageBranch.getAllItem();
-            ViewBag.Categories = ListBranch.Where(x=>x.Loai==loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (loai == 1)
-            {
-                ViewBag.Loai = "động vật";
-            }
-            if (loai == 0)
-            {
-                ViewBag.Loai = "thực vật";
-            }
-            return View();
-        }
+       
         [HttpPost]
 
         public async Task<IActionResult> Create(int loai, CreateClassRequest request)
@@ -97,8 +83,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageClass.createItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "Lớp đã tồn tại";
-                return View();
+                TempData["error"] = "Lớp đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
             }
             if (result > 0)
             {
@@ -106,46 +92,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
-            return View(request);
-        }
-
-        [HttpGet]
-
-        public async Task<IActionResult> Edit(int id)
-        {
-
-            var result = await _manageClass.getItemById(id);
-            if (!HelperMethod.CheckUser(result.CreatedBy, User))
-            {
-                TempData["error"] = "Bạn không được quyền chỉnh sửa";
-                return RedirectToAction("Index", new { loai = result.Loai });
-            }
-            var ListBranch = await _manageBranch.getAllItem();
-            ViewBag.Categories = ListBranch.Where(x => x.Loai == result.Loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (result.Loai == 1)
-            {
-                ViewBag.Loai = "Động Vật";
-            }
-            if (result.Loai == 0)
-            {
-                ViewBag.Loai = "Thực vật";
-            }
-            if (result != null)
-            {
-                var updateRequest = new UpdateClassRequest()
-                {
-                    Name = result.Name,
-                    NameLatinh = result.NameLatinh,
-                    Status = result.Status,
-                    IdDtvNganh = result.IdDtvNganh,
-                };
-                return View(updateRequest);
-            }
-            return RedirectToAction("Error", "Home");
+            TempData["error"] = "Thêm không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
 
@@ -153,6 +101,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             int LoaiDtv = loai;
             var ListBranch = await _manageBranch.getAllItem();
+            var checkPermition = await _manageClass.getItemById((int)request.Id);
+            if (!HelperMethod.CheckUser(checkPermition.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index", new { loai = checkPermition.Loai });
+            }
             ViewBag.Categories = ListBranch.Where(x => x.Loai == loai).Select(x => new SelectListItem()
             {
                 Text = x.Name,
@@ -172,8 +126,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageClass.updateItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "Lớp đã tồn tại";
-                return View();
+                TempData["error"] = "Lớp đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
             if (result > 0)
@@ -182,9 +136,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
-
-            ModelState.AddModelError("", "Cập nhật không thành công");
-            return View(request);
+            TempData["error"] = "Cập nhật không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
 

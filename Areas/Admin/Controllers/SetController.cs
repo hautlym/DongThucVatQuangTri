@@ -39,8 +39,13 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 ViewBag.Loai = "Thực vật";
             }
-
-            var data = await _manageSet.GetAlllPaging(request);
+            var ListItem = await _manageClass.getAllItem();
+            ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            });
+            var data = await _manageSet.GetAlllPaging(request,true);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {
@@ -52,35 +57,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(data.ResultObj);
         }
-        [HttpGet]
-        public async Task<IActionResult> Create(int loai)
-        {
-            var ListItem = await _manageClass.getAllItem();
-            ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (loai == 1)
-            {
-                ViewBag.Loai = "động vật";
-            }
-            if (loai == 0)
-            {
-                ViewBag.Loai = "thực vật";
-            }
-            return View();
-        }
+        
         [HttpPost]
         public async Task<IActionResult> Create(int loai, CreateSetRequest request)
         {
             int LoaiDtv = loai;
-            var ListItem = await _manageClass.getAllItem();
-            ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
+            
             if (loai == 1)
             {
                 ViewBag.Loai = "động vật";
@@ -94,57 +76,29 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageSet.createItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "bộ đã tồn tại";
-                return View();
+                TempData["error"] = "Bộ đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
             }
             if (result > 0)
             {
                 TempData["result"] = "Thêm thành công";
                 return RedirectToAction("Index", new { loai = LoaiDtv });
             }
-            return View(request);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-
-            var result = await _manageSet.getItemById(id);
-            if (!HelperMethod.CheckUser(result.CreatedBy, User))
+            else
             {
-                TempData["error"] = "Bạn không được quyền chỉnh sửa";
-                return RedirectToAction("Index", new { loai = result.Loai });
+                TempData["error"] = "Thêm không thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
             }
-            var ListItem = await _manageClass.getAllItem();
-            ViewBag.Categories = ListItem.Where(x => x.Loai == result.Loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (result.Loai == 1)
-            {
-                ViewBag.Loai = "Động Vật";
-            }
-            if (result.Loai == 0)
-            {
-                ViewBag.Loai = "Thực vật";
-            }
-            if (result != null)
-            {
-                var updateRequest = new UpdateSetRequest()
-                {
-                    Name = result.Name,
-                    NameLatinh = result.NameLatinh,
-                    Status = result.Status,
-                    IdDtvLop = result.IdDtvLop,
-                };
-                return View(updateRequest);
-            }
-            return RedirectToAction("Error", "Home");
         }
         [HttpPost]
         public async Task<IActionResult> Edit(int loai, UpdateSetRequest request)
         {
+            var checkRole = await _manageSet.getItemById((int)request.Id);
+            if (!HelperMethod.CheckUser(checkRole.CreatedBy, User))
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index", new { loai = checkRole.Loai });
+            }
             int LoaiDtv = loai;
             var ListItem = await _manageClass.getAllItem();
             ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
@@ -166,8 +120,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageSet.updateItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "bộ đã tồn tại";
-                return View();
+                TempData["error"] = "Bộ đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
             if (result > 0)
@@ -176,9 +130,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
-
-            ModelState.AddModelError("", "Cập nhật không thành công");
-            return View(request);
+            TempData["error"] = "Cập nhật không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
         public async Task<IActionResult> Delete(int loai, int Id)

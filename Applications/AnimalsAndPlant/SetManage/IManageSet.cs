@@ -9,7 +9,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage
     {
         public Task<List<SetViewModels>> getAllItem();
         public Task<SetViewModels> getItemById(int id);
-        public Task<ApiResult<PageResult<SetViewModels>>> GetAlllPaging(GetSetRequest request);
+        public Task<ApiResult<PageResult<SetViewModels>>> GetAlllPaging(GetSetRequest request, bool isAdmin = false);
         public Task<int> updateItem(UpdateSetRequest request);
         public Task<long> createItem(CreateSetRequest request);
         public Task<int> deleteItem(int id);

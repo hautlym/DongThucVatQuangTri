@@ -4,7 +4,6 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Sửa bộ";
-    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 @section Scripts{
     <script>
@@ -24,61 +23,64 @@
         idLoai = 0;
     }
 }
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Sửa bộ @ViewBag.Loai:</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Sửa bộ @ViewBag.Loai: </li>
-    </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách bộ @ViewBag.Loai</a>
-    </div>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-            <form asp-action="Edit" asp-route-loai="@idLoai" class="row">
-                @if (ViewBag.ErrorMsg != null)
-                {
-                    <div id="msgAlert" class="alert alert-danger" role="alert">
-                        @ViewBag.ErrorMsg
+
+<!-- Button trigger modal -->
+<span data-bs-toggle="modal" data-bs-target="#EditModal@{
+    @Model.Id
+}">
+    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+</span>
+
+<!-- Modal -->
+<div class="modal fade" id="EditModal@{
+            @Model.Id
+}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-action="Edit" class="row" asp-route-loai="@idLoai" data-ajax-method="POST" data-ajax="true" data-ajax-update="UpdateBranchForm@{
+                    @Model.Id
+}" data-ajax-complete="OnComplete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sửa bộ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-wrap" id="UpdateBranchForm@{
+                                @Model.Id
+}">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group w-100">
+                        <div asp-for="IdDtvLop" class="control-label"> Lớp:</div>
+                        <select asp-for="IdDtvLop" id="editSelect@{
+                            @Model.Id
+}" name="IdDtvLop" style="width:100%;" asp-items="@ViewBag.Categories" class="form-control select2">
+                        </select>
                     </div>
-                }
-                <div class="form-group">
-                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <div class="form-group w-100">
+                        <label asp-for="Name" class="control-label col-md-4">Tên tiếng Việt:</label>
+                        <input asp-for="Name" class="form-control col-md-6" />
+                        <span asp-validation-for="Name" class="text-danger col-md-12"></span>
+                    </div>
+                    <div class="form-group w-100">
+                        <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
+                        <input asp-for="NameLatinh" class="form-control" />
+                        <span asp-validation-for="NameLatinh" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                    <div class="form-group w-100">
+                        <label asp-for="Status" class="control-label">Trạng thái: </label>
+                        <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                            <option value="1">Bật</option>
+                            <option value="0">Tắt</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="IdDtvLop" class="control-label"> Lớp:</label>
-                    <select asp-for="IdDtvLop" name="IdDtvLop" asp-items="@ViewBag.Categories" class="form-control select2">
-                    </select>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Sửa thông tin</button>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label">Tên tiếng Việt</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="NameLatinh" class="control-label">Tên Latinh:</label>
-                    <input asp-for="NameLatinh" class="form-control" />
-                    <span asp-validation-for="NameLatinh" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Status" class="control-label">Trạng thái: </label>
-                    <select asp-for="Status" class="form-control" id="dropdown" name="Status">
-                        <option value="1">Bật</option>
-                        <option value="0">Tắt</option>
-                    </select>
-                </div>
-                <div class="form-group mt-2">
-                    <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
-
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <a asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
-
-                    @* <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
-                    <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
+
 

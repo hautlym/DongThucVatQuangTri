@@ -7,7 +7,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Phản hồi liên hệ";
-    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+    //Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 @section Scripts{
     <script src="/admin/assets/ckeditor/ckeditor.js"></script>
@@ -16,23 +16,32 @@
     </script>
     
 }
-<div class="container-fluid px-4">
-    <h1 class="mt-4">@ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">@ViewData["Title"] </li>
-    </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách phản hồi</a>
-    </div>
-    <div class="row">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
+<span data-bs-toggle="modal" data-bs-target="#exampleModal@{
+    @Model.Id
+}">
+    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+</span>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal@{
+    @Model.Id
+}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-action="Edit" class="row" enctype="multipart/form-data" data-ajax-method="POST" data-ajax="true" data-ajax-update="UpdateRoleForm@{
+            @Model.Id
+}" data-ajax-complete="OnComplete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật phản hồi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-wrap justify-content-center" id="UpdateRoleForm@{
+                        @Model.Id
+}">
                     <input type="hidden" asp-for="Id" class="form-control" />
-                    <div class="form-group">
+                    <div class="form-group row w-100">
                         <label asp-for="status" class="control-label">Trạng thái: </label>
+
                         <select asp-for="status" class="form-control" id="dropdown">
                             @foreach (var status1 in Enum.GetValues(typeof(statusContact)))
                             {
@@ -40,18 +49,15 @@
                             }
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row w-100">
                         <label asp-for="Note" class="control-label">Ghi chú</label>
-                        <textarea asp-for="Note" style="height:200px" class="form-control"></textarea>
+                        <textarea asp-for="Note" style="height:100px" class="form-control"></textarea>
                         <span asp-validation-for="Note" class="text-danger"></span>
                     </div>
-                    
                 </div>
-            </div>
-            <div class="row text-center">
-                <div class="form-group mt-2">
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <button asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Sửa thông tin</button>
                 </div>
             </div>
         </form>

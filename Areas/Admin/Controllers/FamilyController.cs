@@ -39,7 +39,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             {
                 ViewBag.Loai = "Thực vật";
             }
-
+            var ListItem = await _manageSet.getAllItem();
+            ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            });
             var data = await _manageFamily.GetAlllPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
@@ -52,25 +57,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             }
             return View(data.ResultObj);
         }
-        [HttpGet]
-        public async Task<IActionResult> Create(int loai)
-        {
-            var ListItem = await _manageSet.getAllItem();
-            ViewBag.Categories = ListItem.Where(x => x.Loai == loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (loai == 1)
-            {
-                ViewBag.Loai = "động vật";
-            }
-            if (loai == 0)
-            {
-                ViewBag.Loai = "thực vật";
-            }
-            return View();
-        }
+       
         [HttpPost]
         public async Task<IActionResult> Create(int loai, CreateFamilyRequest request)
         {
@@ -94,8 +81,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageFamily.createItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "họ đã tồn tại";
-                return View();
+                TempData["error"] = "Họ đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
             }
             if (result > 0)
             {
@@ -103,46 +90,10 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
-            return View(request);
+            TempData["error"] = "Thêm không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-
-            var result = await _manageFamily.getItemById(id);
-            if (!HelperMethod.CheckUser(result.CreatedBy, User))
-            {
-                TempData["error"] = "Bạn không được quyền chỉnh sửa";
-                return RedirectToAction("Index", new { loai = result.Loai });
-            }
-            var ListItem = await _manageSet.getAllItem();
-            ViewBag.Categories = ListItem.Where(x => x.Loai == result.Loai).Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
-            if (result.Loai == 1)
-            {
-                ViewBag.Loai = "Động Vật";
-            }
-            if (result.Loai == 0)
-            {
-                ViewBag.Loai = "Thực vật";
-            }
-            if (result != null)
-            {
-                var updateRequest = new UpdateFamilyRequest()
-                {
-                    Name = result.Name,
-                    NameLatinh = result.NameLatinh,
-                    Status = result.Status,
-                    IdDtvBo = result.IdDtvBo,
-                };
-                return View(updateRequest);
-            }
-            return RedirectToAction("Error", "Home");
-        }
         [HttpPost]
         public async Task<IActionResult> Edit(int loai, UpdateFamilyRequest request)
         {
@@ -167,8 +118,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
             var result = await _manageFamily.updateItem(request);
             if (result == -2)
             {
-                ViewBag.ErrorMsg = "họ đã tồn tại";
-                return View();
+                TempData["error"] = "Họ đã tồn tại";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
 
             }
             if (result > 0)
@@ -178,8 +129,8 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
 
             }
 
-            ModelState.AddModelError("", "Cập nhật không thành công");
-            return View(request);
+            TempData["error"] = "Cập nhật thông tin không thành công";
+            return RedirectToAction("Index", new { loai = LoaiDtv });
         }
         [HttpPost]
         public async Task<IActionResult> Delete(int loai, int Id)

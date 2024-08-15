@@ -11,82 +11,85 @@
     </script>
     }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">@ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"]</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
         <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
-    <div>
-        <h1 class="text-center mt-2">Thống kê thông tin loài</h1>
-        @if (ViewBag.ErrorMsg != null)
-        {
-            <div id="msgAlert" class="alert alert-danger" role="alert">
-                @ViewBag.ErrorMsg
-            </div>
-        }
-        @if (ViewBag.SuscessMsg != null)
-        {
-            <div id="msgAlert" class="alert alert-success" role="alert">
-                @ViewBag.SuscessMsg
-            </div>
-        }
-        <form asp-action="ExportExcel" method="post" class="mt-4">
-            <div class="form-validation col-lg-9 col-md-8 col-12 m-auto">
-                <div class="form-group row mt-3 justify-content-center">
-                    <label class="col-lg-2 col-form-label" for="val-website">
-                        Rừng phòng hộ <span class="text-danger">*</span>
-                    </label>
-                    <div class="col-lg-6 d-flex align-items-center justify-content-between">
-                        <label>
-                            <input type="radio" name="typeNationPark" checked value="NationParkNamGiang"> RPH Nam Giang
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="text-center mt-2">Thống kê thông tin loài</h1>
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
+            @if (ViewBag.SuscessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuscessMsg
+                </div>
+            }
+            <form asp-action="ExportExcel" method="post" class="mt-4">
+                <div class="form-validation col-lg-9 col-md-8 col-12 m-auto">
+                    <div class="form-group row mt-3 justify-content-center">
+                        <label class="col-lg-2 col-form-label" for="val-website">
+                            Rừng phòng hộ <span class="text-danger">*</span>
                         </label>
-                        <label>
-                            <input type="radio" name="typeNationPark" value="NationParkMuongTe"> RPH Mường Tè
+                        <div class="col-lg-6 d-flex align-items-center justify-content-between">
+                            <label>
+                                <input type="radio" name="typeNationPark" checked value="NationParkNamGiang"> RPH Nam Giang
+                            </label>
+                            <label>
+                                <input type="radio" name="typeNationPark" value="NationParkMuongTe"> RPH Mường Tè
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3 justify-content-center">
+                        <label class="col-lg-2 col-form-label" for="val-website">
+                            Loài: <span class="text-danger">*</span>
                         </label>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-between">
+                            <label>
+                                <input type="radio" name="TypeSpceies" value="-1" checked> Tất cả
+                            </label>
+                            <label>
+                                <input type="radio" name="TypeSpceies" value="1"> Động vật
+                            </label>
+                            <label>
+                                <input type="radio" name="TypeSpceies" value="0"> Thực vật
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3 justify-content-center">
+                        <label class="col-lg-2 col-form-label" for="val-website">
+                            Tên file:<span class="text-danger">*</span>
+                        </label>
+                        <div class="col-lg-6 d-flex align-items-center ">
+                            <input type="text" name="FileName" placeholder="Nhập tên file..." class="form-control ">
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3 justify-content-center">
+                        <label class="col-lg-2 col-form-label" for="val-website">
+                            Thời gian:
+                        </label>
+                        <div class="col-lg-6 d-flex align-items-center ">
+                            <input name="BeginDate" class="form-control " placeholder="Ngày bắt đầu..." type="date">
+                            <div class="ms-1 me-1">đến</div>
+                            <input type="date" name="ExpiredDate" placeholder="Ngày kết thúc..." class="form-control ">
+                        </div>
+                    </div>
+
+                    <div class="form-group row mt-1 justify-content-center">
+                        <div class="col-lg-8 ml-auto text-center">
+                            <button type="submit" class="btn btn-primary mt-3">Xuất file Excel</button>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row mt-3 justify-content-center">
-                    <label class="col-lg-2 col-form-label" for="val-website">
-                        Loài: <span class="text-danger">*</span>
-                    </label>
-                    <div class="col-lg-6 d-flex align-items-center justify-content-between">
-                        <label >
-                            <input type="radio" name="TypeSpceies" value="-1" checked> Tất cả
-                        </label>
-                        <label>
-                            <input type="radio" name="TypeSpceies" value="1"> Động vật
-                        </label>
-                        <label>
-                            <input type="radio" name="TypeSpceies" value="0"> Thực vật
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group row mt-3 justify-content-center">
-                    <label class="col-lg-2 col-form-label" for="val-website">
-                        Tên file:<span class="text-danger">*</span>
-                    </label>
-                    <div class="col-lg-6 d-flex align-items-center ">
-                        <input type="text" name="FileName" placeholder="Nhập tên file..." class="form-control ">
-                    </div>
-                </div>
-                <div class="form-group row mt-3 justify-content-center">
-                    <label class="col-lg-2 col-form-label" for="val-website">
-                        Thời gian:
-                    </label>
-                    <div class="col-lg-6 d-flex align-items-center ">
-                        <input name="BeginDate" class="form-control " placeholder="Ngày bắt đầu..." type="date">
-                        <div class="ms-1 me-1">đến</div>
-                        <input type="date" name="ExpiredDate" placeholder="Ngày kết thúc..." class="form-control ">
-                    </div>
-                </div>
-                
-                <div class="form-group row mt-1 justify-content-center">
-                    <div class="col-lg-8 ml-auto text-center">
-                         <button type="submit" class="btn btn-primary mt-3">Xuất file Excel</button>
-                    </div>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
+        
     </div>
 </div>
 

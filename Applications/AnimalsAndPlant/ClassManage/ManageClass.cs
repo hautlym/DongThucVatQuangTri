@@ -29,7 +29,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
 
         public async Task<long> createItem(CreateClassRequest request)
         {
-            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())&&request.Loai==x.Loai).FirstOrDefault();
             if (item != null) return -2;
             var lop = new DtvLop()
             {
@@ -153,12 +153,12 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.ClassManage
 
         public async Task<int> updateItem(UpdateClassRequest request)
         {
-            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
-            if (item != null) return -2;
-
             var result = await _context.DtvLop.Where(x => x.Id == request.Id).FirstOrDefaultAsync();
             if (result == null)
                 return -1;
+            var item = _context.DtvLop.Where(x => x.NameLatinh.Equals(request.NameLatinh.Trim().ToUpper())).FirstOrDefault();
+            if (item != null && item.NameLatinh!=result.NameLatinh) return -2;
+
             result.Status = request.Status;
             result.IdDtvNganh = request.IdDtvNganh;
             result.Name = request.Name;

@@ -56,7 +56,7 @@
         @foreach (var fileInfor in ViewBag.FileInfos)
         {
             <div class="thumbnail">
-                <img src="/newsImage/@fileInfor.Name" alt="thumb" title="@fileInfor.Name" width="120" height="100"/>
+                <img src="/newsImage/@fileInfor.Name" class="thumb-img" alt="thumb" title="@fileInfor.Name" width="120" height="100"/>
                 <br/>
                 <span>@fileInfor.Name</span>
             </div>

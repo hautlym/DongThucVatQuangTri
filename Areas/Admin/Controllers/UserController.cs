@@ -207,6 +207,11 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 Value = x.Id.ToString(),
             });
             var result = await _userService.GetById(id);
+            if (result.ResultObj.Roles == "Administator" && User.FindFirstValue(ClaimTypes.NameIdentifier) != result.ResultObj.Id.ToString())
+            {
+                TempData["error"] = "Bạn không được quyền chỉnh sửa";
+                return RedirectToAction("Index");
+            }
             if (result.IsSuccessed)
             {
                 var user = result.ResultObj;
@@ -265,7 +270,12 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("Index");
-
+            var user = await _userService.GetById(Id);
+            if (user.ResultObj.Roles == "Administator" && User.FindFirstValue(ClaimTypes.NameIdentifier) != user.ResultObj.Id.ToString())
+            {
+                TempData["error"] = "Bạn không được quyền xóa";
+                return RedirectToAction("Index");
+            }
             var result = await _userService.delete(Id);
             if (result.IsSuccessed)
             {

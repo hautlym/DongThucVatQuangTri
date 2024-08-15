@@ -16,6 +16,7 @@ using DongThucVatQuangTri.Applications.EcotourismSafeties;
 using DongThucVatQuangTri.Applications.GroupUsers;
 using DongThucVatQuangTri.Applications.Introduces;
 using DongThucVatQuangTri.Applications.Maps;
+using DongThucVatQuangTri.Applications.MiddelWare;
 using DongThucVatQuangTri.Applications.NewsItem.NewsCatManage;
 using DongThucVatQuangTri.Applications.NewsItem.NewsManage;
 using DongThucVatQuangTri.Applications.Roles;
@@ -181,6 +182,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     //app.UseHsts();
 }
+
+app.UseMiddleware<ErrorExceptionMiddleware>();
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseAuthentication();
 
 app.UseStaticFiles();

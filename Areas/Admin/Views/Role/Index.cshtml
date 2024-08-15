@@ -4,7 +4,7 @@
 @model PageResult<RoleViewModels>
 
 @{
-    ViewData["Title"] = "Nhóm quyền";
+    ViewData["Title"] = "Quản lý quyền";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 
@@ -14,35 +14,28 @@
             $('#msgAlert').fadeOut("slow");
         }, 2000);
     </script>
+    
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Danh sách @ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">@ViewData["Title"]</h4>
+    <ol class="breadcrumb mb-4 bg-white shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Danh sách  @ViewData["Title"] </li>
+        <li class="breadcrumb-item active">@ViewData["Title"] </li>
     </ol>
-
-    <div class="card mb-12">
+    <div class="card mb-12 shadow">
         <div class="card-header">
-            <div class="row">
+            <div class="row justify-content-end">
                 <div class="col-md-6 col-xs-12 mt-1">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <form asp-action="Index" asp-controller="Role" method="post">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
+                        <div class="col-md-12">
+                        <form asp-action="Index" asp-controller="Role" method="post" class="row justify-content-end">
+                                <div class="col-md-9">
+                                    <div class="input-group mb-3 mt-1">
+                                        <input type="text" value="@ViewBag.Keyword" class="form-control" name="keyword" placeholder="Nhập từ khóa cần tìm ...">
+                                        <button class="btn btn-primary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
+                                    <a class="btn btn-secondary" href="@Url.Action("Index","Role",new {keyword = ""})">Clear</a>
                                     </div>
                                 </div>
-
                             </form>
-                        </div>
-                        <div class="col-md-2">
-                            <a class="btn btn-secondary mt-1" href="@Url.Action("Index","Role",new {keyword = ""})">Reset</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -52,6 +45,12 @@
             {
                 <div id="msgAlert" class="alert alert-success" role="alert">
                     @ViewBag.SuscessMsg
+                </div>
+            }
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
                 </div>
             }
             @{
@@ -96,9 +95,10 @@
                                 @Html.DisplayFor(modelItem => item.UpdateAt)
                             </td>
                             <td class="align-middle" style="width:5%;">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                <partial name="Edit" model="new UpdateRoleRequest(){Id=item.Id, RoleName=item.Name}" />
+                                @* <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
                                     <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
-                                </a>
+                                </a> *@
                             </td>
                         </tr>
                     }

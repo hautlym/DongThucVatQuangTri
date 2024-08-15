@@ -114,16 +114,26 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return View();
             if (request.IdDtvLoai == 0)
             {
-                ModelState.AddModelError("", "Vui lòng chọn loài");
+                ModelState.AddModelError("IdDtvLoai", "Vui lòng chọn loài");
                 return View();
             }
             
             var result = await _manageSpecies.createItem(request);
+            if (result == -2)
+            {
+                ModelState.AddModelError("IdDtvLoai", "Loài đã tồn tại");
+                return View();
+            }
             if (result > 0)
             {
                 TempData["result"] = "Thêm thành công";
                 return RedirectToAction("Index", new { loai = LoaiDtv });
 
+            }
+            else
+            {
+                TempData["error"] = "Thêm không thành công";
+                return RedirectToAction("Index", new { loai = LoaiDtv });
             }
             return View(request);
         }

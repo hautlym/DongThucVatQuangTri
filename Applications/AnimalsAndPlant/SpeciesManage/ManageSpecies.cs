@@ -178,6 +178,7 @@ namespace DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage
                 Id = item.l.Id,
                 IdDtvHo = item.l.IdDtvHo,
                 Name = item.l.Name,
+                NameHo = item.f.Name,
                 NameLatinh = item.l.NameLatinh,
                 Status = item.l.Status,
                 Loai = item.l.Loai,

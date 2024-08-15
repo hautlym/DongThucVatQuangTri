@@ -417,155 +417,156 @@
     </script>
 }
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Sửa loài @ViewBag.Loai thuộc RPH</h1>
-    <ol class="breadcrumb mb-4">
+    <h4 class="mt-4">Sửa loài @ViewBag.Loai thuộc RPH</h4>
+    <ol class="breadcrumb mb-4 shadow">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-loai="@idLoai">Quản lý @ViewBag.Loai thuộc BQL RPH </a></li>
         <li class="breadcrumb-item active">Sửa loài @ViewBag.Loai thuộc RPH</li>
     </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-route-loai="@idLoai"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách loài thuộc RPH</a>
-    </div>
-    <div class="row">
-        <form asp-action="Edit" asp-route-loai="@idLoai" enctype="multipart/form-data">
-
+    <div class="card shadow">
+        <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <input type="hidden" asp-for="Id" class="form-control" />
-                    <div class="form-group">
-                        <label asp-for="IdDtvLoai" class="control-label">Loài:</label>
-                        <select asp-for="IdDtvLoai" name="IdDtvLoai" asp-items="@ViewBag.Categories" class="form-control select2">
-                        </select>
-                    </div>
+                <form asp-action="Edit" asp-route-loai="@idLoai" enctype="multipart/form-data">
 
-                    <div class="form-group">
-                        <label asp-for="TenKhac" class="control-label">Tên khác:</label>
-                        <input asp-for="TenKhac" class="form-control" />
-                        <span asp-validation-for="TenKhac" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="PhanBo" class="control-label">Vùng phân bố:</label>
-                        <input asp-for="PhanBo" class="form-control" />
-                        <span asp-validation-for="PhanBo" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="NguonTaiLieu" class="control-label">Nguồn tài liệu:</label>
-                        <input asp-for="NguonTaiLieu" class="form-control" />
-                        <span asp-validation-for="NguonTaiLieu" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Status" class="control-label">Trạng thái: </label>
-                        <select asp-for="Status" class="form-control" id="dropdown" name="Status">
-                            <option value="1">Bật</option>
-                            <option value="0">Tắt</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="TypeNationPark" class="control-label">Rừng phòng hộ: </label>
-                        <select onchange="zoomMap()" asp-for="TypeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
-                            @{
-                                var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
-                            }
-                            @if (typeNationPark == "NationParkNamGiang")
-                            {
-                                <option value="NationParkNamGiang">RPH Nam Giang</option>
-                            }
-                            else if (typeNationPark == "NationParkMuongTe")
-                            {
-                                <option value="NationParkMuongTe">RPH Mường Tè</option>
-                            }
-                            else
-                            {
-                                <option value="NationParkNamGiang">RPH Nam Giang</option>
-                                <option value="NationParkMuongTe">RPH Mường Tè</option>
-                            }
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="hidden" asp-for="Id" class="form-control" />
+                            <div class="form-group">
+                                <label asp-for="IdDtvLoai" class="control-label">Loài:</label>
+                                <select asp-for="IdDtvLoai" name="IdDtvLoai" asp-items="@ViewBag.Categories" class="form-control select2">
+                                </select>
+                            </div>
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="FileDinhKem" class="control-label">Ảnh đính kèm:</label>
-                        <input type="file" multiple asp-for="FileDinhKem" class="form-control" />
-                        <span asp-validation-for="FileDinhKem" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="GiaTriSuDung" class="control-label">Công dụng/ Giá trị sử dụng:</label>
-                        <textarea placeholder="Tối đa 255 kí tự" style="height:100px;" maxlength="255" asp-for="GiaTriSuDung" class="form-control"></textarea>
-                        <span asp-validation-for="GiaTriSuDung" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="DacDiem" class="control-label">Đặc điểm hình thái, sinh thái:</label>
-                        <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
-                        <span asp-validation-for="DacDiem" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="HinhAnh" class="control-label" style="display:block">Hình ảnh:</label>
-                        @{
-                            List<string> ListUrl = new List<string>();
-                            @if (Model != null)
-                            {
-                                if (!String.IsNullOrEmpty(Model.HinhAnh))
+                            <div class="form-group">
+                                <label asp-for="TenKhac" class="control-label">Tên khác:</label>
+                                <input asp-for="TenKhac" class="form-control" />
+                                <span asp-validation-for="TenKhac" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PhanBo" class="control-label">Vùng phân bố:</label>
+                                <input asp-for="PhanBo" class="form-control" />
+                                <span asp-validation-for="PhanBo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NguonTaiLieu" class="control-label">Nguồn tài liệu:</label>
+                                <input asp-for="NguonTaiLieu" class="form-control" />
+                                <span asp-validation-for="NguonTaiLieu" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Status" class="control-label">Trạng thái: </label>
+                                <select asp-for="Status" class="form-control" id="dropdown" name="Status">
+                                    <option value="1">Bật</option>
+                                    <option value="0">Tắt</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TypeNationPark" class="control-label">Rừng phòng hộ: </label>
+                                <select onchange="zoomMap()" asp-for="TypeNationPark" class="form-control typeNationPark" id="dropdown" name="TypeNationPark">
+                                    @{
+                                        var typeNationPark = User.FindFirstValue(ClaimTypes.Role);
+                                    }
+                                    @if (typeNationPark == "NationParkNamGiang")
+                                    {
+                                        <option value="NationParkNamGiang">RPH Nam Giang</option>
+                                    }
+                                    else if (typeNationPark == "NationParkMuongTe")
+                                    {
+                                        <option value="NationParkMuongTe">RPH Mường Tè</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="NationParkNamGiang">RPH Nam Giang</option>
+                                        <option value="NationParkMuongTe">RPH Mường Tè</option>
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FileDinhKem" class="control-label">Ảnh đính kèm:</label>
+                                <input type="file" multiple asp-for="FileDinhKem" class="form-control" />
+                                <span asp-validation-for="FileDinhKem" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="GiaTriSuDung" class="control-label">Công dụng/ Giá trị sử dụng:</label>
+                                <textarea placeholder="Tối đa 255 kí tự" style="height:100px;" maxlength="255" asp-for="GiaTriSuDung" class="form-control"></textarea>
+                                <span asp-validation-for="GiaTriSuDung" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="DacDiem" class="control-label">Đặc điểm hình thái, sinh thái:</label>
+                                <textarea asp-for="DacDiem" id="editor" class="form-control"></textarea>
+                                <span asp-validation-for="DacDiem" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="HinhAnh" class="control-label" style="display:block">Hình ảnh:</label>
+                                @{
+                                    List<string> ListUrl = new List<string>();
+                                    @if (Model != null)
+                                    {
+                                        if (!String.IsNullOrEmpty(Model.HinhAnh))
+                                        {
+                                            ListUrl = (@Model.HinhAnh.Split(",")).ToList();
+                                        }
+                                        else
+                                        {
+                                            ListUrl = null;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ListUrl = null;
+                                    }
+                                }
+                                @if (ListUrl != null)
                                 {
-                                    ListUrl = (@Model.HinhAnh.Split(",")).ToList();
+                                    @foreach (var Url in ListUrl)
+                                    {
+                                        @if (!String.IsNullOrEmpty(Url))
+                                        {
+                                            <img style="height: 200px;width:200px;" src="/user-content/@Url" alt="..." class="img-thumbnail">
+                                        }
+                                    }
+                                    <div class="form-check  ">
+                                        <input asp-for="isDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            Xóa ảnh
+                                        </label>
+                                    </div>
                                 }
                                 else
                                 {
-                                    ListUrl = null;
+                                    <img style="height: 200px;width:200px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
                                 }
-                            }
-                            else
-                            {
-                                ListUrl = null;
-                            }
-                        }
-                        @if (ListUrl != null)
-                        {
-                            @foreach (var Url in ListUrl)
-                            {
-                                @if (!String.IsNullOrEmpty(Url))
-                                {
-                                    <img style="height: 200px;width:200px;" src="/user-content/@Url" alt="..." class="img-thumbnail">
-                                }
-                            }
-                            <div class="form-check  ">
-                                <input asp-for="isDelete" class="form-check-input" type="checkbox" id="defaultCheck1">
-                                <label class="form-check-label" for="defaultCheck1">
-                                    Xóa ảnh
-                                </label>
+
+
                             </div>
-                        }
-                        else
-                        {
-                            <img style="height: 200px;width:200px;display:block;" src="/admin/assets/img/no-image-available-icon-flat-vector-25898826.jpg" alt="..." class="img-thumbnail">
-                        }
-
-
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <label asp-for="KinhDo" class="control-label">Kinh độ:</label>
-                            <input asp-for="KinhDo" class="form-control" name="KinhDo" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="ViDo" class="control-label">Vĩ độ:</label>
-                            <input asp-for="ViDo" class="form-control" name="ViDo" />
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label asp-for="KinhDo" class="control-label">Kinh độ:</label>
+                                    <input asp-for="KinhDo" class="form-control" name="KinhDo" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="ViDo" class="control-label">Vĩ độ:</label>
+                                    <input asp-for="ViDo" class="form-control" name="ViDo" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="control-label">Bản đồ:</label>
+                                <div id="map" style="width: 100%; height: 400px"></div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="control-label">Bản đồ:</label>
-                        <div id="map" style="width: 100%; height: 400px"></div>
+                    <div class="row">
+                        <div class="form-group mt-2 text-center">
+                            <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                            <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
+                            <a asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
-            <div class="row">
-                <div class="form-group mt-2">
-                    <input type="hidden" asp-for="UpdatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <a asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
-
-
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
+    
 </div>

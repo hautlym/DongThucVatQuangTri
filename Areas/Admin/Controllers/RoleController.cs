@@ -16,7 +16,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         private readonly IManageRole _manageRole;
         public RoleController(IManageRole manageRole)
         {
-                _manageRole = manageRole;
+            _manageRole = manageRole;
         }
         public async Task<IActionResult> Index(string keyword, int PageIndex = 1, int PageSize = 10)
         {
@@ -42,7 +42,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int Id)
         {
             var result = await _manageRole.getRoleById(Id);
-            if(result == null)
+            if (result == null)
             {
                 TempData["error"] = "Không tìm thấy role";
                 return RedirectToAction("Index");
@@ -64,14 +64,14 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(UpdateRoleRequest request)
         {
             if (!ModelState.IsValid)
-                return View();
+                return View(ModelState);
             var result = await _manageRole.UpdateRole(request);
-            if(result<0)
+            if (result < 0)
             {
-                if(result==-2)
+                if (result == -2)
                 {
-                    ModelState.AddModelError("RoleName", "Tên đã tồn tại");
-                    return View();
+                    TempData["error"] = "Tên quyền đã tồn tại";
+                    return RedirectToAction("Index");
                 }
                 TempData["error"] = "Sửa quyền không thành công";
                 return RedirectToAction("Index");
@@ -81,7 +81,7 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 TempData["result"] = "Sửa thành công";
                 return RedirectToAction("Index");
             }
-            
+
         }
     }
 }

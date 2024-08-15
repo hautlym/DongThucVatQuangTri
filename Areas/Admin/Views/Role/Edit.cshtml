@@ -2,39 +2,42 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Chỉnh sửa thông tin";
-    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+    //Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
-<div class="container-fluid px-4">
-    <h1 class="mt-4">@ViewData["Title"]</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item active"> @ViewData["Title"] </li>
-    </ol>
-    <div style="margin: 20px 0;">
-        <a class="btn btn-success" asp-action="Index" asp-controller="Role" ><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách nhóm quyền</a>
-    </div>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-            <form asp-action="Edit" class="row">
-                @if (ViewBag.ErrorMsg != null)
-                {
-                    <div id="msgAlert" class="alert alert-danger" role="alert">
-                        @ViewBag.ErrorMsg
+
+<!-- Button trigger modal -->
+<div data-bs-toggle="modal" data-bs-target="#exampleModal@{
+    @Model.Id
+}">
+    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal@{@Model.Id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-action="Edit" class="row" data-ajax-method="POST" data-ajax="true" data-ajax-update="UpdateRoleForm@{
+        @Model.Id
+}" data-ajax-complete="OnComplete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sửa nhóm quyền</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-wrap" id="UpdateRoleForm@{
+                    @Model.Id
+}">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="col-lg-12 col-md-12 col-12">
+                            <label for="message-text" class="col-form-label">Tên quyền:</label>
+                            <input asp-for="RoleName" class="form-control rounded my-1" id="message-text"></input>
+                            <span asp-validation-for="RoleName" class="text-danger fs-5 mt-1"></span>
                     </div>
-                }
-                <div class="form-group">
-                    <input type="hidden" asp-for="Id" class="form-control" />
                 </div>
-                <div class="form-group">
-                    <label asp-for="RoleName" class="control-label">Tên quyền</label>
-                    <input asp-for="RoleName" class="form-control" />
-                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Sửa thông tin</button>
                 </div>
-                <div class="form-group mt-2">
-                    <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>

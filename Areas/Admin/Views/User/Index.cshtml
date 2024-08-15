@@ -4,7 +4,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model PageResult<UserViewModels>
 @{
-    ViewData["Title"] = "Danh sách người dùng";
+    ViewData["Title"] = "Quản lí người dùng";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
 @section Scripts{
@@ -15,35 +15,36 @@
     </script>
 }
 <div class="container-fluid px-4">
-
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"> Trang chủ</a></li>
-        <li class="breadcrumb-item active">Danh sách người dùng </li>
-    </ol>
-    <h1 class="mt-4">Danh sách người dùng</h1>
-    <div class="card mb-12">
+    <div class="col-lg-12">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+            <h4 class="mt-4">@ViewData["Title"]</h4>
+            <ol class="breadcrumb mb-4 bg-white shadow">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"> Trang chủ</a></li>
+                <li class="breadcrumb-item active">@ViewData["Title"]</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="card shadow mb-12">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-5 col-xs-12 mt-1">
                     <a asp-action="Create" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i> Thêm người dùng</a>
                 </div>
                 <div class="col-md-7 col-xs-12 mt-1">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-md-12">
                             <form asp-action="Index" asp-controller="User" method="post" class="row">
-                                <div class="col-md-4">
-                                    <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control mt-1" />
-                                </div>
                                 <div class="col-md-4">
                                     <select name="Roles" onchange="this.form.submit()" asp-items="@ViewBag.Roles" class="form-control mt-1">
                                         <option value="">--Chọn nhóm quyền--</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary mt-1" type="submit">Tìm kiếm</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <a class="btn btn-secondary mt-1" href="@Url.Action("Index","User",new {keyword = ""})">Reset</a>
+                                <div class="col-md-8">
+                                    <div class="input-group mb-3 mt-1">
+                                        <input type="text" value="@ViewBag.Keyword" class="form-control" name="keyword" placeholder="Nhập từ khóa cần tìm ...">
+                                        <button class="btn btn-primary" type="submit"  id="button-addon2"><i class="fas fa-search"></i></button>
+                                        <a class="btn btn-secondary" href="@Url.Action("Index","User",new {keyword = ""})">Clear</a>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -51,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-body align-middle">
+        <div class="card-body align-middle overflow-auto">
 
             @if (ViewBag.ErrorMsg != null)
             {
@@ -88,7 +89,7 @@
                             Ngày tạo
                         </th>
                         <th scope="col">
-                            Last Login
+                            Đăng nhập cuối
                         </th>
                         <th scope="col">
                             Trạng thái
