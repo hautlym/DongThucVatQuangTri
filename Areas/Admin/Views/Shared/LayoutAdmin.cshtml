@@ -12,6 +12,7 @@
     *@
     <title>@ViewData["Title"] - Admin </title>
     <link rel="icon" href="/images/logo.png">
+     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
@@ -21,6 +22,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/admin/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    
     <link rel="stylesheet" href="/lib/image-popup/magnific-popup.css">
     <style>
         select {
@@ -80,11 +82,12 @@
                                 @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator") || User.FindFirst(ClaimTypes.Role).Value.Equals("NationParkMuongTe") || User.FindFirst(ClaimTypes.Role).Value.Equals("NationParkNamGiang"))
                                 {
                                     <a class="nav-link" asp-action="Index" asp-controller="User">Danh sách</a>
-                                    <a class="nav-link" asp-action="Create" asp-controller="User">Thêm mới</a>
+                                    
                                 }
                                 @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
                                 {
-                                    <a class="nav-link" asp-action="ChangePasswordList" asp-controller="User">Đổi mật khẩu</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="User">Thêm mới</a>
+                                    <a class="nav-link" asp-action="ChangePasswordList" asp-controller="User">Đặt lại mật khẩu</a>
                                 }
                                 <a class="nav-link" asp-action="Details" asp-controller="User" asp-route-Id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">Thông tin User</a>
                             </nav>
@@ -358,6 +361,19 @@
     <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function(){
+            $("input[type='password']").each(function (idx, event) {
+                if (!event.value || event.value?.trim() == "") {
+                    $(".togglePassword").css("display", "none");
+                    $(event).attr("style", "border-right: 1px solid #ced4da !important;border-top-right-radius: 0.25rem;border-bottom-right-radius: 0.25rem; ");
+                } else {
+                    $(".togglePassword").css("display", "flex");
+                    $(event).attr("style", "");
+                }
+            })
+        })
+    </script>
     @*     <script>
     $(document).ready(function () {
     // Tìm số lượng thẻ select và in ra console

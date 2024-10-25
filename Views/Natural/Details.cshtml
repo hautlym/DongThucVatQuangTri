@@ -3,12 +3,33 @@
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.FamilyManage.Dtos;
 @using DongThucVatQuangTri.Applications.AnimalsAndPlant.SetManage.Dtos;
 @using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
 
 @model DetailsModels
 
 @{
     ViewData["Title"] = "Thông tin loài";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var SearchModelSession = Context.Session.GetString("SearchModel");
+    var SearchModel = JsonConvert.DeserializeObject<SearchModel>(SearchModelSession);
+    var UrlListAnimal = Url.ActionLink(
+    "Index",
+    "Natural",                          // Tên controller
+    new
+    {
+        keyword = SearchModel.keyword,         // Truyền tham số keyword
+        keyword2 = SearchModel.keyword2,       // Truyền tham số keyword2
+        IdLoai = SearchModel.IdLoai,           // Truyền tham số IdLoai
+        id_nganh = SearchModel.id_nganh,       // Truyền tham số id_nganh
+        id_lop = SearchModel.id_lop,           // Truyền tham số id_lop
+        id_bo = SearchModel.id_bo,             // Truyền tham số id_bo
+        id_ho = SearchModel.id_ho,             // Truyền tham số id_ho
+        icun = SearchModel.icun,               // Truyền tham số icun
+        sdvn = SearchModel.sdvn,               // Truyền tham số sdvn
+        ndcp = SearchModel.ndcp,               // Truyền tham số ndcp
+        nd64cp = SearchModel.nd64cp,           // Truyền tham số nd64cp
+        vqg = SearchModel.vqg                  // Truyền tham số vqg
+    });
 }
 @{
     string vqg = Context.Session.GetString("NationPark");
@@ -103,9 +124,18 @@
 </style>
 <div id="content" style="margin:0 0 150px">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
-
+    
     <div class="tintuc" id="trangchitiet">
+        
         <div class="maincontent">
+            <div class="col-lg-12">
+                <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-4 bg-white shadow p-2">
+                        <li class="breadcrumb-item"><a href="@UrlListAnimal">Danh sách loài</a></li>
+                        <li class="breadcrumb-item active">Thông tin loài </li>
+                    </ol>
+                </nav>
+            </div>
             <h2><span style="font-family:LoraF;">Thông tin loài <span></span></span></h2>
             <div class="row">
                 <div class="col-md-12">

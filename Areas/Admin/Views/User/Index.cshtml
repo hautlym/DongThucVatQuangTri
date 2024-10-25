@@ -7,7 +7,7 @@
     ViewData["Title"] = "Quản lí người dùng";
     Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
 }
-@section Scripts{
+@section Scripts {
     <script>
         setTimeout(function () {
             $('#msgAlert').fadeOut("slow");
@@ -42,7 +42,7 @@
                                 <div class="col-md-8">
                                     <div class="input-group mb-3 mt-1">
                                         <input type="text" value="@ViewBag.Keyword" class="form-control" name="keyword" placeholder="Nhập từ khóa cần tìm ...">
-                                        <button class="btn btn-primary" type="submit"  id="button-addon2"><i class="fas fa-search"></i></button>
+                                        <button class="btn btn-primary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                                         <a class="btn btn-secondary" href="@Url.Action("Index","User",new {keyword = ""})">Clear</a>
                                     </div>
                                 </div>
@@ -134,40 +134,45 @@
 
 
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
-                                    <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
-                                </a>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
-                                    @item.Id
-                                }" style="border:none;background-color:transparent;">
-                                    <i class="fa-solid fa-trash" style="color: #f20707;"></i>
-                                </button>
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModal@{
-                                                    @item.Id
+                                @if (User.FindFirstValue(ClaimTypes.Role) == "Administator")
+                                {
+
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                        <i class="fa-regular fa-pen-to-square" style="color: #194de6;"></i>
+                                    </a>
+
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal@{
+                                        @item.Id
+                                    }" style="border:none;background-color:transparent;">
+                                        <i class="fa-solid fa-trash" style="color: #f20707;"></i>
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal@{
+                                                        @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        @using (Html.BeginForm("Delete", "User", FormMethod.Post))
-                                        {
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Xóa tài khoản</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="modal-dialog">
+                                            @using (Html.BeginForm("Delete", "User", FormMethod.Post))
+                                            {
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Xóa tài khoản</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Bạn có muốn xóa tài khoản @item.Email không ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
+                                                        <input type="hidden" name="Id" value="@item.Id">
+                                                        <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
+                                                            Xóa tài khoản
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    Bạn có muốn xóa tài khoản @item.Email không ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" style="padding:5px 20px;" data-bs-dismiss="modal">Đóng</button>
-                                                    <input type="hidden" name="Id" value="@item.Id">
-                                                    <button type="submit" class="btn btn-danger" style="padding:5px 20px;">
-                                                        Xóa tài khoản
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        }
+                                            }
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </td>
 
 

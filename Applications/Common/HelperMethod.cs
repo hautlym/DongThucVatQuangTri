@@ -36,6 +36,33 @@ namespace DongThucVatQuangTri.Applications.Common
                 return false;
             }
         }
+        public static bool AreEqual<T>(T obj1, T obj2)
+        {
+            if (obj1 == null || obj2 == null)
+                return false;
+
+            // Lấy tất cả các thuộc tính của đối tượng
+            var properties = typeof(T).GetProperties();
+
+            foreach (var property in properties)
+            {
+                var value1 = property.GetValue(obj1);
+                var value2 = property.GetValue(obj2);
+
+                // Kiểm tra nếu hai giá trị không giống nhau (kể cả null)
+                if (value1 != null && value2 != null)
+                {
+                    if (!value1.Equals(value2))
+                        return false;
+                }
+                else if (value1 == null && value2 != null || value1 != null && value2 == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static class EnumExtensions
         {
             public static string GetEnumMemberValue(Enum value)

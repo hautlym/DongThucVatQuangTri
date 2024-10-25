@@ -1,0 +1,114 @@
+﻿@* @ú
+@model SearchModel
+
+<form id="formSearch" asp-action="Index" asp-controller="Natural">
+    <input type="hidden" name="idLoai" value="@idLoai" />
+    <div class="naturalOption">
+        <div class="row">
+            <div class="col-md-3"><span>Ngành:</span></div>
+            <div class="col-md-3"><span>Lớp:</span></div>
+            <div class="col-md-3"><span>Bộ:</span></div>
+            <div class="col-md-3"><span>Họ:</span></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <select class="form-control select2" name="id_nganh" asp-items="@ViewBag.NganhSearch" onchange="getListLop(this.value)">
+                    <option value="0">
+                        Ngành
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control select2 LopSearch" name="id_lop" onchange="getListBo(this.value)">
+                    <option value="0">
+                        Lớp
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control select2 BoSearch" name="id_bo" onchange="getListHo(this.value)">
+                    <option value="0">
+                        Bộ
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control select2 HoSearch" name="id_ho">
+                    <option value="0">
+                        Họ
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="BaoTonOption ">
+        <div class="row" style=" margin-top:20px;">
+            <span>Mức độ bảo tồn:</span>
+        </div>
+        <div class="row">
+
+            <div class="col-md-3">
+                <select name="icun" asp-items="@ViewBag.MucDoBaoTonIUCN" class="form-control select2 ">
+                    <option value="0">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        ICUN
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="sdvn" asp-items="@ViewBag.MucDoBaoTonSDVN" class="form-control select2">
+                    <option value="0">Sách đỏ Việt Nam</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="ndcp" asp-items="@ViewBag.MucDoBaoTonNDCP" class="form-control select2">
+                    @if (idLoai == 1)
+                    {
+                        <option value="0">Nghị định 84/ NĐ-CP</option>
+                    }
+                    @if (idLoai == 0)
+                    {
+                        <option value="0">Nghị định 32/ NĐ-CP</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                @if (idLoai == 1)
+                {
+                    <select name="nd64cp" asp-items="@ViewBag.MucDoBaoTonND64CP" class="form-control">
+                        <option value="0">Nghị định 64/ NĐ-CP</option>
+                    </select>
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="NationParkOption " id="selectElement">
+        <div class="col-md-3">Chọn rừng phòng hộ: </div>
+        <div class="col-md-9">
+            <select class="form-control col-md-9 " name="vqg">
+                <option value="All">
+                    Tất cả
+                </option>
+                <option value="NationParkMuongTe">
+                    BQL RPH Mường Tè
+                </option>
+                <option value="NationParkNamGiang">
+                    BQL RPH Nam Giang
+                </option>
+            </select>
+
+        </div>
+    </div>
+    <div class="TextSearch">
+        <div class="row" style=" margin-top:20px;">
+            <div class="col-md-5">Tên tiếng Việt:</div>
+            <div class="col-md-5">Tên khoa học:</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5"><input class="form-control" name="keyword" /></div>
+            <div class="col-md-4"><input class="form-control" name="keyword2" /></div>
+            <div class="col-md-3"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button></div>
+        </div>
+    </div>
+</form> *@

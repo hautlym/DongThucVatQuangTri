@@ -99,7 +99,10 @@
                                     </select>
                                 </div>
                             </div>
-
+                        }
+                        else
+                        {
+                            <input type="hidden" asp-for="Roles" value="@User.FindFirstValue(ClaimTypes.Role)" />
                         }
                         <div class="form-group row">
                             <label asp-for="GroupUserId" class="control-label col-lg-3">Nhóm người dùng <span class="text-danger">*</span>:</label>

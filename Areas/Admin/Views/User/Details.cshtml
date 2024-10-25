@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using DongThucVatQuangTri.Applications.Enums
 @model DongThucVatQuangTri.Applications.UserManage.Dtos.UserViewModels
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -12,6 +13,7 @@
             <h4 class="mt-4">@ViewData["Title"] @Model.Email</h4>
             <ol class="breadcrumb mb-4 bg-white shadow">
                 <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="User">Quản lí người dùng</a></li>
                 <li class="breadcrumb-item active">Thông tin tài khoản </li>
             </ol>
         </nav>
@@ -21,15 +23,7 @@
     <div class="card mb-4 shadow">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-12">
-                    <div style="margin:0 0 20px;">
-                        @if (User.FindFirst(ClaimTypes.Role).Value.Equals("Administator"))
-                        {
-                            <a class="btn btn-success" asp-action="Index" asp-controller="User"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Quản lý người dùng</a>
-                        }
-                       
-                    </div>
-                </div>
+                
                 <div class="col-md-12">
                     <dl class="row">
                         <table class="table table-striped">
@@ -82,7 +76,9 @@
                                 
                                 <tr>
                                     <th> Vai trò:</th>
-                                    <td> @Html.DisplayFor(model => model.Roles)</td>
+                                    <td>
+                                        @(Permittion.Roles[Model.Roles])
+                                        </td>
                                 </tr>
                                 <tr>
                                     <th> Nhóm người dùng:</th>
@@ -92,14 +88,18 @@
                         </table>
                     </dl>
                     <div>
-                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
-                            <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
-                            Chỉnh sửa
-                        </a>
-                        <a class="btn btn-primary" asp-action="ChangePassword" asp-route-id="@Model.Id">
-                            <i class="fa-solid fa-key"></i>
-                            Đổi mật khẩu
-                        </a>
+                        @if (User.FindFirstValue(ClaimTypes.Role) == "Administator" || User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Id.ToString())
+                        {
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                                Chỉnh sửa
+                            </a>
+                            <a class="btn btn-primary" asp-action="ChangePassword" asp-route-id="@Model.Id">
+                                <i class="fa-solid fa-key"></i>
+                                Đổi mật khẩu
+                            </a>
+                        }
+
                     </div>
                 </div>
             </div>

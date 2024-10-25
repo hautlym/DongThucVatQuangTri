@@ -27,6 +27,7 @@
     }
 }
 <script>
+
     // $(document).ready(function () {
     //     $("#formSearch").submit(function (event) {
     //         // Ngăn chặn việc gửi lại trang
@@ -88,80 +89,129 @@
     // });
 </script>
 <script type="text/javascript">
-    
-    function CallDownLoad() { 
-        if (idNganh != null) { 
+
+    function CallDownLoad() {
+        if (idNganh != null) {
         }
     }
     function getListLop(idNganh) {
-        $(".LopSearch").show();
-        $.ajax({
-            url: "@Url.Action("GetListLop", "Natural")",
-            data: { IdNganh: idNganh },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                console.log(data)
-                var markup = "<option value='0'>Lớp</option>";
-                var markup1 = "<option value='0'>Bộ</option>";
-                var markup2 = "<option value='0'>Họ</option>";
-                for (var x = 0; x < data.length; x++) {
-                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+        return new Promise((resolve, reject) => {
+            $(".LopSearch").show();
+            $.ajax({
+                url: "@Url.Action("GetListLop", "Natural")",
+                data: { IdNganh: idNganh },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    console.log(data)
+                    var markup = "<option value='0'>Lớp</option>";
+                    var markup1 = "<option value='0'>Bộ</option>";
+                    var markup2 = "<option value='0'>Họ</option>";
+                    for (var x = 0; x < data.length; x++) {
+                        markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                    }
+                    $(".LopSearch").html(markup).show();
+                    $(".BoSearch").html(markup1).show();
+                    $(".HoSearch").html(markup2).show();
+                    resolve();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                    reject();
                 }
-                $(".LopSearch").html(markup).show();
-                $(".BoSearch").html(markup1).show();
-                $(".HoSearch").html(markup2).show();
-            },
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
-        });
+            });
+        })
     }
     function getListBo(IdLop) {
-        $(".BoSearch").show();
-        $.ajax({
-            url: "@Url.Action("GetListBo", "Natural")",
-            data: { idLop: IdLop },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                console.log(data)
-                var markup = "<option value='0'>Bộ</option>";
-                var markup2 = "<option value='0'>Họ</option>";
-                for (var x = 0; x < data.length; x++) {
-                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+        return new Promise((resolve, reject) => {
+            $(".BoSearch").show();
+            $.ajax({
+                url: "@Url.Action("GetListBo", "Natural")",
+                data: { idLop: IdLop },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    console.log(data)
+                    var markup = "<option value='0'>Bộ</option>";
+                    var markup2 = "<option value='0'>Họ</option>";
+                    for (var x = 0; x < data.length; x++) {
+                        markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                    }
+                    $(".BoSearch").html(markup).show();
+                    $(".HoSearch").html(markup2).show();
+                    resolve();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                    reject();
                 }
-                $(".BoSearch").html(markup).show();
-                $(".HoSearch").html(markup2).show();
-            },
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
-        });
+            });
+        })
     }
     function getListHo(IdBo) {
-        $(".HoSearch").show();
-        $.ajax({
-            url: "@Url.Action("getListHo", "Natural")",
-            data: { idBo: IdBo },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                console.log(data)
-                var markup = "<option value='0'>Họ</option>";
-                for (var x = 0; x < data.length; x++) {
-                    markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+        return new Promise((resolve, reject) => {
+            $(".HoSearch").show();
+            $.ajax({
+                url: "@Url.Action("getListHo", "Natural")",
+                data: { idBo: IdBo },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    console.log(data)
+                    var markup = "<option value='0'>Họ</option>";
+                    for (var x = 0; x < data.length; x++) {
+                        markup += "<option value=" + data[x].value + ">" + data[x].text + "</option>";
+                    }
+                    $(".HoSearch").html(markup).show();
+                    resolve();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                    reject();
                 }
-                $(".HoSearch").html(markup).show();
-            },
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
-        });
+            });
+        })
     }
 
 </script>
+<script type="text/javascript">
+    SetParam()
+    async function SetParam() {
+        const currentUrl = window.location.href;
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const idNganh = urlParams.get('id_nganh');
+        const idLop = urlParams.get('id_lop');
+        const idBo = urlParams.get('id_bo');
+        const idHo = urlParams.get('id_ho');
+        const RPH = urlParams.get('vqg');
+        const Keyword1 = urlParams.get('keyword');
+        const Keyword2 = urlParams.get('keyword2');
+        $(document).ready(function () {
+            $("select[name='vqg']").val(RPH?? All)
+            $("input[name='keyword']").val(Keyword1)
+            $("input[name='keyword2']").val(Keyword2)
+        })
+       
+        if (!idNganh || idNganh == 0) {
+            return;
+        }
+        await getListLop(idNganh);
+        $('.LopSearch').val(idLop);
+
+        if (!idLop || idLop == 0) {
+            return;
+        }
+        await getListBo(idLop);
+        $('.BoSearch').val(idBo);
+        if (!idBo || idBo == 0) {
+            return;
+        }
+        await getListHo(idBo);
+        $('.HoSearch').val(idHo);
+    }
+
+</script>
 <style>
     .noibat {
         max-width: 800px;
@@ -215,8 +265,8 @@
         line-height: normal;
     }
     /* .BaoTonOption select{
-                                                    margin-left: 20px
-                                                } */
+                                                                    margin-left: 20px
+                                                                } */
 </style>
 <div id="content">
     <div class="cover"><img src="/images/cover.png" width="1920" height="252" alt="" /></div>
@@ -228,7 +278,7 @@
                 </h2>
             </marquee>
             <div class="searchBox">
-                <form id="formSearch" asp-action="Index" asp-controller="Natural">
+                <form id="formSearch" asp-action="Index" asp-controller="Natural" method="get">
                     <input type="hidden" name="idLoai" value="@idLoai" />
                     <div class="naturalOption">
                         <div class="row">
@@ -406,32 +456,32 @@
                                         @{
                                             try
                                             {
-                                                <h6 style="font-size:12px;">
-                                                    @if (!String.IsNullOrEmpty(@item.NameHo))
+                                                        <h6 style="font-size:12px;">
+                                                            @if (!String.IsNullOrEmpty(@item.NameHo))
                                                     {
-                                                        @item.NameHo
+                                                                @item.NameHo
                                                     }
-                                                </h6>
-                                                <h6 style="font-size:12px;">
-                                                    @if (ItemBo != null)
+                                                        </h6>
+                                                        <h6 style="font-size:12px;">
+                                                            @if (ItemBo != null)
                                                     {
-                                                        @ItemBo.Name
-                                                    }
-
-                                                </h6>
-                                                <h6 style="font-size:12px;">
-                                                    @if (itemLop != null)
-                                                    {
-                                                        @itemLop.Name
+                                                                @ItemBo.Name
                                                     }
 
-                                                </h6>
-                                                <h6 style="font-size:12px;">
-                                                    @if (itemNganh != null)
+                                                        </h6>
+                                                        <h6 style="font-size:12px;">
+                                                            @if (itemLop != null)
                                                     {
-                                                        @itemNganh.Name
+                                                                @itemLop.Name
                                                     }
-                                                </h6>
+
+                                                        </h6>
+                                                        <h6 style="font-size:12px;">
+                                                            @if (itemNganh != null)
+                                                    {
+                                                                @itemNganh.Name
+                                                    }
+                                                        </h6>
                                             }
                                             catch (Exception ex) { }
                                         }

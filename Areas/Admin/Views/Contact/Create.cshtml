@@ -95,7 +95,6 @@
                                 <option value="NationParkNamGiang">RPH Nam Giang</option>
                                 <option value="NationParkMuongTe">RPH Mường Tè</option>
                             }
-
                         </select>
                     </div>
                     <input type="hidden" asp-for="Author" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
@@ -104,7 +103,6 @@
                         <textarea asp-for="Description" id="editor" class="form-control"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-                    
                 </div>
             </div>
             <div class="row">

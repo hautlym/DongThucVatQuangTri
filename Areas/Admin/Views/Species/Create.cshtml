@@ -126,7 +126,7 @@
                             <input type="hidden" asp-for="Loai" value="@idLoai" />
                             <input type="hidden" asp-for="CreatedBy" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
                             <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Lưu</button>
-                            <button asp-action="Index" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</button>
+                            <a asp-action="Index" type="button" class="btn btn-secondary" asp-route-loai="@idLoai"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Hủy</a>
                             @*      <input type="submit" value="Lưu" class="btn btn-primary" style="margin: 20px 0;" />
                             <button asp-action="Index" asp-route-loai="@idLoai" class="btn btn-secondary" />Hủy</button> *@
                         </div>

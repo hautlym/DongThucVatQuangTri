@@ -6,10 +6,12 @@ using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.Dtos;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesManage.DtosPublic;
 using DongThucVatQuangTri.Applications.AnimalsAndPlant.SpeciesNationParkManage;
+using DongThucVatQuangTri.Applications.Common;
 using DongThucVatQuangTri.Applications.Enums;
 using DongThucVatQuangTri.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Drawing.Printing;
 
 namespace DongThucVatQuangTri.Controllers
@@ -33,8 +35,35 @@ namespace DongThucVatQuangTri.Controllers
             _manageSpeciesNationPark = manageSpeciesNationPark;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(SearchModel searchModel, int PageIndex = 1, int PageSize = 20)
         {
+
+            // Lấy SearchModel từ session
+            var sessionSearchModel = HttpContext.Session.GetString("SearchModel");
+            SearchModel storedSearchModel = null;
+
+            if (!string.IsNullOrEmpty(sessionSearchModel))
+            {
+                storedSearchModel = JsonConvert.DeserializeObject<SearchModel>(sessionSearchModel);
+            }
+
+            // Sử dụng reflection để kiểm tra nếu SearchModel truyền lên khác với SearchModel trong session
+            bool hasSearchChanged = storedSearchModel == null ||
+                                    !HelperMethod.AreEqual(searchModel, storedSearchModel);
+
+            // Nếu có thay đổi, ghi đè session với SearchModel mới
+            if (hasSearchChanged)
+            {
+                HttpContext.Session.SetString("SearchModel", JsonConvert.SerializeObject(searchModel));
+            }
+            else
+            {
+                // Nếu không có thay đổi, lấy lại SearchModel từ session
+                searchModel = storedSearchModel;
+            }
+
+
             var typeNationPark = HttpContext.Session.GetString("NationPark");
             if (String.IsNullOrEmpty(searchModel.vqg))
             {
@@ -112,7 +141,7 @@ namespace DongThucVatQuangTri.Controllers
             return View(data.ResultObj);
         }
         [HttpGet]
-        public async Task<IActionResult> Details(int Id)
+        public async Task<IActionResult> Details(int Id, string currentUrl = "")
         {
             var result1 = await _manageSpeciesNationPark.getItemById(Id);
             var result = await _manageSpecies.getItemById(result1.IdDtvLoai);
@@ -123,6 +152,7 @@ namespace DongThucVatQuangTri.Controllers
             ViewBag.Lop = await _manageClass.getAllItem();
             ViewBag.Bo = await _manageSet.getAllItem();
             ViewBag.Ho = await _manageFamily.getAllItem();
+            ViewBag.CurrentUrl = currentUrl;
             if (MucDoBaoTon.MuDoBaoTonIUCN.ContainsKey(result.MucDoBaoTonIucn ?? 100))
             {
                 ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";

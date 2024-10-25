@@ -12,6 +12,38 @@
             $('#msgAlert').fadeOut("slow");
         }, 2000);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+    <script>
+        feather.replace({
+            'aria-hidden': 'true'
+        });
+        function Showbutton(event) {
+            let parent = $(event.target).closest(".input-group");
+            if (!event.target.value || event.target.value?.trim() == "") {
+                
+                console.log(parent)
+                $(parent).find(".togglePassword").css("display", "none");
+                $(event.target).attr("style", "border-right: 1px solid #ced4da !important;border-top-right-radius: 0.25rem;border-bottom-right-radius: 0.25rem; width:100% !important; ");
+
+            } else {
+                $(parent).find(".togglePassword").css("display", "flex");
+                $(event.target).attr("style", "");
+            }
+        }
+        $(".togglePassword").click(function (e) {
+            e.preventDefault();
+            let parent = $(this).closest(".input-group");
+            var type = $(this).parent().parent().find("input").attr("type");
+            if (type == "password") {
+                $(parent).find("svg.feather.feather-eye").replaceWith(feather.icons["eye-off"].toSvg());
+                $(parent).find("input").attr("type", "text");
+            } else if (type == "text") {
+                $(parent).find("svg.feather.feather-eye-off").replaceWith(feather.icons["eye"].toSvg());
+                $(parent).find("input").attr("type", "password");
+            }
+        });
+    </script>
+
 }
 <div class="container-fluid px-4">
     <div class="col-lg-12">
@@ -25,13 +57,13 @@
         </nav>
     </div>
 
-    
+
     <div class="row  d-flex justify-content-center">
         <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-body">
-                   @*  <div style="margin: 20px 0;">
-                        <a class="btn btn-success" asp-action="Index" asp-controller="User"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách người dùng</a>
+                    @*  <div style="margin: 20px 0;">
+                    <a class="btn btn-success" asp-action="Index" asp-controller="User"><i class="fa-solid fa-list" style="color: #ffffff;"></i> Danh sách người dùng</a>
                     </div> *@
                     @if (ViewBag.ErrorMsg != null)
                     {
@@ -54,7 +86,7 @@
                                     <input type="email" asp-for="Email" class="form-control" />
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
-                                
+
                             </div>
                             <div class="form-group row">
                                 <label asp-for="PhoneNumber" class="control-label col-lg-3">SĐT <span class="text-danger">*</span>:</label>
@@ -62,23 +94,33 @@
                                     <input asp-for="PhoneNumber" class="form-control" />
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
-                                
+
                             </div>
-                            <div class="form-group row">
+
+                            <div class="form-group row ">
                                 <label asp-for="Password" class="control-label col-lg-3">Mật khẩu <span class="text-danger">*</span>:</label>
-                                <div class="col-lg-8">
-                                    <input type="password" asp-for="Password" class="form-control" />
-                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                <div class=" col-lg-8 ">
+                                    <div class="input-group">
+                                        <input  onkeyup="Showbutton(event)" class="form-control password border-end-0" asp-for="Password" class="block mt-1 w-full" type="password" required />
+                                        <span class="bg-white input-group-text togglePassword" id="">
+                                            <i data-feather="eye" style="cursor: pointer"></i>
+                                        </span>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
                                 </div>
-                                
                             </div>
                             <div class="form-group row">
                                 <label asp-for="ConfirmPassword" class="control-label col-lg-3">Nhập lại mật khẩu <span class="text-danger">*</span>:</label>
                                 <div class="col-lg-8">
-                                    <input type="password" asp-for="ConfirmPassword" class="form-control" />
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    <div class="input-group">
+                                        <input  onkeyup="Showbutton(event)" class="form-control password border-end-0" asp-for="ConfirmPassword" class="block mt-1 w-full" type="password" required />
+                                        <span class="bg-white input-group-text togglePassword" id="">
+                                            <i data-feather="eye" style="cursor: pointer"></i>
+                                        </span>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    </div>
                                 </div>
-                               
+
                             </div>
                             <div class="form-group row">
                                 <label asp-for="Dob" class="control-label col-lg-3"> Ngày sinh <span class="text-danger">*</span>: </label>
@@ -86,7 +128,7 @@
                                     <input type="date" asp-for="Dob" class="form-control" />
                                     <span asp-validation-for="Dob" class="text-danger"></span>
                                 </div>
-                               
+
                             </div>
                             <div class="form-group row">
                                 <label asp-for="Address" class="control-label col-lg-3">Địa chỉ <span class="text-danger">*</span>:</label>
@@ -94,7 +136,7 @@
                                     <input asp-for="Address" class="form-control" />
                                     <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
-                                
+
                             </div>
 
                             <div class="form-group row">
@@ -149,7 +191,7 @@
                                     <select asp-for="GroupUserId" name="GroupUserId" asp-items="@ViewBag.GroupUser" class="form-control ">
                                     </select>
                                 </div>
-                                
+
                             </div>
                             <div class="form-group m-2 text-center">
                                 <button type="submit" class="btn btn-primary mb-1"><i class="fa-regular fa-floppy-disk" style="color: #ffffff;"></i> Thêm tài khoản</button>
@@ -157,12 +199,11 @@
                             </div>
                         </form>
                     </div>
-                    
+
                 </div>
             </div>
-           
+
         </div>
     </div>
 </div>
-
 
