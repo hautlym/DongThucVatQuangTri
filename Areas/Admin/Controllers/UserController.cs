@@ -124,7 +124,14 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
         public async Task<IActionResult> AdminChangePassword(AdminUpdatePasswordRequest request)
         {
             if (!ModelState.IsValid)
-                return View();
+            {
+                var newpass = new AdminUpdatePasswordRequest()
+                {
+                    Id = request.Id,
+                    
+                };
+                return View(newpass);
+            }    
             var result = await _userService.AdminChangePassword(request.Id, request);
             if (result.IsSuccessed)
             {
@@ -176,7 +183,9 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                     $"              Vui lòng đăng nhập để thiết lập mật khẩu mới!\r\n                    </p>\r\n                    <a href=\"{loginUrl} \"\r\n                      style=\"background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px; \">Đăng\r\n  " +
                     $"                    nhập</a>\r\n                  </td>\r\n                </tr>\r\n                <tr>\r\n                  <td style=\"height:40px; \">&nbsp;</td>\r\n                </tr>\r\n              </table>\r\n            </td>\r\n        </table>\r\n      </td>\r\n    <tr>\r\n      <td style=\"height:20px; \">&nbsp;</td>\r\n    </tr>\r\n    </tr>\r\n  </table> <!--/100% body table-->\r\n</body>\r\n\r\n</html>";
                 await _emailSender.SendEmailAsync(user.ResultObj.Email, "Đặt lại mật khẩu", template);
-                return RedirectToAction("Index");
+                ViewBag.SuscessMsg = "Mật khẩu ngẫu nhiên đã được đổi và gửi đến người dùng. Xem mật khẩu bên phải";
+
+                return View("AdminChangePassword",request);
             }
             ViewBag.ErrorMsg = result.Message;
             return RedirectToAction("AdminChangePassword", new { Id =id});
@@ -254,26 +263,30 @@ namespace DongThucVatQuangTri.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
             var role = await _manageRole.getAll();
-            ViewBag.Roles = role.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Value.ToString(),
-            });
-            var groupUser = await _manageGroupUser.getAll();
-            ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-            });
+           
             var result = await _userService.GetById(id);
             if (result.ResultObj.Roles == "Administator" && User.FindFirstValue(ClaimTypes.NameIdentifier) != result.ResultObj.Id.ToString())
             {
                 TempData["error"] = "Bạn không được quyền chỉnh sửa";
                 return RedirectToAction("Index");
             }
+
             if (result.IsSuccessed)
             {
                 var user = result.ResultObj;
+                ViewBag.Roles = role.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Value.ToString(),
+                    Selected = x.Id == user.Roles.FirstOrDefault()
+                });
+                var groupUser = await _manageGroupUser.getAll();
+                ViewBag.GroupUser = groupUser.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                    Selected = user.GroupUserId == x.Id
+                });
                 var updateRequest = new UserUpdateRequest()
                 {
                     Dob = user.Dob,

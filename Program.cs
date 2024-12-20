@@ -155,6 +155,9 @@ builder.Services.Configure<IdentityOptions>(option =>
     option.User.RequireUniqueEmail = true;
     option.SignIn.RequireConfirmedEmail = false;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     option.SignIn.RequireConfirmedPhoneNumber = false;
+    option.Lockout.AllowedForNewUsers = false; // Không cho phép khóa tài khoản mới
+    option.Lockout.MaxFailedAccessAttempts = int.MaxValue; // Đặt số lần đăng nhập sai tối đa rất cao
+    option.Lockout.DefaultLockoutTimeSpan = TimeSpan.Zero;
 });
 builder.Services.Configure<SecurityStampValidatorOptions>(o => o.ValidationInterval = TimeSpan.FromHours(10));
 
@@ -183,7 +186,7 @@ if (!app.Environment.IsDevelopment())
     //app.UseHsts();
 }
 
-app.UseMiddleware<ErrorExceptionMiddleware>();
+//app.UseMiddleware<ErrorExceptionMiddleware>();
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseAuthentication();

@@ -51,7 +51,7 @@
                                 </tr>
                                 <tr>
                                     <th>Ngày sinh:</th>
-                                    <td>@Html.DisplayFor(model => model.Dob)</td>
+                                    <td>@Model.Dob?.ToString("dd/MM/yyyy")</td>
                                 </tr>
                                 <tr>
                                     <th>Địa chỉ:</th>
@@ -59,15 +59,15 @@
                                 </tr>
                                 <tr>
                                     <th> Ngày đăng kí:</th>
-                                    <td>@Html.DisplayFor(model => model.CreatedAt)</td>
+                                    <td>@Model.CreatedAt.ToString("dd/MM/yyyy hh:mm:ss tt")</td>
                                 </tr>
                                 <tr>
                                     <th> Ngày cập nhật:</th>
-                                    <td>@Html.DisplayFor(model => model.UpdatedAt)</td>
+                                    <td>@Model.UpdatedAt.ToString("dd/MM/yyyy hh:mm:ss tt")</td>
                                 </tr>
                                 <tr>
                                     <th> Lần đăng nhập cuối:</th>
-                                    <td>@Html.DisplayFor(model => model.LastSigninedTime)</td>
+                                    <td>@Model.LastSigninedTime?.ToString("dd/MM/yyyy hh:mm:ss tt")</td>
                                 </tr>
                                 <tr>
                                     <th> Trạng thái:</th>
@@ -94,10 +94,18 @@
                                 <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
                                 Chỉnh sửa
                             </a>
-                            <a class="btn btn-primary" asp-action="ChangePassword" asp-route-id="@Model.Id">
-                                <i class="fa-solid fa-key"></i>
-                                Đổi mật khẩu
-                            </a>
+                            if (User.FindFirstValue(ClaimTypes.Role) != "Administator" || User.FindFirstValue(ClaimTypes.NameIdentifier)==Model.Id.ToString()){
+                                <a class="btn btn-primary" asp-action="ChangePassword" asp-route-id="@Model.Id">
+                                    <i class="fa-solid fa-key"></i>
+                                    Đổi mật khẩu
+                                </a>
+                            }else{
+                                <a class="btn btn-primary" asp-action="AdminChangePassword" asp-route-id="@Model.Id">
+                                    <i class="fa-solid fa-key"></i>
+                                    Đổi mật khẩu
+                                </a>
+                            }
+                            
                         }
 
                     </div>

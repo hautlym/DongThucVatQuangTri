@@ -533,6 +533,9 @@ else
                             if (img !== null || img !== undefined || img !== "") {
                                 var listImg = img.split(",")
                                 for (var i = 0; i < listImg.length; i++) {
+                                    if(listImg[i].trim()==""){
+                                        continue;
+                                    }
                                     imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
                                 }
                             }
@@ -947,6 +950,9 @@ else
                             if (img !== null || img !== undefined || img !== "") {
                                 var listImg = img.split(",")
                                 for (var i = 0; i < listImg.length; i++) {
+                                    if(listImg[i].trim()==""){
+                                        continue;
+                                    }
                                     imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
                                 }
                             }
@@ -1359,6 +1365,9 @@ else
                             if (img !== null || img !== undefined || img !== "") {
                                 var listImg = img.split(",")
                                 for (var i = 0; i < listImg.length; i++) {
+                                    if(listImg[i].trim()==""){
+                                        continue;
+                                    }
                                     imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
                                 }
                             }
@@ -1463,230 +1472,7 @@ else
             info.addTo(map);
         </script>
     }
-    @* <script>
 
-    /*===================================================
-    MAPS  LAYER
-    ===================================================*/
-    var mapOptions = {
-    center: [22.481854, 102.616594],
-    zoom: 11,
-    attributionControl: false
-    }
-    var map = new L.map('map', mapOptions); // Creating a map object
-    var basemaps = {
-
-    GoogleStreets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-    maxZoom: 20,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }),
-    GoogleHybrid: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-    maxZoom: 20,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }),
-    GoogleSatellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    maxZoom: 20,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }),
-    GoogleTerrain: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-    maxZoom: 20,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }),
-    OpenMapStreets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-
-    };
-
-    L.control.layers(basemaps).addTo(map);
-    basemaps.GoogleHybrid.addTo(map);
-    var popup = L.popup();
-    /*===================================================
-    Attribution options
-    ===================================================*/
-    var attrOptions = {
-    prefix: 'Creater: Cường nv'
-    };
-    var mtData = L.geoJson(muongtedatarrx).addTo(map); // Add geojson rrxa muong te
-    var attr = L.control.attribution(attrOptions);
-    var scale = L.control.scale(); // Creating scale control
-    //L.geoJson(muongte_rgxa).addTo(map)
-    scale.addTo(map); // Adding scale control to the map
-    attr.addTo(map);  // Adding attribution to the map
-    // L.Control.geocoder().addTo(map); // Add search to maps
-    // Add coornidates
-    L.control.coordinates({
-    position: "bottomright", //optional default "bootomright"
-    decimals: 2, //optional default 4
-    decimalSeperator: ".", //optional default "."
-    labelTemplateLat: "Latitude: {y}", //optional default "Lat: {y}"
-    labelTemplateLng: "Longitude: {x}", //optional default "Lng: {x}"
-    enableUserInput: true, //optional default true
-    useDMS: false, //optional default false
-    useLatLngOrder: true, //ordering of labels, default false-> lng-lat
-    markerType: L.marker, //optional default L.marker
-    markerProps: {}, //optional default {},
-    labelFormatterLng: function (lng) { return lng + " lng" }, //optional default none,
-    labelFormatterLat: function (lat) { return lat + " lat" }, //optional default none
-    //customLabelFcn: function(latLonObj, opts) { "Geohash: " + encodeGeoHash(latLonObj.lat, latLonObj.lng)} //optional default none
-    }).addTo(map);
-    /*===================================================
-    Chú thích
-    ===================================================*/
-    var legend = L.control({ position: "bottomleft" });
-    legend.onAdd = function (map1) {
-    var div = L.DomUtil.create("div", "legend");
-    div.innerHTML += "<h4>Chú thích</h4>";
-    div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/treeicon.png" alt=""><span> Thực vật</span><br><br>';
-    div.innerHTML += '<img height ="30" width="30" src="/dataMaps/pic/Elephant.png" alt=""><span> Động vật </span><br>';
-    return div;
-    };
-    legend.addTo(map);
-    /*===================================================
-    Printer
-    ===================================================*/
-    L.easyPrint({
-    title: 'Máy in',
-    position: 'bottomright',
-    filename: 'IFEE-ĐenVa',
-    exportOnly: true,
-    sizeModes: ['Current', 'A4Portrait', 'A4Landscape']
-    }).addTo(map);
-    /*===================================================
-    maker point
-    ===================================================*/
-    // Icon ảnh
-    var normal = L.icon({
-    iconUrl: "/dataMaps/pic/treeicon.png",
-    iconSize: [30, 30], // size of the icon
-    iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
-    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-    });
-
-
-    var noble = L.icon({
-    iconUrl: "/dataMaps/pic/Elephant.png",
-    iconSize: [30, 30], // size of the icon
-    iconAnchor: [30, 30], // point of the icon which will correspond to marker's location
-    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-    });
-
-
-    /*===================================================
-    listpoint dtv
-    ===================================================*/
-    var planesAnimal = [
-    @foreach (var item in Model.SpeciesAnimal)
-    {
-    var text = $"['{@item.Name}', {@item.ViDo},{@item.KinhDo},{item.Id}],";
-    @Html.Raw(text)
-    }
-    ];
-    var planesPlant = [
-    @foreach (var item in Model.SpeciesPlant)
-    {
-    var text = $"['{@item.Name}', {@item.ViDo}, {@item.KinhDo},{item.Id}],";
-    @Html.Raw(text)
-    }
-    ];
-
-    for (var i = 0; i < planesAnimal.length; i++) {
-    marker = new L.marker([planesAnimal[i][1], planesAnimal[i][2]], { icon: noble }) // Hiển thị icon theo dtv
-    .bindPopup(planesAnimal[i][0])
-    .addTo(map);
-    marker.getElement().dataset.idLoai = planesAnimal[i][3];
-    marker.id = planesAnimal[i][0];
-    marker.on('click', markerOnClick);
-    }
-
-    for (var i = 0; i < planesPlant.length; i++) {
-    marker = new L.marker([planesPlant[i][1], planesPlant[i][2]], { icon: normal }) // Hiển thị icon theo dtv
-    .bindPopup(planesPlant[i][0])
-    .addTo(map);
-    marker.getElement().dataset.idLoai = planesPlant[i][3];
-    marker.id = planesPlant[i][0];
-    marker.on('click', markerOnClick);
-    }
-
-    /*===================================================
-    AJAX get data dtv from maker
-    ===================================================*/
-    function markerOnClick(e) {
-    // alert(this.id);
-    var clickedMarkerId = e.target.getElement().dataset.idLoai;
-    $.ajax({
-    url: '/Home/getInforSpecies',
-    type: 'GET',
-    data: { Id: clickedMarkerId },
-    success: function (data) {
-    console.log(data)
-    var imgitem = "";
-    if (data.success) {
-    img = data.item.fileDinhKem;
-    if (img !== null || img !== undefined || img !== "") {
-    var listImg = img.split(",")
-    for (var i = 0; i < listImg.length; i++) {
-    imgitem += "<a class='gallery-item' onclick='zoomImg()'  href ='/user-content/" + listImg[i] + "' > <img class=' border rounded' src = '/user-content/" + listImg[i] + "' alt = 'Species Image' style = 'width:100%;height:200px;object-fit:contain; margin:2px;' > </a>"
-    }
-    }
-    row = `<tr>
-    <th>Tên loài</th>
-    <td>${data.item.name == null ? "Không" : data.item.name}</td>
-    </tr>
-    <tr>
-    <th>Tên latinh</th>
-    <td>${data.item.nameLatinh == null ? "Không" : data.item.nameLatinh}</td>
-    </tr>
-    <tr>
-    <th>Tên khác</th>
-    <td>${data.item.tenKhac == null ? "Không" : data.item.tenKhac}</td>
-    </tr>
-    <tr>
-    <th>Phân bố</th>
-    <td>${data.item.phanBo == null ? "Không" : data.item.phanBo}</td>
-    </tr>
-    <tr>
-    <th>Mức độ bảo tồn IUCN</th>
-    <td>
-    ${data.mucdobaoton.mucDoBaoTonIucn == null ? "" : data.mucdobaoton.mucDoBaoTonIucn}
-    </td>
-    </tr>
-    <tr>
-    <th>Mức độ bảo tồn SDVN</th>
-    <td>
-    ${data.mucdobaoton.mucDoBaoTonSdvn == null ? "" : data.mucdobaoton.mucDoBaoTonSdvn}
-    </td>
-    </tr>
-    <tr>
-    <th>Mức độ bảo tồn NDCP</th>
-    <td>
-    ${data.mucdobaoton.mucDoBaoTonNdcp == null ? "" : data.mucdobaoton.mucDoBaoTonNdcp}
-    </td>
-    </tr>
-    <tr>
-    <th> Mức độ bảo tồn ND64CP</th>
-    <td>
-    ${data.mucdobaoton.mucDoBaoTonNd64cp == null ? "" : data.mucdobaoton.mucDoBaoTonNd64cp}
-    </td>
-    </tr>
-    <tr>
-    <th>Ảnh</th>
-    <td >
-    <div class='popup-gallery'style='width:100%;max-height: 300px; overflow-y:auto;'>
-    ${imgitem}
-    </div>
-
-    </td>
-    </tr>`
-    $('#speciesTable tbody').html(row);
-    }
-    //
-    },
-    error: function (error) {
-    console.log(error);
-    }
-
-    });
-    }
-    </script> *@
     <script>
         selectNationPark()
         function selectNationPark() {

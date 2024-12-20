@@ -11,25 +11,31 @@
     ViewData["Title"] = "Thông tin loài";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var SearchModelSession = Context.Session.GetString("SearchModel");
-    var SearchModel = JsonConvert.DeserializeObject<SearchModel>(SearchModelSession);
-    var UrlListAnimal = Url.ActionLink(
-    "Index",
-    "Natural",                          // Tên controller
-    new
-    {
-        keyword = SearchModel.keyword,         // Truyền tham số keyword
-        keyword2 = SearchModel.keyword2,       // Truyền tham số keyword2
-        IdLoai = SearchModel.IdLoai,           // Truyền tham số IdLoai
-        id_nganh = SearchModel.id_nganh,       // Truyền tham số id_nganh
-        id_lop = SearchModel.id_lop,           // Truyền tham số id_lop
-        id_bo = SearchModel.id_bo,             // Truyền tham số id_bo
-        id_ho = SearchModel.id_ho,             // Truyền tham số id_ho
-        icun = SearchModel.icun,               // Truyền tham số icun
-        sdvn = SearchModel.sdvn,               // Truyền tham số sdvn
-        ndcp = SearchModel.ndcp,               // Truyền tham số ndcp
-        nd64cp = SearchModel.nd64cp,           // Truyền tham số nd64cp
-        vqg = SearchModel.vqg                  // Truyền tham số vqg
-    });
+    string UrlListAnimal = "";
+    if(!string.IsNullOrEmpty(SearchModelSession)){
+        var SearchModel = JsonConvert.DeserializeObject<SearchModel>(SearchModelSession);
+         UrlListAnimal = Url.ActionLink(
+        "Index",
+        "Natural",                          // Tên controller
+        new
+        {
+            keyword = SearchModel.keyword,         // Truyền tham số keyword
+            keyword2 = SearchModel.keyword2,       // Truyền tham số keyword2
+            IdLoai = SearchModel.IdLoai,           // Truyền tham số IdLoai
+            id_nganh = SearchModel.id_nganh,       // Truyền tham số id_nganh
+            id_lop = SearchModel.id_lop,           // Truyền tham số id_lop
+            id_bo = SearchModel.id_bo,             // Truyền tham số id_bo
+            id_ho = SearchModel.id_ho,             // Truyền tham số id_ho
+            icun = SearchModel.icun,               // Truyền tham số icun
+            sdvn = SearchModel.sdvn,               // Truyền tham số sdvn
+            ndcp = SearchModel.ndcp,               // Truyền tham số ndcp
+            nd64cp = SearchModel.nd64cp,           // Truyền tham số nd64cp
+            vqg = SearchModel.vqg                  // Truyền tham số vqg
+        });
+    }else{
+         UrlListAnimal = Url.ActionLink("Index", "Natural");
+    }
+    
 }
 @{
     string vqg = Context.Session.GetString("NationPark");
@@ -430,5 +436,9 @@
             var select = document.getElementById("mode" + '@vqg')
             console.log(select)
             select.style.display = "none";
-        }
+               select.remove();
+            var accoding = document.querySelector(".accordion-item").querySelector(".accordion-collapse.collapse");
+               console.log(accoding)
+               accoding.classList.add("show");
+     }
     </script>

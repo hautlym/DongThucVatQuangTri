@@ -28,16 +28,23 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-5 col-xs-12 mt-1">
-                    <a asp-action="Create" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i> Thêm người dùng</a>
+                    @if (User.FindFirstValue(ClaimTypes.Role) == "Administator")
+                    {
+                        <a asp-action="Create" class="btn btn-success"><i class="fa-solid fa-plus" style="color: #ffffff;"></i> Thêm người dùng</a>
+                    }
                 </div>
                 <div class="col-md-7 col-xs-12 mt-1">
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <form asp-action="Index" asp-controller="User" method="post" class="row">
                                 <div class="col-md-4">
-                                    <select name="Roles" onchange="this.form.submit()" asp-items="@ViewBag.Roles" class="form-control mt-1">
-                                        <option value="">--Chọn nhóm quyền--</option>
-                                    </select>
+                                    @if (User.FindFirstValue(ClaimTypes.Role) == "Administator")
+                                    {
+                                        <select name="Roles" onchange="this.form.submit()" asp-items="@ViewBag.Roles" class="form-control mt-1">
+                                            <option value="">--Chọn nhóm quyền--</option>
+                                        </select>
+                                    }
+
                                 </div>
                                 <div class="col-md-8">
                                     <div class="input-group mb-3 mt-1">
@@ -126,7 +133,7 @@
                                 @Html.DisplayFor(modelItem => item.CreatedAt)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.LastSigninedTime)
+                                @item.LastSigninedTime?.ToString("dd/MM/yyyy hh:mm:ss tt")
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Status)
@@ -148,7 +155,7 @@
                                     </button>
                                     <!-- Modal -->
                                     <div class="modal fade" id="exampleModal@{
-                                                        @item.Id
+                                                            @item.Id
 }" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             @using (Html.BeginForm("Delete", "User", FormMethod.Post))

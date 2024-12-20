@@ -1,13 +1,21 @@
-﻿namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DongThucVatQuangTri.Applications.NewsItem.Dtos.NewsDtos
 {
     public class CreateNewsRequest
     {
         public int? RootNewsCatId { get; set; }
         public int? NewsCatId { get; set; }
+        [Required(ErrorMessage = "Vui lòng điền tên")]
+
         public string Name { get; set; }
+        [Required(ErrorMessage = "Vui lòng điền alias")]
+
         public string Alias { get; set; }
         public IFormFile? Image { get; set; }
         public string? ShortDescription { get; set; }
+        [Required(ErrorMessage = "Vui lòng điền nội dung")]
+
         public string Description { get; set; }
         public int? SortOrder { get; set; }
         public short? IsHot { get; set; }

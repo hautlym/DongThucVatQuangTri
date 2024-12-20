@@ -65,10 +65,21 @@ namespace DongThucVatQuangTri.Applications.UserManage
         {
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null)
-                return new ApiErrorResult<string>("Sai tài khoản hoặc mật khẩu");
+            {
+                user = await _userManager.FindByEmailAsync(request.Username);
+                if (user == null)
+                {
+                    return new ApiErrorResult<string>("Sai tài khoản hoặc mật khẩu");
+                }
+            }
+          
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.remember, true);
             if (!result.Succeeded)
             {
+                if (result.IsLockedOut)
+                {
+                    return new ApiErrorResult<string>("Tài khoản của bạn đang bị khóa. Vui lòng liên hệ admin");
+                }
                 return new ApiErrorResult<string>("Sai tài khoản hoặc mật khẩu");
             }
             var claim = new[]

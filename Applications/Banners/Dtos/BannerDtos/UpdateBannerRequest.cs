@@ -1,9 +1,12 @@
-﻿namespace DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DongThucVatQuangTri.Applications.Banners.Dtos.BannerDtos
 {
     public class UpdateBannerRequest
     {
         public long Id { get; set; }
         public int BannerCatId { get; set; }
+        [Required(ErrorMessage = "Vui lòng điền tên")]
         public string Name { get; set; }
         public IFormFile? Src { get; set; }
         public IFormFile? SrcMobile { get; set; }

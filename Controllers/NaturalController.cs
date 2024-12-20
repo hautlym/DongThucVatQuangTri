@@ -143,41 +143,49 @@ namespace DongThucVatQuangTri.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int Id, string currentUrl = "")
         {
-            var result1 = await _manageSpeciesNationPark.getItemById(Id);
-            var result = await _manageSpecies.getItemById(result1.IdDtvLoai);
-            var loai = result.Loai;
-            var item = (await _manageBranch.getAllItem()).Where(x => x.Loai == loai).Where(x => x.Status == 1).ToList();
+            try
+            {
+                var result1 = await _manageSpeciesNationPark.getItemById(Id);
+                var result = await _manageSpecies.getItemById(result1.IdDtvLoai);
+                var loai = result.Loai;
+                var item = (await _manageBranch.getAllItem()).Where(x => x.Loai == loai).Where(x => x.Status == 1).ToList();
 
-            ViewBag.Nganh = item;
-            ViewBag.Lop = await _manageClass.getAllItem();
-            ViewBag.Bo = await _manageSet.getAllItem();
-            ViewBag.Ho = await _manageFamily.getAllItem();
-            ViewBag.CurrentUrl = currentUrl;
-            if (MucDoBaoTon.MuDoBaoTonIUCN.ContainsKey(result.MucDoBaoTonIucn ?? 100))
-            {
-                ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";
+                ViewBag.Nganh = item;
+                ViewBag.Lop = await _manageClass.getAllItem();
+                ViewBag.Bo = await _manageSet.getAllItem();
+                ViewBag.Ho = await _manageFamily.getAllItem();
+                ViewBag.CurrentUrl = currentUrl;
+                if (MucDoBaoTon.MuDoBaoTonIUCN.ContainsKey(result.MucDoBaoTonIucn ?? 100))
+                {
+                    ViewBag.MucDoBaoTonIUCN = !String.IsNullOrEmpty(result.MucDoBaoTonIucn.ToString()) && result.MucDoBaoTonIucn != 0 ? MucDoBaoTon.MuDoBaoTonIUCN[(int)result.MucDoBaoTonIucn] : "";
+                }
+                if (MucDoBaoTon.MuDoBaoTonSDVN.ContainsKey(result.MucDoBaoTonSdvn ?? 100))
+                {
+                    ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+                }
+                ViewBag.MucDoBaoTonNDCP = !String.IsNullOrEmpty(result.MucDoBaoTonNdcp.ToString()) && result.MucDoBaoTonNdcp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNdcp] : "";
+                ViewBag.MucDoBaoTonND64CP = !String.IsNullOrEmpty(result.MucDoBaoTonNd64cp.ToString()) && result.MucDoBaoTonNd64cp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNd64cp] : "";
+                if (loai == 1)
+                {
+                    ViewBag.Loai = "Động Vật";
+                }
+                if (loai == 0)
+                {
+                    ViewBag.Loai = "Thực vật";
+                }
+                var listVQG = (await _manageSpeciesNationPark.getAllItem()).Where(x => x.IdDtvLoai == result.Id).ToList();
+                var detailsModels = new DetailsModels()
+                {
+                    lisViewModels = (await _manageSpecies.getAllItem()).Where(x => x.IdDtvHo == result.IdDtvHo && x.Id != result.Id).Take(2).ToList(),
+                    speciesViewModels = result
+                };
+                return View(detailsModels);
             }
-            if (MucDoBaoTon.MuDoBaoTonSDVN.ContainsKey(result.MucDoBaoTonSdvn ?? 100))
+            catch(Exception ex)
             {
-                ViewBag.MucDoBaoTonSDVN = !String.IsNullOrEmpty(result.MucDoBaoTonSdvn.ToString()) && result.MucDoBaoTonSdvn != 0 ? MucDoBaoTon.MuDoBaoTonSDVN[(int)result.MucDoBaoTonSdvn] : "";
+                throw new Exception(ex.Message);
             }
-            ViewBag.MucDoBaoTonNDCP = !String.IsNullOrEmpty(result.MucDoBaoTonNdcp.ToString()) && result.MucDoBaoTonNdcp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNdcp] : "";
-            ViewBag.MucDoBaoTonND64CP = !String.IsNullOrEmpty(result.MucDoBaoTonNd64cp.ToString()) && result.MucDoBaoTonNd64cp != 0 ? MucDoBaoTon.MuDoBaoTonNDCP[(int)loai][(int)result.MucDoBaoTonNd64cp] : "";
-            if (loai == 1)
-            {
-                ViewBag.Loai = "Động Vật";
-            }
-            if (loai == 0)
-            {
-                ViewBag.Loai = "Thực vật";
-            }
-            var listVQG = (await _manageSpeciesNationPark.getAllItem()).Where(x => x.IdDtvLoai == result.Id).ToList();
-            var detailsModels = new DetailsModels()
-            {
-                lisViewModels = (await _manageSpecies.getAllItem()).Where(x => x.IdDtvHo == result.IdDtvHo && x.Id != result.Id).Take(2).ToList(),
-                speciesViewModels = result
-            };
-            return View(detailsModels);
+           
         }
         [HttpPost]
         public async Task<IActionResult> GetListLop(int IdNganh)

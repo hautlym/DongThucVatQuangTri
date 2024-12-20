@@ -9,8 +9,9 @@ namespace DongThucVatQuangTri.Applications.UserManage.Dtos
 {
     public class ResetPasswordRequest
     {
+        [Required(ErrorMessage = "Vui lòng điền mật khẩu ")]
         public string NewPassword { get; set; }
-        [Compare("NewPassword", ErrorMessage = "Nhập khẩu mật lại không chính xác")]
+        [Compare("NewPassword", ErrorMessage = "Xác thực mật khẩu không chính xác")]
         public string? ConfirmPassword { get; set; }
         public string code { get; set; }
         public string UserId { get; set; }
