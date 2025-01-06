@@ -188,7 +188,7 @@
         const Keyword1 = urlParams.get('keyword');
         const Keyword2 = urlParams.get('keyword2');
         $(document).ready(function () {
-            $("select[name='vqg']").val(RPH?? All)
+            $("select[name='vqg']").val(RPH?? 'All')
             $("input[name='keyword']").val(Keyword1)
             $("input[name='keyword2']").val(Keyword2)
         })
@@ -363,18 +363,19 @@
                     <div class="NationParkOption " id="selectElement">
                         <div class="col-md-3">Chọn rừng phòng hộ: </div>
                         <div class="col-md-9">
-                            <select class="form-control col-md-9 " name="vqg">
-                                <option value="All">
-                                    Tất cả
-                                </option>
-                                <option value="NationParkMuongTe">
-                                    BQL RPH Mường Tè
-                                </option>
-                                <option value="NationParkNamGiang">
-                                    BQL RPH Nam Giang
-                                </option>
-                            </select>
-
+                            @if(vqg=="All"){
+                                <select class="form-control col-md-9 " name="vqg">
+                                    <option value="All">
+                                        Tất cả
+                                    </option>
+                                    <option value="NationParkMuongTe">
+                                        BQL RPH Mường Tè
+                                    </option>
+                                    <option value="NationParkNamGiang">
+                                        BQL RPH Nam Giang
+                                    </option>
+                                </select>
+                            }
                         </div>
                     </div>
                     <div class="TextSearch">

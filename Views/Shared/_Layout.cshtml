@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>@ViewData["Title"]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-@*     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    @*     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
  *@    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="icon" href="/images/logo.png">
 
@@ -24,11 +24,12 @@
     <link rel="stylesheet" href="/lib/image-popup/magnific-popup.css">
 </head>
 <style>
-    
-   
-     a{
-        text-decoration:none
+
+
+    a {
+        text-decoration: none
     }
+
     #header .contact .custom-select1 {
         height: 20px;
         background-repeat: no-repeat;
@@ -40,15 +41,16 @@
         font-size: 20px;
         text-align: center;
     }
-    .logo_name{
+
+    .logo_name {
         display: flex;
         justify-content: space-between;
     }
 
     .contact {
-        display:flex;
-        align-items:center;
-        justify-content:center
+        display: flex;
+        align-items: center;
+        justify-content: center
     }
 
     .rightContact {
@@ -107,12 +109,12 @@
                 <div class="header2">
                     @*  <div class="logo"><a href="javascript:;"><img src="/images/logo.png" width="120" height="61" alt="" /></a></div> *@
                     <div class="nav">
-                        <a href="javascript:;" class="navBtn" ><span></span><span></span><span></span></a>
-                        <ul >
+                        <a href="javascript:;" class="navBtn"><span></span><span></span><span></span></a>
+                        <ul>
                             <li><a asp-action="Index" asp-controller="Home" id="homeBtn" class="active"><span>Trang chủ</span>&nbsp;</a></li>
-                            <li><a asp-action="introduce" asp-controller="Home" >Giới thiệu</a></li>
+                            <li><a asp-action="introduce" asp-controller="Home">Giới thiệu</a></li>
                             <li><a asp-action="Address" asp-controller="Home">Bản đồ</a></li>
-                            <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai ="1">CSDL Động vật</a></li>
+                            <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="1">CSDL Động vật</a></li>
                             <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="0">CSDL Thực vật</a></li>
                             <li><a asp-action="News" asp-controller="Home">Tin tức</a></li>
                             <li><a asp-action="Tour" asp-controller="Home">Du lịch</a></li>
@@ -124,20 +126,20 @@
                 </div><!--header2-->
             </div><!--end maincontent-->
         </div><!--end header-->
-        
+
         <div id="content">
             @RenderBody()
         </div><!--end content-->
 
         <div id="footer">
             <div class="maincontent">
-                
+
                 <div class="info" style="width:25%;">
                     <div class="logo"><a href="javascript:;"><img src="/images/logo.png" width="180" height="180" alt="" /></a></div>
                 </div><!--end info-->
                 <div class="subLink" style="width:70%;">
                     <ul style="width:30% !important;">
-                        <li><a asp-action="introduce" asp-controller="Home" >Giới thiệu</a></li>
+                        <li><a asp-action="introduce" asp-controller="Home">Giới thiệu</a></li>
                         <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="1">CSDL Động vật</a></li>
                         <li><a asp-action="Index" asp-controller="Natural" asp-route-IdLoai="0">CSDL Thực vật</a></li>
                         <li><a asp-action="News" asp-controller="Home">Tin tức</a></li>
@@ -215,8 +217,13 @@
                 success: function (result) {
                     var currentUrl = window.location.href;
                     // // Thiết lập phần query parameters thành chuỗi trống
-                    var updatedUrl = currentUrl.split('?')[0];
-                    window.history.replaceState({}, document.title, updatedUrl);
+                    var baseUrl  = currentUrl.split('?')[0];
+                    // Nếu không có query parameters thì không cần xử lý
+                    if (baseUrl.includes("Address")) {
+                         window.history.replaceState({}, document.title, baseUrl);
+                    } else {
+                        // Nếu không có query parameters, giữ nguyên base URL
+                    }
                     window.location.reload()
                 },
                 error: function () {
@@ -228,7 +235,7 @@
     <script src="/lib/image-popup/jquery.magnific-popup.min.js"></script>
     <script src="/lib/toastr/js/toastr.init.js"></script>
     <script src="/lib/toastr/js/toastr.min.js"></script>
-    @RenderSection("CilentScript", required:false)
+    @RenderSection("CilentScript", required: false)
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>

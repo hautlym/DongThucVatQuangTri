@@ -41,6 +41,11 @@ namespace DongThucVatQuangTri.Controllers
 
             // Lấy SearchModel từ session
             var sessionSearchModel = HttpContext.Session.GetString("SearchModel");
+            var typeNationPark = HttpContext.Session.GetString("NationPark");
+            if (String.IsNullOrEmpty(searchModel.vqg) || typeNationPark != "All")
+            {
+                searchModel.vqg = typeNationPark;
+            }
             SearchModel storedSearchModel = null;
 
             if (!string.IsNullOrEmpty(sessionSearchModel))
@@ -64,11 +69,7 @@ namespace DongThucVatQuangTri.Controllers
             }
 
 
-            var typeNationPark = HttpContext.Session.GetString("NationPark");
-            if (String.IsNullOrEmpty(searchModel.vqg))
-            {
-                searchModel.vqg = typeNationPark;
-            }
+            
             var request = new getSpeciesPublicRequest()
             {
                 PageIndex = PageIndex,
